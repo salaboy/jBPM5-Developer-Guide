@@ -12,7 +12,7 @@ import com.salaboy.process.engine.services.Service;
  *
  * @author salaboy
  */
-public interface ProcessInstance {
+public interface ProcessInstance extends NodeInstanceContainer{
     public void setId(long id);
 
     public long getId();
@@ -23,9 +23,9 @@ public interface ProcessInstance {
     
     public ContextInstance getContextInstance();
     
-    public TaskContainer getTaskContainer();
-    
     public void start();
+    
+    public void start(Map<String, Object> variables);
 
     public void triggerCompleted();
     

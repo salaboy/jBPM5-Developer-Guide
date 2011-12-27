@@ -12,5 +12,7 @@ import java.util.Map;
  */
 public interface ContextInstance {
     public Map<String, Object> getVariables();
+    public Object getVariable(String key);
     public void setVariables(Map<String, Object> variables);
+    public void setVariable(String key, Object value);
 }

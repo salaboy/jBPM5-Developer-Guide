@@ -61,7 +61,7 @@ public class SimpleProcessExecutionTest {
 
         processInstance.start();
 
-        Assert.assertEquals(processInstance.getStatus(), STATUS.ENDED);
+        assertEquals(processInstance.getStatus(), STATUS.ENDED);
 
 
     }
@@ -73,17 +73,17 @@ public class SimpleProcessExecutionTest {
         
         services.put("event-service", new ProcessEventSupportService() {
 
-            public void fireBeforeTaskTriggered(TaskInstance task) {
+            public void fireBeforeTaskTriggered(NodeInstance task) {
                 taskExecuted.add(task.getTask().getName());
             }
 
-            public void fireAfterTaskTriggered(TaskInstance task) {
+            public void fireAfterTaskTriggered(NodeInstance task) {
             }
 
-            public void fireBeforeTaskLeft(TaskInstance task) {
+            public void fireBeforeTaskLeft(NodeInstance task) {
             }
 
-            public void fireAfterTaskLeft(TaskInstance task) {
+            public void fireAfterTaskLeft(NodeInstance task) {
             }
         });
 
@@ -94,6 +94,45 @@ public class SimpleProcessExecutionTest {
         assertEquals(processInstance.getStatus(), STATUS.CREATED);
 
         processInstance.start();
+
+        assertEquals(3, taskExecuted.size());
+
+        assertEquals(processInstance.getStatus(), STATUS.ENDED);
+
+
+    }
+    
+    @Test
+    public void simpleProcessExecutionWithProcessVariables() {
+        final List<String> taskExecuted = new ArrayList<String>();
+        Map<String, Service> services = new HashMap<String, Service>();
+        
+        services.put("event-service", new ProcessEventSupportService() {
+
+            public void fireBeforeTaskTriggered(NodeInstance node) {
+                
+                taskExecuted.add(node.getTask().getName());
+            }
+
+            public void fireAfterTaskTriggered(NodeInstance node) {
+            }
+
+            public void fireBeforeTaskLeft(NodeInstance node) {
+            }
+
+            public void fireAfterTaskLeft(NodeInstance node) {
+            }
+        });
+
+        ProcessDefinition process = createProcessDefinition();
+
+        
+        ProcessInstance processInstance = ProcessInstanceFactory.newProcessInstance(process, services);
+
+        assertEquals(processInstance.getStatus(), STATUS.CREATED);
+        Map<String, Object> variables = new HashMap<String, Object>();
+        variables.put("MyProcessVariable", new Object());
+        processInstance.start(variables);
 
         assertEquals(3, taskExecuted.size());
 

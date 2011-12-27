@@ -5,7 +5,7 @@
 package com.salaboy.process.engine.taskinstances.impl;
 
 import com.salaboy.process.engine.structures.ProcessInstance;
-import com.salaboy.process.engine.structures.TaskInstance;
+import com.salaboy.process.engine.structures.NodeInstance;
 import com.salaboy.process.engine.structures.SequenceFlow;
 import com.salaboy.process.engine.structures.Task;
 
@@ -13,11 +13,11 @@ import com.salaboy.process.engine.structures.Task;
  *
  * @author salaboy
  */
-public class StartEventInstance extends AbstractTaskInstance {
+public class StartEventNodeInstance extends AbstractNodeInstance {
 
     private long id;
 
-    public StartEventInstance(ProcessInstance pI, Task task) {
+    public StartEventNodeInstance(ProcessInstance pI, Task task) {
         super(pI, task);
     }
 
@@ -30,7 +30,7 @@ public class StartEventInstance extends AbstractTaskInstance {
     }
 
     @Override
-    public void internalTrigger(TaskInstance from, String type) {
+    public void internalTrigger(NodeInstance from, String type) {
         if (type != null) {
             throw new IllegalArgumentException(
                     "A StartEvent does not accept incoming connections!");
@@ -39,6 +39,7 @@ public class StartEventInstance extends AbstractTaskInstance {
             throw new IllegalArgumentException(
                     "A StartEvent can only be triggered by the process itself!");
         }
+        
         triggerCompleted();
     }
 

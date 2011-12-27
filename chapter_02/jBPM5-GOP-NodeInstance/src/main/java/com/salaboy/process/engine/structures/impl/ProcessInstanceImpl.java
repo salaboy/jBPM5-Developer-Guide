@@ -4,17 +4,13 @@
  */
 package com.salaboy.process.engine.structures.impl;
 
+import com.salaboy.process.engine.factories.NodeInstanceFactory;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Random;
-import javax.net.ssl.SSLEngineResult;
-import com.salaboy.process.engine.structures.ContextInstance;
-import com.salaboy.process.engine.structures.TaskContainer;
-import com.salaboy.process.engine.structures.TaskInstance;
-import com.salaboy.process.engine.structures.ProcessDefinition;
-import com.salaboy.process.engine.structures.ProcessInstance;
-import com.salaboy.process.engine.factories.TaskInstanceFactory;
 import com.salaboy.process.engine.services.Service;
+import com.salaboy.process.engine.structures.*;
+import java.util.List;
 
 /**
  *
@@ -22,17 +18,16 @@ import com.salaboy.process.engine.services.Service;
  */
 public class ProcessInstanceImpl implements ProcessInstance {
 
-
-   
-
-    public enum STATUS {
+     public enum STATUS {
 
         CREATED, ACTIVE, SUSPENDED, CANCELLED, ENDED
     };
+
+   
     private long id;
     private ProcessDefinition process;
     private ContextInstance context;
-    private TaskContainer taskContainer;
+    private NodeInstanceContainer nodeContainer;
     private STATUS status;
     
     private Map<String, Service> services = new HashMap<String, Service>();
@@ -44,7 +39,7 @@ public class ProcessInstanceImpl implements ProcessInstance {
         this.id = new Random().nextLong();
         this.process = process;
         this.context = new ContextInstanceImpl();
-        this.taskContainer = new TaskContainerImpl();
+        this.nodeContainer = new NodeContainerImpl();
         this.status = STATUS.CREATED;
     }
 
@@ -70,8 +65,8 @@ public class ProcessInstanceImpl implements ProcessInstance {
     @Override
     public void start() {
         // We should check that the first task inside the process.tasks is a startEvent
-        TaskInstance startEvent = TaskInstanceFactory.newTaskInstance(this, process.getTasks().get(0L));
-        this.taskContainer.addTaskInstance(startEvent);
+        NodeInstance startEvent = NodeInstanceFactory.newNodeInstance(this, process.getTasks().get(0L));
+        this.nodeContainer.addNodeInstance(startEvent);
         this.status = STATUS.ACTIVE;
         startEvent.trigger(null, null);
 
@@ -95,10 +90,6 @@ public class ProcessInstanceImpl implements ProcessInstance {
         return context;
     }
 
-    @Override
-    public TaskContainer getTaskContainer() {
-        return taskContainer;
-    }
 
     @Override
     public void triggerCompleted() {
@@ -111,4 +102,37 @@ public class ProcessInstanceImpl implements ProcessInstance {
     public STATUS getStatus() {
         return status;
     }
+    
+    public void start(Map<String, Object> variables) {
+        this.context.setVariables(variables);
+        start();
+    }
+
+    
+    //From NodeContainer
+    
+    public List<NodeInstance> getNodeInstances() {
+        return this.nodeContainer.getNodeInstances();
+    }
+
+    public void setNodeInstances(List<NodeInstance> nodeInstances) {
+        this.nodeContainer.setNodeInstances(nodeInstances);
+    }
+
+    public void addNodeInstance(NodeInstance nodeInstance) {
+        this.nodeContainer.addNodeInstance(nodeInstance);
+    }
+
+    public void removeNodeInstance(NodeInstance nodeInstance) {
+        this.nodeContainer.removeNodeInstance(nodeInstance);
+    }
+
+    public NodeInstance getNodeInstance(Task task) {
+        return this.nodeContainer.getNodeInstance(task);
+    }
+
+    public void nodeInstanceCompleted(NodeInstance nodeInstance, String outType) {
+        this.nodeContainer.nodeInstanceCompleted(nodeInstance, outType);
+    }
+    
 }

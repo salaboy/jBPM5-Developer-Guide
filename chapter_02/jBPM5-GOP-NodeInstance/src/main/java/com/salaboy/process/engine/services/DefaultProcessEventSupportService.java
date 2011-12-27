@@ -4,7 +4,7 @@
  */
 package com.salaboy.process.engine.services;
 
-import com.salaboy.process.engine.structures.TaskInstance;
+import com.salaboy.process.engine.structures.NodeInstance;
 
 /**
  *
@@ -13,22 +13,22 @@ import com.salaboy.process.engine.structures.TaskInstance;
 public class DefaultProcessEventSupportService implements ProcessEventSupportService{
 
     @Override
-    public void fireBeforeTaskTriggered(TaskInstance task) {
+    public void fireBeforeTaskTriggered(NodeInstance task) {
         System.out.println("BEFORE TASK FIRED: "+ task.getTask());
     }
 
     @Override
-    public void fireAfterTaskTriggered(TaskInstance task) {
+    public void fireAfterTaskTriggered(NodeInstance task) {
         System.out.println("AFTER TASK FIRED: "+ task.getTask());
     }
 
     @Override
-    public void fireBeforeTaskLeft(TaskInstance task) {
+    public void fireBeforeTaskLeft(NodeInstance task) {
         System.out.println("BEFORE TASK LEFT: "+ task.getTask());
     }
 
     @Override
-    public void fireAfterTaskLeft(TaskInstance task) {
+    public void fireAfterTaskLeft(NodeInstance task) {
         System.out.println("AFTER TASK LEFT: "+ task.getTask());
     }
     

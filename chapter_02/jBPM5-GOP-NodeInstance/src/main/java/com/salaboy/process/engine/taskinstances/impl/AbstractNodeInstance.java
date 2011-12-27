@@ -4,12 +4,12 @@
  */
 package com.salaboy.process.engine.taskinstances.impl;
 
+import com.salaboy.process.engine.factories.NodeInstanceFactory;
 import java.util.List;
 import com.salaboy.process.engine.structures.Task;
-import com.salaboy.process.engine.structures.TaskInstance;
+import com.salaboy.process.engine.structures.NodeInstance;
 import com.salaboy.process.engine.structures.ProcessInstance;
 import com.salaboy.process.engine.structures.SequenceFlow;
-import com.salaboy.process.engine.factories.TaskInstanceFactory;
 import com.salaboy.process.engine.services.ProcessEventSupportService;
 import com.salaboy.process.engine.services.ProcessEventSupportServiceFactory;
 
@@ -17,13 +17,13 @@ import com.salaboy.process.engine.services.ProcessEventSupportServiceFactory;
  *
  * @author salaboy
  */
-public abstract class AbstractTaskInstance implements TaskInstance {
+public abstract class AbstractNodeInstance implements NodeInstance {
 
     protected ProcessInstance processInstance;
     protected Task task;
     protected ProcessEventSupportService eventService;
 
-    public AbstractTaskInstance(ProcessInstance processInstance, Task task) {
+    public AbstractNodeInstance(ProcessInstance processInstance, Task task) {
         this.processInstance = processInstance;
         this.task = task;
         eventService = (ProcessEventSupportService)processInstance.getService("event-service");
@@ -32,7 +32,7 @@ public abstract class AbstractTaskInstance implements TaskInstance {
     
     
     @Override
-    public final void trigger(TaskInstance from, String type) {
+    public final void trigger(NodeInstance from, String type) {
 
         //Fire before TASK Triggered
 
@@ -54,7 +54,7 @@ public abstract class AbstractTaskInstance implements TaskInstance {
         this.processInstance = processInstance;
     }
 
-    public abstract void internalTrigger(TaskInstance from, String type);
+    public abstract void internalTrigger(NodeInstance from, String type);
 
     private ProcessEventSupportService getProcessEventSupportService() {
         return ProcessEventSupportServiceFactory.getService();
@@ -63,7 +63,7 @@ public abstract class AbstractTaskInstance implements TaskInstance {
     protected void triggerCompleted(String type, boolean remove) {
         if (remove) {
 
-            processInstance.getTaskContainer().removeTaskInstance(this);
+            processInstance.removeNodeInstance(this);
         }
         Task task = getTask();
         List<SequenceFlow> flows = null;
@@ -71,7 +71,7 @@ public abstract class AbstractTaskInstance implements TaskInstance {
             flows = task.getOutgoingFlows(type);
         }
         if (flows == null || flows.isEmpty()) {
-            processInstance.getTaskContainer().taskInstanceCompleted(this, type);
+            processInstance.nodeInstanceCompleted(this, type);
         } else {
             for (SequenceFlow flow : flows) {
                 triggerConnection(flow);
@@ -82,9 +82,9 @@ public abstract class AbstractTaskInstance implements TaskInstance {
     protected void triggerConnection(SequenceFlow flow) {
 
         eventService.fireBeforeTaskLeft(this);
-        this.processInstance.getTaskContainer().addTaskInstance(TaskInstanceFactory.newTaskInstance(this.processInstance, flow.getTo()));
+        this.processInstance.addNodeInstance(NodeInstanceFactory.newNodeInstance(this.processInstance, flow.getTo()));
         // trigger next TASK
-        this.processInstance.getTaskContainer().getTaskInstance(flow.getTo()).trigger(this, flow.getToType());
+        this.processInstance.getNodeInstance(flow.getTo()).trigger(this, flow.getToType());
 
         eventService.fireAfterTaskLeft(this);
 
