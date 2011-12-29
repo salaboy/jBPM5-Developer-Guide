@@ -8,7 +8,6 @@
     </parent>
     
 	<artifactId>jBPM5-First-Project</artifactId>
-	<version>1.0-SNAPSHOT</version>
 	<packaging>jar</packaging>
 
 	<name>jBPM5 :: First Project</name>
