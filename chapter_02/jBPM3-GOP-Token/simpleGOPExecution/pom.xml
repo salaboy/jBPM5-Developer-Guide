@@ -9,7 +9,7 @@
     </parent>
   
     <artifactId>simpleGOPExecution</artifactId>
-    <name>jBPM3 GOP - Token Based Execution</name>
+    <name>jBPM3 :: GOP - Token Based Execution</name>
     <packaging>jar</packaging>
   
     

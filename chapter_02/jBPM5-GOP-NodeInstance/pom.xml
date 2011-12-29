@@ -10,7 +10,7 @@
   
     <artifactId>jBPM5-GOP-NodeInstance</artifactId>
   
-    <name>jBPM5 Simple Graphic Oriented Programming - Node Instance Approach</name>
+    <name>jBPM5 :: Simple Graphic Oriented Programming - Node Instance Approach</name>
     <url>http://salaboy.com</url>
     
     <dependencies>

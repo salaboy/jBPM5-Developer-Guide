@@ -9,7 +9,7 @@
     </parent>
   
     <artifactId>simpleGOPDefinition</artifactId>  
-    <name>jBPM3 GOP - Token Based Definition</name>
+    <name>jBPM3 :: GOP - Token Based Definition</name>
     <packaging>jar</packaging>
     <url>http://salaboy.com</url>
     <dependencies>

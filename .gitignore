@@ -2,3 +2,4 @@ target/
 .project
 .classpath
 .DS_Store
+/chapter_02/jbpm5-first-project/.settings/

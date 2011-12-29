@@ -8,7 +8,7 @@
     </parent>
     <packaging>pom</packaging>
     <artifactId>jBPM3-GOP-TokenBased</artifactId>
-    <name>jBPM3 Simple Graphic Oriented Programming - Token Based Approach</name>
+    <name>jBPM3 :: Simple Graphic Oriented Programming - Token Based Approach</name>
     <url>http://salaboy.com</url>
     
     <modules>
