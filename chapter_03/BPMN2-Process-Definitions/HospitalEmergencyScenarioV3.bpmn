@@ -1,0 +1,145 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<bpmn2:definitions xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://www.omg.org/bpmn20" xmlns:bpmn2="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" xmlns:drools="http://www.jboss.org/drools" id="_pRMI4DVBEeGuKd61boWk5A" xsi:schemaLocation="http://www.omg.org/spec/BPMN/20100524/MODEL BPMN20.xsd" targetNamespace="http://www.omg.org/bpmn20">
+  <bpmn2:interface id="_FB0A1339-2ECA-4008-A174-A30431225A39_ServiceInterface" name="">
+    <bpmn2:operation id="_FB0A1339-2ECA-4008-A174-A30431225A39_ServiceOperation" name="">
+      <bpmn2:inMessageRef>_FB0A1339-2ECA-4008-A174-A30431225A39_InMessage</bpmn2:inMessageRef>
+    </bpmn2:operation>
+  </bpmn2:interface>
+  <bpmn2:interface id="_E40F47FF-B3F0-4B97-AD31-B06E0DB2E8BD_ServiceInterface" name="">
+    <bpmn2:operation id="_E40F47FF-B3F0-4B97-AD31-B06E0DB2E8BD_ServiceOperation" name="">
+      <bpmn2:inMessageRef>_E40F47FF-B3F0-4B97-AD31-B06E0DB2E8BD_InMessage</bpmn2:inMessageRef>
+    </bpmn2:operation>
+  </bpmn2:interface>
+  <bpmn2:message id="_FB0A1339-2ECA-4008-A174-A30431225A39_InMessage" itemRef="_FB0A1339-2ECA-4008-A174-A30431225A39_InMessageType"/>
+  <bpmn2:message id="_E40F47FF-B3F0-4B97-AD31-B06E0DB2E8BD_InMessage" itemRef="_E40F47FF-B3F0-4B97-AD31-B06E0DB2E8BD_InMessageType"/>
+  <bpmn2:itemDefinition id="_FB0A1339-2ECA-4008-A174-A30431225A39_InMessageType"/>
+  <bpmn2:itemDefinition id="_E40F47FF-B3F0-4B97-AD31-B06E0DB2E8BD_InMessageType"/>
+  <bpmn2:signal id="_pRMI4jVBEeGuKd61boWk5A"/>
+  <bpmn2:process id="hospitalEmergencyV1" drools:packageName="default" name="" isExecutable="true">
+    <bpmn2:startEvent id="_397FA494-253F-4206-9337-798D2759581C" drools:bgcolor="#ffffff" name="">
+      <bpmn2:outgoing>_3D5E5B46-7661-4264-B8FF-4250197F5099</bpmn2:outgoing>
+    </bpmn2:startEvent>
+    <bpmn2:businessRuleTask id="_B4321CB7-FC42-40D2-A421-FE1FE6EAF9FD" drools:bgcolor="#b1c2d6" name="Assign Bed">
+      <bpmn2:incoming>_3D5E5B46-7661-4264-B8FF-4250197F5099</bpmn2:incoming>
+      <bpmn2:outgoing>_AD663BD1-0132-4DCB-9714-697E54C75A78</bpmn2:outgoing>
+    </bpmn2:businessRuleTask>
+    <bpmn2:sequenceFlow id="_3D5E5B46-7661-4264-B8FF-4250197F5099" sourceRef="_397FA494-253F-4206-9337-798D2759581C" targetRef="_B4321CB7-FC42-40D2-A421-FE1FE6EAF9FD"/>
+    <bpmn2:userTask id="_7776DABA-1F3B-4173-8DBF-87161434D716" drools:bgcolor="#b1c2d6" name="Coordinate Staff">
+      <bpmn2:incoming>_6A7F9148-E9C4-4F36-BA2A-4DBB30FEDCD3</bpmn2:incoming>
+      <bpmn2:outgoing>_F5B445C9-7A93-4D6A-A7B1-D3C0231763C1</bpmn2:outgoing>
+    </bpmn2:userTask>
+    <bpmn2:serviceTask id="_FB0A1339-2ECA-4008-A174-A30431225A39" drools:bgcolor="#b1c2d6" drools:servicetaskinterface="" drools:servicetaskoperation="" name="Notify Gate to Ambulance" implementation="Other" operationRef="_FB0A1339-2ECA-4008-A174-A30431225A39_ServiceOperation">
+      <bpmn2:incoming>_F5B445C9-7A93-4D6A-A7B1-D3C0231763C1</bpmn2:incoming>
+      <bpmn2:outgoing>_CF287F9E-8D0D-47D5-943B-5A2212496553</bpmn2:outgoing>
+    </bpmn2:serviceTask>
+    <bpmn2:sequenceFlow id="_F5B445C9-7A93-4D6A-A7B1-D3C0231763C1" sourceRef="_7776DABA-1F3B-4173-8DBF-87161434D716" targetRef="_FB0A1339-2ECA-4008-A174-A30431225A39"/>
+    <bpmn2:userTask id="_DA2EDFB2-D539-4244-A66A-585C7496A7BA" drools:bgcolor="#b1c2d6" name="Check In Patient">
+      <bpmn2:incoming>_23609C9C-0D51-42AC-B1CD-DFCCA88FE4B5</bpmn2:incoming>
+      <bpmn2:outgoing>_62FFE180-34D9-4E47-8584-8D6CE68D0E46</bpmn2:outgoing>
+    </bpmn2:userTask>
+    <bpmn2:endEvent id="_211CD0FC-A47F-4826-8225-A4B7F3CF3705" drools:bgcolor="#ffffff" name="">
+      <bpmn2:incoming>_62FFE180-34D9-4E47-8584-8D6CE68D0E46</bpmn2:incoming>
+    </bpmn2:endEvent>
+    <bpmn2:sequenceFlow id="_62FFE180-34D9-4E47-8584-8D6CE68D0E46" sourceRef="_DA2EDFB2-D539-4244-A66A-585C7496A7BA" targetRef="_211CD0FC-A47F-4826-8225-A4B7F3CF3705"/>
+    <bpmn2:sequenceFlow id="_AD663BD1-0132-4DCB-9714-697E54C75A78" sourceRef="_B4321CB7-FC42-40D2-A421-FE1FE6EAF9FD" targetRef="_F3BA0E13-33CD-48D3-A8B6-6CF5642849BF"/>
+    <bpmn2:sequenceFlow id="_6A7F9148-E9C4-4F36-BA2A-4DBB30FEDCD3" name="Yes&#xA;" sourceRef="_F3BA0E13-33CD-48D3-A8B6-6CF5642849BF" targetRef="_7776DABA-1F3B-4173-8DBF-87161434D716"/>
+    <bpmn2:serviceTask id="_E40F47FF-B3F0-4B97-AD31-B06E0DB2E8BD" drools:bgcolor="#b1c2d6" drools:servicetaskinterface="" drools:servicetaskoperation="" name="Notify Rejection to Ambulance" implementation="Other" operationRef="_E40F47FF-B3F0-4B97-AD31-B06E0DB2E8BD_ServiceOperation">
+      <bpmn2:incoming>_98172B69-DD90-4BEA-B16D-6E1F276FF9D7</bpmn2:incoming>
+      <bpmn2:outgoing>_5C2CAC99-FB76-4EAD-89D6-EC697395BFA7</bpmn2:outgoing>
+    </bpmn2:serviceTask>
+    <bpmn2:sequenceFlow id="_98172B69-DD90-4BEA-B16D-6E1F276FF9D7" name="No&#xA;" sourceRef="_F3BA0E13-33CD-48D3-A8B6-6CF5642849BF" targetRef="_E40F47FF-B3F0-4B97-AD31-B06E0DB2E8BD"/>
+    <bpmn2:endEvent id="_9435A614-1D15-4017-854B-C3325A614C6C" drools:bgcolor="#ffffff" name="">
+      <bpmn2:incoming>_5C2CAC99-FB76-4EAD-89D6-EC697395BFA7</bpmn2:incoming>
+    </bpmn2:endEvent>
+    <bpmn2:sequenceFlow id="_5C2CAC99-FB76-4EAD-89D6-EC697395BFA7" sourceRef="_E40F47FF-B3F0-4B97-AD31-B06E0DB2E8BD" targetRef="_9435A614-1D15-4017-854B-C3325A614C6C"/>
+    <bpmn2:exclusiveGateway id="_F3BA0E13-33CD-48D3-A8B6-6CF5642849BF" drools:bgcolor="#ffffff" name="is Bed Assigned?&#xA;" gatewayDirection="Diverging">
+      <bpmn2:incoming>_AD663BD1-0132-4DCB-9714-697E54C75A78</bpmn2:incoming>
+      <bpmn2:outgoing>_6A7F9148-E9C4-4F36-BA2A-4DBB30FEDCD3</bpmn2:outgoing>
+      <bpmn2:outgoing>_98172B69-DD90-4BEA-B16D-6E1F276FF9D7</bpmn2:outgoing>
+    </bpmn2:exclusiveGateway>
+    <bpmn2:intermediateCatchEvent id="_90329A83-35AD-4E26-909B-7CAA9E272BD3" drools:bgcolor="#ffffff" name="Ambulance Approaching To Gate">
+      <bpmn2:outgoing>_23609C9C-0D51-42AC-B1CD-DFCCA88FE4B5</bpmn2:outgoing>
+      <bpmn2:signalEventDefinition id="_pRMI4TVBEeGuKd61boWk5A" signalRef="_pRMI4jVBEeGuKd61boWk5A"/>
+    </bpmn2:intermediateCatchEvent>
+    <bpmn2:sequenceFlow id="_23609C9C-0D51-42AC-B1CD-DFCCA88FE4B5" sourceRef="_90329A83-35AD-4E26-909B-7CAA9E272BD3" targetRef="_DA2EDFB2-D539-4244-A66A-585C7496A7BA"/>
+    <bpmn2:endEvent id="_7954565A-8655-41E8-A15F-0CAB60254B8D" drools:bgcolor="#ffffff" name="">
+      <bpmn2:incoming>_CF287F9E-8D0D-47D5-943B-5A2212496553</bpmn2:incoming>
+    </bpmn2:endEvent>
+    <bpmn2:sequenceFlow id="_CF287F9E-8D0D-47D5-943B-5A2212496553" sourceRef="_FB0A1339-2ECA-4008-A174-A30431225A39" targetRef="_7954565A-8655-41E8-A15F-0CAB60254B8D"/>
+  </bpmn2:process>
+  <bpmndi:BPMNDiagram id="_pRMI4zVBEeGuKd61boWk5A">
+    <bpmndi:BPMNPlane id="_pRMI5DVBEeGuKd61boWk5A" bpmnElement="hospitalEmergencyV1">
+      <bpmndi:BPMNShape id="_pRMI5TVBEeGuKd61boWk5A" bpmnElement="_397FA494-253F-4206-9337-798D2759581C">
+        <dc:Bounds height="30.0" width="30.0" x="15.0" y="77.0"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="_pRMI5jVBEeGuKd61boWk5A" bpmnElement="_B4321CB7-FC42-40D2-A421-FE1FE6EAF9FD">
+        <dc:Bounds height="80.0" width="100.0" x="75.0" y="53.0"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="_pRMI5zVBEeGuKd61boWk5A" bpmnElement="_3D5E5B46-7661-4264-B8FF-4250197F5099">
+        <di:waypoint xsi:type="dc:Point" x="30.0" y="92.0"/>
+        <di:waypoint xsi:type="dc:Point" x="125.0" y="93.0"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNShape id="_pRMv8DVBEeGuKd61boWk5A" bpmnElement="_7776DABA-1F3B-4173-8DBF-87161434D716">
+        <dc:Bounds height="80.0" width="100.0" x="330.0" y="53.0"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="_pRMv8TVBEeGuKd61boWk5A" bpmnElement="_FB0A1339-2ECA-4008-A174-A30431225A39">
+        <dc:Bounds height="80.0" width="100.0" x="465.0" y="52.0"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="_pRMv8jVBEeGuKd61boWk5A" bpmnElement="_F5B445C9-7A93-4D6A-A7B1-D3C0231763C1">
+        <di:waypoint xsi:type="dc:Point" x="380.0" y="93.0"/>
+        <di:waypoint xsi:type="dc:Point" x="515.0" y="92.0"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNShape id="_pRMv8zVBEeGuKd61boWk5A" bpmnElement="_DA2EDFB2-D539-4244-A66A-585C7496A7BA">
+        <dc:Bounds height="80.0" width="100.0" x="405.0" y="245.0"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="_pRMv9DVBEeGuKd61boWk5A" bpmnElement="_211CD0FC-A47F-4826-8225-A4B7F3CF3705">
+        <dc:Bounds height="28.0" width="28.0" x="537.0" y="268.0"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="_pRMv9TVBEeGuKd61boWk5A" bpmnElement="_62FFE180-34D9-4E47-8584-8D6CE68D0E46">
+        <di:waypoint xsi:type="dc:Point" x="455.0" y="285.0"/>
+        <di:waypoint xsi:type="dc:Point" x="551.0" y="282.0"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="_pRMv9jVBEeGuKd61boWk5A" bpmnElement="_AD663BD1-0132-4DCB-9714-697E54C75A78">
+        <di:waypoint xsi:type="dc:Point" x="125.0" y="93.0"/>
+        <di:waypoint xsi:type="dc:Point" x="215.0" y="93.0"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="_pRMv9zVBEeGuKd61boWk5A" bpmnElement="_6A7F9148-E9C4-4F36-BA2A-4DBB30FEDCD3">
+        <di:waypoint xsi:type="dc:Point" x="215.0" y="93.0"/>
+        <di:waypoint xsi:type="dc:Point" x="380.0" y="93.0"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNShape id="_pRMv-DVBEeGuKd61boWk5A" bpmnElement="_E40F47FF-B3F0-4B97-AD31-B06E0DB2E8BD">
+        <dc:Bounds height="80.0" width="100.0" x="315.0" y="150.0"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="_pRMv-TVBEeGuKd61boWk5A" bpmnElement="_98172B69-DD90-4BEA-B16D-6E1F276FF9D7">
+        <di:waypoint xsi:type="dc:Point" x="215.0" y="93.0"/>
+        <di:waypoint xsi:type="dc:Point" x="215.0" y="190.0"/>
+        <di:waypoint xsi:type="dc:Point" x="365.0" y="190.0"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNShape id="_pRMv-jVBEeGuKd61boWk5A" bpmnElement="_9435A614-1D15-4017-854B-C3325A614C6C">
+        <dc:Bounds height="28.0" width="28.0" x="453.0" y="175.0"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="_pRMv-zVBEeGuKd61boWk5A" bpmnElement="_5C2CAC99-FB76-4EAD-89D6-EC697395BFA7">
+        <di:waypoint xsi:type="dc:Point" x="365.0" y="190.0"/>
+        <di:waypoint xsi:type="dc:Point" x="467.0" y="189.0"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNShape id="_pRMv_DVBEeGuKd61boWk5A" bpmnElement="_F3BA0E13-33CD-48D3-A8B6-6CF5642849BF">
+        <dc:Bounds height="40.0" width="40.0" x="195.0" y="73.0"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="_pRMv_TVBEeGuKd61boWk5A" bpmnElement="_90329A83-35AD-4E26-909B-7CAA9E272BD3">
+        <dc:Bounds height="30.0" width="30.0" x="285.0" y="270.0"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="_pRMv_jVBEeGuKd61boWk5A" bpmnElement="_23609C9C-0D51-42AC-B1CD-DFCCA88FE4B5">
+        <di:waypoint xsi:type="dc:Point" x="300.0" y="285.0"/>
+        <di:waypoint xsi:type="dc:Point" x="455.0" y="285.0"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNShape id="_pRMv_zVBEeGuKd61boWk5A" bpmnElement="_7954565A-8655-41E8-A15F-0CAB60254B8D">
+        <dc:Bounds height="28.0" width="28.0" x="592.0" y="76.0"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="_pRMwADVBEeGuKd61boWk5A" bpmnElement="_CF287F9E-8D0D-47D5-943B-5A2212496553">
+        <di:waypoint xsi:type="dc:Point" x="515.0" y="92.0"/>
+        <di:waypoint xsi:type="dc:Point" x="606.0" y="90.0"/>
+      </bpmndi:BPMNEdge>
+    </bpmndi:BPMNPlane>
+  </bpmndi:BPMNDiagram>
+</bpmn2:definitions>
+

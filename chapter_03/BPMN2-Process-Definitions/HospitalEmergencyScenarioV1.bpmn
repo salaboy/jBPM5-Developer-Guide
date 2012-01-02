@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<bpmn2:definitions xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://www.omg.org/bpmn20" xmlns:bpmn2="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" xmlns:drools="http://www.jboss.org/drools" id="_Wg9kEDVBEeGuKd61boWk5A" xsi:schemaLocation="http://www.omg.org/spec/BPMN/20100524/MODEL BPMN20.xsd" targetNamespace="http://www.omg.org/bpmn20">
+  <bpmn2:interface id="_FB0A1339-2ECA-4008-A174-A30431225A39_ServiceInterface" name="">
+    <bpmn2:operation id="_FB0A1339-2ECA-4008-A174-A30431225A39_ServiceOperation" name="">
+      <bpmn2:inMessageRef>_FB0A1339-2ECA-4008-A174-A30431225A39_InMessage</bpmn2:inMessageRef>
+    </bpmn2:operation>
+  </bpmn2:interface>
+  <bpmn2:message id="_FB0A1339-2ECA-4008-A174-A30431225A39_InMessage" itemRef="_FB0A1339-2ECA-4008-A174-A30431225A39_InMessageType"/>
+  <bpmn2:itemDefinition id="_FB0A1339-2ECA-4008-A174-A30431225A39_InMessageType"/>
+  <bpmn2:process id="hospitalEmergencyV1" drools:packageName="default" name="" isExecutable="true">
+    <bpmn2:startEvent id="_397FA494-253F-4206-9337-798D2759581C" drools:bgcolor="#ffffff" name="">
+      <bpmn2:outgoing>_3D5E5B46-7661-4264-B8FF-4250197F5099</bpmn2:outgoing>
+    </bpmn2:startEvent>
+    <bpmn2:businessRuleTask id="_B4321CB7-FC42-40D2-A421-FE1FE6EAF9FD" drools:bgcolor="#b1c2d6" name="Assign Bed">
+      <bpmn2:incoming>_3D5E5B46-7661-4264-B8FF-4250197F5099</bpmn2:incoming>
+      <bpmn2:outgoing>_43304EE8-6418-431E-A23B-63D90EFB5096</bpmn2:outgoing>
+    </bpmn2:businessRuleTask>
+    <bpmn2:sequenceFlow id="_3D5E5B46-7661-4264-B8FF-4250197F5099" sourceRef="_397FA494-253F-4206-9337-798D2759581C" targetRef="_B4321CB7-FC42-40D2-A421-FE1FE6EAF9FD"/>
+    <bpmn2:userTask id="_7776DABA-1F3B-4173-8DBF-87161434D716" drools:bgcolor="#b1c2d6" name="Coordinate Staff">
+      <bpmn2:incoming>_43304EE8-6418-431E-A23B-63D90EFB5096</bpmn2:incoming>
+      <bpmn2:outgoing>_F5B445C9-7A93-4D6A-A7B1-D3C0231763C1</bpmn2:outgoing>
+    </bpmn2:userTask>
+    <bpmn2:sequenceFlow id="_43304EE8-6418-431E-A23B-63D90EFB5096" sourceRef="_B4321CB7-FC42-40D2-A421-FE1FE6EAF9FD" targetRef="_7776DABA-1F3B-4173-8DBF-87161434D716"/>
+    <bpmn2:serviceTask id="_FB0A1339-2ECA-4008-A174-A30431225A39" drools:bgcolor="#b1c2d6" drools:servicetaskinterface="" drools:servicetaskoperation="" name="Notify Gate to Ambulance" implementation="Other" operationRef="_FB0A1339-2ECA-4008-A174-A30431225A39_ServiceOperation">
+      <bpmn2:incoming>_F5B445C9-7A93-4D6A-A7B1-D3C0231763C1</bpmn2:incoming>
+      <bpmn2:outgoing>_71BAB84E-3C3A-43CF-857F-548041069227</bpmn2:outgoing>
+    </bpmn2:serviceTask>
+    <bpmn2:sequenceFlow id="_F5B445C9-7A93-4D6A-A7B1-D3C0231763C1" sourceRef="_7776DABA-1F3B-4173-8DBF-87161434D716" targetRef="_FB0A1339-2ECA-4008-A174-A30431225A39"/>
+    <bpmn2:userTask id="_DA2EDFB2-D539-4244-A66A-585C7496A7BA" drools:bgcolor="#b1c2d6" name="Check In Patient">
+      <bpmn2:incoming>_71BAB84E-3C3A-43CF-857F-548041069227</bpmn2:incoming>
+      <bpmn2:outgoing>_62FFE180-34D9-4E47-8584-8D6CE68D0E46</bpmn2:outgoing>
+    </bpmn2:userTask>
+    <bpmn2:sequenceFlow id="_71BAB84E-3C3A-43CF-857F-548041069227" sourceRef="_FB0A1339-2ECA-4008-A174-A30431225A39" targetRef="_DA2EDFB2-D539-4244-A66A-585C7496A7BA"/>
+    <bpmn2:endEvent id="_211CD0FC-A47F-4826-8225-A4B7F3CF3705" drools:bgcolor="#ffffff" name="">
+      <bpmn2:incoming>_62FFE180-34D9-4E47-8584-8D6CE68D0E46</bpmn2:incoming>
+    </bpmn2:endEvent>
+    <bpmn2:sequenceFlow id="_62FFE180-34D9-4E47-8584-8D6CE68D0E46" sourceRef="_DA2EDFB2-D539-4244-A66A-585C7496A7BA" targetRef="_211CD0FC-A47F-4826-8225-A4B7F3CF3705"/>
+  </bpmn2:process>
+  <bpmndi:BPMNDiagram id="_Wg9kETVBEeGuKd61boWk5A">
+    <bpmndi:BPMNPlane id="_Wg9kEjVBEeGuKd61boWk5A" bpmnElement="hospitalEmergencyV1">
+      <bpmndi:BPMNShape id="_Wg9kEzVBEeGuKd61boWk5A" bpmnElement="_397FA494-253F-4206-9337-798D2759581C">
+        <dc:Bounds height="30.0" width="30.0" x="145.0" y="78.0"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="_Wg9kFDVBEeGuKd61boWk5A" bpmnElement="_B4321CB7-FC42-40D2-A421-FE1FE6EAF9FD">
+        <dc:Bounds height="80.0" width="100.0" x="220.0" y="53.0"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="_Wg9kFTVBEeGuKd61boWk5A" bpmnElement="_3D5E5B46-7661-4264-B8FF-4250197F5099">
+        <di:waypoint xsi:type="dc:Point" x="160.0" y="93.0"/>
+        <di:waypoint xsi:type="dc:Point" x="270.0" y="93.0"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNShape id="_Wg9kFjVBEeGuKd61boWk5A" bpmnElement="_7776DABA-1F3B-4173-8DBF-87161434D716">
+        <dc:Bounds height="80.0" width="100.0" x="365.0" y="53.0"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="_Wg9kFzVBEeGuKd61boWk5A" bpmnElement="_43304EE8-6418-431E-A23B-63D90EFB5096">
+        <di:waypoint xsi:type="dc:Point" x="270.0" y="93.0"/>
+        <di:waypoint xsi:type="dc:Point" x="415.0" y="93.0"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNShape id="_Wg9kGDVBEeGuKd61boWk5A" bpmnElement="_FB0A1339-2ECA-4008-A174-A30431225A39">
+        <dc:Bounds height="80.0" width="100.0" x="510.0" y="53.0"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="_Wg9kGTVBEeGuKd61boWk5A" bpmnElement="_F5B445C9-7A93-4D6A-A7B1-D3C0231763C1">
+        <di:waypoint xsi:type="dc:Point" x="415.0" y="93.0"/>
+        <di:waypoint xsi:type="dc:Point" x="560.0" y="93.0"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNShape id="_Wg9kGjVBEeGuKd61boWk5A" bpmnElement="_DA2EDFB2-D539-4244-A66A-585C7496A7BA">
+        <dc:Bounds height="80.0" width="100.0" x="655.0" y="53.0"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="_Wg9kGzVBEeGuKd61boWk5A" bpmnElement="_71BAB84E-3C3A-43CF-857F-548041069227">
+        <di:waypoint xsi:type="dc:Point" x="560.0" y="93.0"/>
+        <di:waypoint xsi:type="dc:Point" x="705.0" y="93.0"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNShape id="_Wg9kHDVBEeGuKd61boWk5A" bpmnElement="_211CD0FC-A47F-4826-8225-A4B7F3CF3705">
+        <dc:Bounds height="28.0" width="28.0" x="799.0" y="78.0"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="_Wg9kHTVBEeGuKd61boWk5A" bpmnElement="_62FFE180-34D9-4E47-8584-8D6CE68D0E46">
+        <di:waypoint xsi:type="dc:Point" x="705.0" y="93.0"/>
+        <di:waypoint xsi:type="dc:Point" x="813.0" y="92.0"/>
+      </bpmndi:BPMNEdge>
+    </bpmndi:BPMNPlane>
+  </bpmndi:BPMNDiagram>
+</bpmn2:definitions>
+
