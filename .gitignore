@@ -3,3 +3,4 @@ target/
 .classpath
 .DS_Store
 /chapter_02/jbpm5-first-project/.settings/
+/chapter_04/jBPM5-ServiceTasksSimple/.settings/
