@@ -10,7 +10,7 @@
   <groupId>com.salaboy.jbpm5.dev.guide</groupId>
   <artifactId>jBPM5-ServiceTasksSimple</artifactId>
   <version>1.0-SNAPSHOT</version>
-  <name>jBPM5-ServiceTasksSimple</name>
+  <name>jBPM5 :: Service Tasks Simple Example</name>
   <url>http://maven.apache.org</url>
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
