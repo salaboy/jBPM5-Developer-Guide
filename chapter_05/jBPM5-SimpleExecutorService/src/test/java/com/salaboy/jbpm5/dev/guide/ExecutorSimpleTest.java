@@ -5,7 +5,8 @@
 package com.salaboy.jbpm5.dev.guide;
 
 import com.salaboy.jbpm5.dev.guide.executor.Executor;
-import com.salaboy.jbpm5.dev.guide.executor.ExecutorImpl;
+import com.salaboy.jbpm5.dev.guide.executor.ExecutorFactoryBean;
+
 import org.junit.*;
 
 /**
@@ -13,7 +14,7 @@ import org.junit.*;
  * @author salaboy
  */
 public class ExecutorSimpleTest {
-    private Executor executor = new ExecutorImpl();
+    private Executor executor;
     public ExecutorSimpleTest() {
     }
 
@@ -26,20 +27,21 @@ public class ExecutorSimpleTest {
     }
 
     @Before
-    public void setUp() {
-        executor.init();
+    public void setUp() throws Exception {
+    	ExecutorFactoryBean factoryBean = new ExecutorFactoryBean();
+    	executor = factoryBean.getObject();
     }
 
     @After
     public void tearDown() {
         executor.destroy();
+        executor = null;
     }
 
     @Test
     public void executorSimpleTest() throws InterruptedException {
         
-        
-        executor.schedule("com.salaboy.jbpm5.dev.guide.executor.commands.PrintOutCommand");
+        executor.schedule("com.salaboy.jbpm5.dev.guide.executor.commands.PrintOutCommand", "myKey", null);
         
         Thread.sleep(15000);
     }

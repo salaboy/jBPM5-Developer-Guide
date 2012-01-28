@@ -1,10 +1,6 @@
-/*
- * To change this template, choose Tools | Templates and open the template in
- * the editor.
- */
 package com.salaboy.jbpm5.dev.guide.executor;
 
-import java.io.ByteArrayInputStream;
+import java.io.ByteArrayInputStream; 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
@@ -18,18 +14,16 @@ import javax.persistence.EntityManager;
 import com.salaboy.jbpm5.dev.guide.executor.entities.RequestInfo;
 import com.salaboy.jbpm5.dev.guide.executor.entities.STATUS;
 
-/**
- *
- * @author salaboy
- */
-public class ExecutorImpl implements Executor {
+public class ExecutorListenerImpl implements ExecutorListener {
 
+    private EntityManager em;
+    private CommandDoneHandler handler;
     private Thread running = null;
     
-    private int waitTime = 5000;
-    private EntityManager em;
+    private int waitTime = 2000; //default is smaller than ExecutorImpl
+    private String executionKey;
 
-    public ExecutorImpl() {
+    public ExecutorListenerImpl() {
     }
     
     public int getWaitTime() {
@@ -38,6 +32,14 @@ public class ExecutorImpl implements Executor {
 
 	public void setWaitTime(int waitTime) {
 		this.waitTime = waitTime;
+	}
+	
+	public String getExecutionKey() {
+		return executionKey;
+	}
+
+	public void setExecutionKey(String executionKey) {
+		this.executionKey = executionKey;
 	}
 	
 	public void setEntityManager(EntityManager em) {
@@ -57,33 +59,28 @@ public class ExecutorImpl implements Executor {
                         Thread.sleep(waitTime);
                         System.out.println("Waking Up! ...");
                         try {
-                            List<?> resultList = em.createQuery("Select r from RequestInfo as r where r.status ='QUEUED'").getResultList();
+                            List<?> resultList = em.createQuery("Select r from RequestInfo as r where r.status ='DONE'").getResultList();
                             
                             System.out.println("Number of request pending for execution = "+resultList.size());
                             if (resultList.size() > 0) {
                                 
                                 RequestInfo r = (RequestInfo) resultList.get(0);
                                 System.out.println("Request Status =" +r.getStatus());
-                                Command cmd = (Command) Class.forName(r.getCommandName()).newInstance();
                                 byte[] rData = r.getRequestData();
+                                CommandContext ctx = null;
                                 if (rData != null) {
                                 	try {
                                 		ObjectInputStream in = new ObjectInputStream(new ByteArrayInputStream(rData));
-                                		CommandContext ctx = (CommandContext) in.readObject();
-                                		cmd.setContext(ctx);
+                                		ctx = (CommandContext) in.readObject();
                                 	} catch (IOException e) {
-                                		cmd.setContext(null);
+                                		ctx = null;
                                 	}
                                 }
-                                cmd.execute();
+                                handler.onCommandDone(ctx);
                                 em.getTransaction().begin();
-                                r.setStatus(STATUS.DONE);
+                                r.setStatus(STATUS.NOTIFIED);
                                 em.getTransaction().commit();
                             }
-                        } catch (InstantiationException ex) {
-                            Logger.getLogger(ExecutorImpl.class.getName()).log(Level.SEVERE, null, ex);
-                        } catch (IllegalAccessException ex) {
-                            Logger.getLogger(ExecutorImpl.class.getName()).log(Level.SEVERE, null, ex);
                         } catch (ClassNotFoundException ex) {
                             Logger.getLogger(ExecutorImpl.class.getName()).log(Level.SEVERE, null, ex);
                         }
@@ -119,6 +116,14 @@ public class ExecutorImpl implements Executor {
         em.getTransaction().commit();
     }
 
+    public void setHandler(CommandDoneHandler handler) {
+    	this.handler = handler;
+    }
+    
+    public CommandDoneHandler getHandler() {
+    	return handler;
+    }
+    
     public void unschedule(String key) {
     	String eql = "Select r from RequestInfo as r where r.status ='QUEUED' and key = :key";
 		List<?> result = em.createQuery(eql).setParameter("key", key).getResultList();
@@ -141,4 +146,5 @@ public class ExecutorImpl implements Executor {
     public void join() throws InterruptedException {
     	running.join();
     }
+
 }

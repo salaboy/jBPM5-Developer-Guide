@@ -54,7 +54,7 @@ public class PersistenceTest {
         em.getTransaction().begin();
         em.persist(requestInfo);
         em.getTransaction().commit();
-        List resultList = em.createQuery("Select r from RequestInfo as r").getResultList();
+        List<?> resultList = em.createQuery("Select r from RequestInfo as r").getResultList();
         assertEquals(1, resultList.size());
     }
     

@@ -6,7 +6,6 @@ package com.salaboy.jbpm5.dev.guide.executor.entities;
 
 import java.util.Date;
 import javax.persistence.*;
-import javax.print.DocFlavor.STRING;
 
 /**
  *
@@ -25,6 +24,8 @@ public class RequestInfo {
     private String message;
     //Business Key for callback
     private String key;
+    @Lob
+    private byte[] requestData;
 
     public RequestInfo() {
     }
@@ -76,6 +77,12 @@ public class RequestInfo {
     public void setTime(Date time) {
         this.time = time;
     }
-    
-    
+
+	public byte[] getRequestData() {
+		return requestData;
+	}
+
+	public void setRequestData(byte[] requestData) {
+		this.requestData = requestData;
+	}
 }

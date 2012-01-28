@@ -15,6 +15,7 @@
     <module>jBPM5-ServiceTasksSimple</module>
     <module>jBPM5-SimpleExecutorService</module>
     <module>jBPM5-WebServiceTasksSimple</module>
+    <module>jBPM5-ExecutorTaskSimple</module>
   </modules>
     
    
