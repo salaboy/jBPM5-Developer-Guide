@@ -53,7 +53,8 @@ public class ExecutorListenerImpl implements ExecutorListener {
         this.running = new Thread() {
             @Override
             public void run() {
-                while (true) {
+            	boolean found = false;
+                while (!found) {
                     try {
                         System.out.println("Sleeping ...");
                         Thread.sleep(waitTime);
@@ -80,6 +81,7 @@ public class ExecutorListenerImpl implements ExecutorListener {
                                 em.getTransaction().begin();
                                 r.setStatus(STATUS.NOTIFIED);
                                 em.getTransaction().commit();
+                                found = true;
                             }
                         } catch (ClassNotFoundException ex) {
                             Logger.getLogger(ExecutorImpl.class.getName()).log(Level.SEVERE, null, ex);

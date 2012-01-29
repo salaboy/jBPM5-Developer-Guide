@@ -37,11 +37,10 @@ public class AbstractAsyncWorkItemHandler implements WorkItemHandler {
 		this.executor.schedule(command, this.execKey, ctx);
 		String sWaitTillComplete = (String) workItem.getParameter("waitTillComplete");
 		Boolean waitTillComplete = sWaitTillComplete == null ? null : Boolean.valueOf(sWaitTillComplete);
-		if (listener == null) {
-			if (waitTillComplete == null || !waitTillComplete.booleanValue()) {
-				manager.completeWorkItem(workItemId, workItem.getResults());
-			}
-		} else {
+		if (waitTillComplete == null || !waitTillComplete.booleanValue()) {
+			manager.completeWorkItem(workItemId, workItem.getResults());
+		}
+		if (listener != null) {
 			listener.setExecutionKey(this.execKey);
 			listener.init();
 		} 
@@ -51,11 +50,10 @@ public class AbstractAsyncWorkItemHandler implements WorkItemHandler {
 		executor.unschedule(this.execKey);
 		String sWaitTillComplete = (String) workItem.getParameter("waitTillComplete");
 		Boolean waitTillComplete = sWaitTillComplete == null ? null : Boolean.valueOf(sWaitTillComplete);
-		if (listener == null) {
-			if (waitTillComplete == null || !waitTillComplete.booleanValue()) {
-				manager.abortWorkItem(workItem.getId());
-			}
-		} else {
+		if (waitTillComplete == null || !waitTillComplete.booleanValue()) {
+			manager.abortWorkItem(workItem.getId());
+		}
+		if (listener != null) {
 			listener.destroy();
 		} 
 	}
