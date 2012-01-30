@@ -1,0 +1,103 @@
+version: 1
+
+dn: o=mojo
+objectClass: organization
+objectClass: extensibleObject
+objectClass: top
+o: mojo
+
+dn: ou=users,o=mojo
+objectClass: extensibleObject
+objectClass: organizationalUnit
+objectClass: top
+ou: users
+
+dn: ou=groups,o=mojo
+objectClass: extensibleObject
+objectClass: organizationalUnit
+objectClass: top
+ou: groups
+
+
+dn: cn=USER,ou=groups,o=mojo
+objectClass: groupOfUniqueNames
+objectClass: top
+objectClass: group
+cn: USER
+uniqueMember: cn=calcacuervo,ou=users,o=mojo
+
+dn: cn=PM,ou=groups,o=mojo
+objectClass: groupOfUniqueNames
+objectClass: top
+objectClass: group
+cn: PM
+uniqueMember: cn=esteban,ou=users,o=mojo
+
+dn: cn=HR,ou=groups,o=mojo
+objectClass: groupOfUniqueNames
+objectClass: top
+objectClass: group
+cn: HR
+uniqueMember: cn=mariano,ou=users,o=mojo
+
+dn: cn=Admin,ou=groups,o=mojo
+objectClass: groupOfUniqueNames
+objectClass: top
+objectClass: group
+cn: Admin
+uniqueMember: cn=salaboy,ou=users,o=mojo
+uniqueMember: cn=Administrator,ou=users,o=mojo
+
+dn: cn=demian,ou=users,o=mojo
+objectClass: organizationalPerson
+objectClass: person
+objectClass: inetOrgPerson
+objectClass: top
+cn: Demian calcaprina
+sn: Calca
+uid: calcacuervo
+mail: calcacuervo@gmail.com
+userPassword:: cGFzcw==
+
+dn: cn=mariano,ou=users,o=mojo
+objectClass: organizationalPerson
+objectClass: person
+objectClass: inetOrgPerson
+objectClass: top
+cn: mariano
+sn: mariano
+uid: mariano
+mail: mariano@gmail.com
+userPassword:: cGFzcw==
+
+dn: cn=Administrator,ou=users,o=mojo
+objectClass: organizationalPerson
+objectClass: person
+objectClass: inetOrgPerson
+objectClass: top
+cn: Admin
+sn: Admin
+uid: Administrator
+userPassword:: cGFzcw==
+
+dn: cn=esteban,ou=users,o=mojo
+objectClass: organizationalPerson
+objectClass: person
+objectClass: inetOrgPerson
+objectClass: top
+cn: esteban
+sn: esteban
+uid: esteban
+mail: esteban@gmail.com
+userPassword:: cGFzcw==
+
+dn: cn=salaboy,ou=users,o=mojo
+objectClass: organizationalPerson
+objectClass: person
+objectClass: inetOrgPerson
+objectClass: top
+cn: salaboy
+sn: salaboy
+uid: salaboy
+mail: salaboy@gmail.com
+userPassword:: cGFzcw==
