@@ -33,6 +33,7 @@ import org.junit.Test;
 import com.salaboy.jbpm5.dev.guide.commands.CheckInCommand;
 import com.salaboy.jbpm5.dev.guide.executor.CommandContext;
 import com.salaboy.jbpm5.dev.guide.executor.CommandDoneHandler;
+import com.salaboy.jbpm5.dev.guide.executor.ExecutionResults;
 import com.salaboy.jbpm5.dev.guide.executor.Executor;
 import com.salaboy.jbpm5.dev.guide.executor.ExecutorFactoryBean;
 import com.salaboy.jbpm5.dev.guide.executor.ExecutorImpl;
@@ -123,7 +124,7 @@ public class WaitCompletionAsyncTaskSimpleTest {
 		input.put("bedrequest_patientname", patientName);
 
 		listener.setHandler(new CommandDoneHandler() {
-			public void onCommandDone(CommandContext ctx) {
+			public void onCommandDone(CommandContext ctx, ExecutionResults execResults) {
 				//do nothing
 				System.out.println("I'm not completing the workItem");
 			}
@@ -151,7 +152,7 @@ public class WaitCompletionAsyncTaskSimpleTest {
 		input.put("bedrequest_patientname", patientName);
 
 		listener.setHandler(new CommandDoneHandler() {
-			public void onCommandDone(CommandContext ctx) {
+			public void onCommandDone(CommandContext ctx, ExecutionResults execResults) {
 				Map<String, Object> results = new HashMap<String, Object>();
 				for (Map.Entry<String, Serializable> entry : ctx.getData().entrySet()) {
 					results.put(entry.getKey(), entry.getValue());
@@ -185,7 +186,7 @@ public class WaitCompletionAsyncTaskSimpleTest {
 		input.put("bedrequest_patientname", patientName);
         
 		listener.setHandler(new CommandDoneHandler() {
-			public void onCommandDone(CommandContext ctx) {
+			public void onCommandDone(CommandContext ctx, ExecutionResults execResults) {
 				//do nothing
 				System.out.println("I'm not completing the workItem");
 			}

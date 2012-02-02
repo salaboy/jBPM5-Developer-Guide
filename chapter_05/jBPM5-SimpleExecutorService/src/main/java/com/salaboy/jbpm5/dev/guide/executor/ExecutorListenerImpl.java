@@ -54,30 +54,47 @@ public class ExecutorListenerImpl implements ExecutorListener {
             @Override
             public void run() {
             	boolean found = false;
+            	String execKey = executionKey;
                 while (!found) {
                     try {
                         System.out.println("Sleeping ...");
                         Thread.sleep(waitTime);
                         System.out.println("Waking Up! ...");
                         try {
-                            List<?> resultList = em.createQuery("Select r from RequestInfo as r where r.status ='DONE'").getResultList();
+                            List<?> resultList = em.createQuery(
+                            	"Select r from RequestInfo as r where r.status ='DONE' and r.key = :key")
+                            	.setParameter("key", execKey).getResultList();
                             
                             System.out.println("Number of request pending for execution = "+resultList.size());
                             if (resultList.size() > 0) {
                                 
                                 RequestInfo r = (RequestInfo) resultList.get(0);
                                 System.out.println("Request Status =" +r.getStatus());
-                                byte[] rData = r.getRequestData();
+                                byte[] reqData = r.getRequestData();
                                 CommandContext ctx = null;
-                                if (rData != null) {
+                                if (reqData != null) {
                                 	try {
-                                		ObjectInputStream in = new ObjectInputStream(new ByteArrayInputStream(rData));
+                                		ObjectInputStream in = new ObjectInputStream(new ByteArrayInputStream(reqData));
                                 		ctx = (CommandContext) in.readObject();
                                 	} catch (IOException e) {
                                 		ctx = null;
                                 	}
                                 }
-                                handler.onCommandDone(ctx);
+
+                                byte[] respData = r.getResponseData();
+                                ExecutionResults results = null;
+                                if (respData != null) {
+                                	try {
+                                		ObjectInputStream in = new ObjectInputStream(new ByteArrayInputStream(respData));
+                                		results = (ExecutionResults) in.readObject();
+                                	} catch (IOException e) {
+                                		results = null;
+                                	}
+                                }
+
+                                if (handler != null) {
+                                	handler.onCommandDone(ctx, results);
+                                }
                                 em.getTransaction().begin();
                                 r.setStatus(STATUS.NOTIFIED);
                                 em.getTransaction().commit();

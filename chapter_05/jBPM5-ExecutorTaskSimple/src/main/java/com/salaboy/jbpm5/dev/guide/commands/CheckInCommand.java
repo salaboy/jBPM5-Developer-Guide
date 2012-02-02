@@ -2,20 +2,17 @@ package com.salaboy.jbpm5.dev.guide.commands;
 
 import com.salaboy.jbpm5.dev.guide.executor.Command;
 import com.salaboy.jbpm5.dev.guide.executor.CommandContext;
+import com.salaboy.jbpm5.dev.guide.executor.ExecutionResults;
 
 public class CheckInCommand implements Command {
 
 	private static int checkInCount = 0;
 	
-	private String patientName = null;
-
-	public void setContext(CommandContext ctx) {
-		this.patientName = (String) ctx.getData("bedrequest_patientname");
-	}
-	
-	public void execute() {
-		System.out.println("Check In for patient " + this.patientName + " happening NOW!!!");
+	public ExecutionResults execute(CommandContext ctx) {
+		String patientName = (String) ctx.getData("bedrequest_patientname");;
+		System.out.println("Check In for patient " + patientName + " happening NOW!!!");
 		checkInCount++;
+		return null;
 	}
 	
 	public static int getCheckInCount() {
