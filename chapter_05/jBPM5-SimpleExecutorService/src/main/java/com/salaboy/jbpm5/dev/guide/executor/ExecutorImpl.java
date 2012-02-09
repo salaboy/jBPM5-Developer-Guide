@@ -44,6 +44,10 @@ public class ExecutorImpl implements Executor {
 		this.em = em;
 	}
 	
+	public EntityManager getEntityManager() {
+		return em;
+	}
+	
 	public void init() {
         if (this.running != null) {
         	throw new IllegalArgumentException("Executor already running");

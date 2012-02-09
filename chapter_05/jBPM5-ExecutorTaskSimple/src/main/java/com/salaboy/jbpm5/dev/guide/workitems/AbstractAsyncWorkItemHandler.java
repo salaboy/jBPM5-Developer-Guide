@@ -10,20 +10,25 @@ import org.drools.runtime.process.WorkItemManager;
 import com.salaboy.jbpm5.dev.guide.executor.CommandContext;
 import com.salaboy.jbpm5.dev.guide.executor.Executor;
 import com.salaboy.jbpm5.dev.guide.executor.ExecutorListener;
+import com.salaboy.jbpm5.dev.guide.executor.ExecutorListenerBuilder;
 
 public class AbstractAsyncWorkItemHandler implements WorkItemHandler {
 	
 	private final Executor executor;
-	private final ExecutorListener listener;
+	private final ExecutorListenerBuilder listenerBuilder;
+	private ExecutorListener listener = null;
 	
 	private String execKey;
 	
-	public AbstractAsyncWorkItemHandler(Executor executor, ExecutorListener listener) {
+	public AbstractAsyncWorkItemHandler(Executor executor, ExecutorListenerBuilder listenerBuilder) {
 		this.executor = executor;
-		this.listener = listener;
+		this.listenerBuilder = listenerBuilder;
 	}
 	
 	public void executeWorkItem(WorkItem workItem, WorkItemManager manager) {
+		if (listenerBuilder != null) {
+			this.listener = listenerBuilder.build();
+		}
 		long workItemId = workItem.getId();
 		String command = (String) workItem.getParameter("commandClass");
 		this.execKey = workItem.getName() + "_" + workItem.getProcessInstanceId() + "_" + workItemId;

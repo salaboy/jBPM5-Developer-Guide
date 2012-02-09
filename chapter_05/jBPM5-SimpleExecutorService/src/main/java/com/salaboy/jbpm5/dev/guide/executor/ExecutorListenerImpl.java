@@ -1,6 +1,6 @@
 package com.salaboy.jbpm5.dev.guide.executor;
 
-import java.io.ByteArrayInputStream; 
+import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
@@ -50,7 +50,7 @@ public class ExecutorListenerImpl implements ExecutorListener {
         if (this.running != null) {
         	throw new IllegalArgumentException("Executor already running");
         }
-        this.running = new Thread() {
+        Thread running = new Thread() {
             @Override
             public void run() {
             	boolean found = false;
@@ -145,7 +145,7 @@ public class ExecutorListenerImpl implements ExecutorListener {
     
     public void unschedule(String key) {
     	String eql = "Select r from RequestInfo as r where r.status ='QUEUED' and key = :key";
-		List<?> result = em.createQuery(eql).setParameter("key", key).getResultList();
+    	List<?> result = em.createQuery(eql).setParameter("key", key).getResultList();
 		if (result.isEmpty()) {
 			return;
 		}
@@ -159,6 +159,7 @@ public class ExecutorListenerImpl implements ExecutorListener {
         em.close();
         if (running != null && running.isAlive()) {
         	running.interrupt();
+        	running = null;
         }
     }
     
