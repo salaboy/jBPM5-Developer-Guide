@@ -1,273 +1,248 @@
-<?xml version="1.0" encoding="UTF-8"?> 
-<definitions id="Definition"
-             targetNamespace="http://www.jboss.org/drools"
-             typeLanguage="http://www.java.com/javaTypes"
-             expressionLanguage="http://www.mvel.org/2.0"
-             xmlns="http://www.omg.org/spec/BPMN/20100524/MODEL"
-             xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-             xsi:schemaLocation="http://www.omg.org/spec/BPMN/20100524/MODEL BPMN20.xsd"
-             xmlns:g="http://www.jboss.org/drools/flow/gpd"
-             xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI"
-             xmlns:dc="http://www.omg.org/spec/DD/20100524/DC"
-             xmlns:di="http://www.omg.org/spec/DD/20100524/DI"
-             xmlns:tns="http://www.jboss.org/drools">
-
-  <itemDefinition id="_actorItem" structureRef="Object" />
-
-  <process processType="Private" isExecutable="true" id="chapter_06_simple_review" name="Simple Review" tns:packageName="com.salaboy.jbpm5.dev.guide.controller" >
-
-    <!-- process variables -->
-    <property id="actor" itemSubjectRef="_actorItem"/>
-
-    <!-- nodes -->
-    <startEvent id="_1" name="StartProcess" />
-    <userTask id="_2" name="Self Evaluation" >
-      <ioSpecification>
-        <dataInput id="_2_CommentInput" name="Comment" />
-        <dataInput id="_2_SkippableInput" name="Skippable" />
-        <dataInput id="_2_ContentInput" name="Content" />
-        <dataInput id="_2_TaskNameInput" name="TaskName" />
-        <dataInput id="_2_GroupIdInput" name="GroupId" />
-        <dataInput id="_2_PriorityInput" name="Priority" />
-        <inputSet>
-          <dataInputRefs>_2_CommentInput</dataInputRefs>
-          <dataInputRefs>_2_SkippableInput</dataInputRefs>
-          <dataInputRefs>_2_ContentInput</dataInputRefs>
-          <dataInputRefs>_2_TaskNameInput</dataInputRefs>
-          <dataInputRefs>_2_GroupIdInput</dataInputRefs>
-          <dataInputRefs>_2_PriorityInput</dataInputRefs>
-        </inputSet>
-        <outputSet>
-        </outputSet>
-      </ioSpecification>
-      <dataInputAssociation>
-        <targetRef>_2_CommentInput</targetRef>
-        <assignment>
-          <from xsi:type="tFormalExpression">en-UK</from>
-          <to xsi:type="tFormalExpression">_2_CommentInput</to>
-        </assignment>
-      </dataInputAssociation>
-      <dataInputAssociation>
-        <targetRef>_2_SkippableInput</targetRef>
-        <assignment>
-          <from xsi:type="tFormalExpression">false</from>
-          <to xsi:type="tFormalExpression">_2_SkippableInput</to>
-        </assignment>
-      </dataInputAssociation>
-      <dataInputAssociation>
-        <targetRef>_2_ContentInput</targetRef>
-        <assignment>
-          <from xsi:type="tFormalExpression"></from>
-          <to xsi:type="tFormalExpression">_2_ContentInput</to>
-        </assignment>
-      </dataInputAssociation>
-      <dataInputAssociation>
-        <targetRef>_2_TaskNameInput</targetRef>
-        <assignment>
-          <from xsi:type="tFormalExpression">Self Evaluation</from>
-          <to xsi:type="tFormalExpression">_2_TaskNameInput</to>
-        </assignment>
-      </dataInputAssociation>
-      <dataInputAssociation>
-        <targetRef>_2_GroupIdInput</targetRef>
-        <assignment>
-          <from xsi:type="tFormalExpression"></from>
-          <to xsi:type="tFormalExpression">_2_GroupIdInput</to>
-        </assignment>
-      </dataInputAssociation>
-      <dataInputAssociation>
-        <targetRef>_2_PriorityInput</targetRef>
-        <assignment>
-          <from xsi:type="tFormalExpression"></from>
-          <to xsi:type="tFormalExpression">_2_PriorityInput</to>
-        </assignment>
-      </dataInputAssociation>
-      <potentialOwner>
-        <resourceAssignmentExpression>
-          <formalExpression>#{actor}</formalExpression>
-        </resourceAssignmentExpression>
-      </potentialOwner>
-    </userTask>
-    <userTask id="_3" name="Project Manager Evaluation" >
-      <ioSpecification>
-        <dataInput id="_3_CommentInput" name="Comment" />
-        <dataInput id="_3_SkippableInput" name="Skippable" />
-        <dataInput id="_3_ContentInput" name="Content" />
-        <dataInput id="_3_TaskNameInput" name="TaskName" />
-        <dataInput id="_3_GroupIdInput" name="GroupId" />
-        <dataInput id="_3_PriorityInput" name="Priority" />
-        <inputSet>
-          <dataInputRefs>_3_CommentInput</dataInputRefs>
-          <dataInputRefs>_3_SkippableInput</dataInputRefs>
-          <dataInputRefs>_3_ContentInput</dataInputRefs>
-          <dataInputRefs>_3_TaskNameInput</dataInputRefs>
-          <dataInputRefs>_3_GroupIdInput</dataInputRefs>
-          <dataInputRefs>_3_PriorityInput</dataInputRefs>
-        </inputSet>
-        <outputSet>
-        </outputSet>
-      </ioSpecification>
-      <dataInputAssociation>
-        <targetRef>_3_CommentInput</targetRef>
-        <assignment>
-          <from xsi:type="tFormalExpression">en-UK</from>
-          <to xsi:type="tFormalExpression">_3_CommentInput</to>
-        </assignment>
-      </dataInputAssociation>
-      <dataInputAssociation>
-        <targetRef>_3_SkippableInput</targetRef>
-        <assignment>
-          <from xsi:type="tFormalExpression">false</from>
-          <to xsi:type="tFormalExpression">_3_SkippableInput</to>
-        </assignment>
-      </dataInputAssociation>
-      <dataInputAssociation>
-        <targetRef>_3_ContentInput</targetRef>
-        <assignment>
-          <from xsi:type="tFormalExpression"></from>
-          <to xsi:type="tFormalExpression">_3_ContentInput</to>
-        </assignment>
-      </dataInputAssociation>
-      <dataInputAssociation>
-        <targetRef>_3_TaskNameInput</targetRef>
-        <assignment>
-          <from xsi:type="tFormalExpression">Project Manager Evaluation</from>
-          <to xsi:type="tFormalExpression">_3_TaskNameInput</to>
-        </assignment>
-      </dataInputAssociation>
-      <dataInputAssociation>
-        <targetRef>_3_GroupIdInput</targetRef>
-        <assignment>
-          <from xsi:type="tFormalExpression">PM</from>
-          <to xsi:type="tFormalExpression">_3_GroupIdInput</to>
-        </assignment>
-      </dataInputAssociation>
-      <dataInputAssociation>
-        <targetRef>_3_PriorityInput</targetRef>
-        <assignment>
-          <from xsi:type="tFormalExpression"></from>
-          <to xsi:type="tFormalExpression">_3_PriorityInput</to>
-        </assignment>
-      </dataInputAssociation>
-      <potentialOwner>
-        <resourceAssignmentExpression>
-          <formalExpression></formalExpression>
-        </resourceAssignmentExpression>
-      </potentialOwner>
-    </userTask>
-    <endEvent id="_7" name="End" >
-        <terminateEventDefinition/>
-    </endEvent>
-    <userTask id="_9" name="HR Manager Evaluation" >
-      <ioSpecification>
-        <dataInput id="_9_CommentInput" name="Comment" />
-        <dataInput id="_9_SkippableInput" name="Skippable" />
-        <dataInput id="_9_ContentInput" name="Content" />
-        <dataInput id="_9_TaskNameInput" name="TaskName" />
-        <dataInput id="_9_GroupIdInput" name="GroupId" />
-        <dataInput id="_9_PriorityInput" name="Priority" />
-        <inputSet>
-          <dataInputRefs>_9_CommentInput</dataInputRefs>
-          <dataInputRefs>_9_SkippableInput</dataInputRefs>
-          <dataInputRefs>_9_ContentInput</dataInputRefs>
-          <dataInputRefs>_9_TaskNameInput</dataInputRefs>
-          <dataInputRefs>_9_GroupIdInput</dataInputRefs>
-          <dataInputRefs>_9_PriorityInput</dataInputRefs>
-        </inputSet>
-        <outputSet>
-        </outputSet>
-      </ioSpecification>
-      <dataInputAssociation>
-        <targetRef>_9_CommentInput</targetRef>
-        <assignment>
-          <from xsi:type="tFormalExpression">en-UK</from>
-          <to xsi:type="tFormalExpression">_9_CommentInput</to>
-        </assignment>
-      </dataInputAssociation>
-      <dataInputAssociation>
-        <targetRef>_9_SkippableInput</targetRef>
-        <assignment>
-          <from xsi:type="tFormalExpression">false</from>
-          <to xsi:type="tFormalExpression">_9_SkippableInput</to>
-        </assignment>
-      </dataInputAssociation>
-      <dataInputAssociation>
-        <targetRef>_9_ContentInput</targetRef>
-        <assignment>
-          <from xsi:type="tFormalExpression"></from>
-          <to xsi:type="tFormalExpression">_9_ContentInput</to>
-        </assignment>
-      </dataInputAssociation>
-      <dataInputAssociation>
-        <targetRef>_9_TaskNameInput</targetRef>
-        <assignment>
-          <from xsi:type="tFormalExpression">HR Manager Evaluation</from>
-          <to xsi:type="tFormalExpression">_9_TaskNameInput</to>
-        </assignment>
-      </dataInputAssociation>
-      <dataInputAssociation>
-        <targetRef>_9_GroupIdInput</targetRef>
-        <assignment>
-          <from xsi:type="tFormalExpression">HR</from>
-          <to xsi:type="tFormalExpression">_9_GroupIdInput</to>
-        </assignment>
-      </dataInputAssociation>
-      <dataInputAssociation>
-        <targetRef>_9_PriorityInput</targetRef>
-        <assignment>
-          <from xsi:type="tFormalExpression"></from>
-          <to xsi:type="tFormalExpression">_9_PriorityInput</to>
-        </assignment>
-      </dataInputAssociation>
-      <potentialOwner>
-        <resourceAssignmentExpression>
-          <formalExpression></formalExpression>
-        </resourceAssignmentExpression>
-      </potentialOwner>
-    </userTask>
-
-    <!-- connections -->
-    <sequenceFlow id="_1-_2" sourceRef="_1" targetRef="_2" />
-    <sequenceFlow id="_2-_3" sourceRef="_2" targetRef="_3" />
-    <sequenceFlow id="_9-_7" sourceRef="_9" targetRef="_7" />
-    <sequenceFlow id="_3-_9" sourceRef="_3" targetRef="_9" />
-
-  </process>
-
-  <bpmndi:BPMNDiagram>
-    <bpmndi:BPMNPlane bpmnElement="chapter_06_simple_review" >
-      <bpmndi:BPMNShape bpmnElement="_1" >
-        <dc:Bounds x="16" y="16" width="48" height="48" />
+<?xml version="1.0" encoding="UTF-8"?>
+<bpmn2:definitions xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://www.omg.org/bpmn20" xmlns:bpmn2="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" xmlns:drools="http://www.jboss.org/drools" id="_z2IH4FSpEeG6RM8M8E8kUw" xsi:schemaLocation="http://www.omg.org/spec/BPMN/20100524/MODEL BPMN20.xsd" expressionLanguage="http://www.mvel.org/2.0" targetNamespace="http://www.omg.org/bpmn20" typeLanguage="http://www.java.com/javaTypes">
+  <bpmn2:itemDefinition id="_actorItem" structureRef="Object"/>
+  <bpmn2:process id="chapter_06_simple_review" drools:packageName="com.salaboy.jbpm5.dev.guide.controller" name="Simple Review" isExecutable="true">
+    <bpmn2:property id="actor" itemSubjectRef="_actorItem"/>
+    <bpmn2:startEvent id="_2515F9F9-8AC7-456B-BB4B-37B8ABA3F739" drools:bgcolor="#ffffff" name="StartProcess">
+      <bpmn2:outgoing>_B68352FB-A429-4B59-A88F-9D4F8B77B18E</bpmn2:outgoing>
+    </bpmn2:startEvent>
+    <bpmn2:userTask id="_4C4DCCB6-C67A-49CA-ADFB-06E7E436C5CE" drools:scriptFormat="http://www.java.com/java" name="Self Evaluation">
+      <bpmn2:incoming>_B68352FB-A429-4B59-A88F-9D4F8B77B18E</bpmn2:incoming>
+      <bpmn2:outgoing>_E4061E27-CABD-4E1F-87AF-A785994B5E60</bpmn2:outgoing>
+      <bpmn2:ioSpecification id="_z2Iu8FSpEeG6RM8M8E8kUw">
+        <bpmn2:dataInput id="_4C4DCCB6-C67A-49CA-ADFB-06E7E436C5CE_CommentInput" name="Comment"/>
+        <bpmn2:dataInput id="_4C4DCCB6-C67A-49CA-ADFB-06E7E436C5CE_SkippableInput" name="Skippable"/>
+        <bpmn2:dataInput id="_4C4DCCB6-C67A-49CA-ADFB-06E7E436C5CE_ContentInput" name="Content"/>
+        <bpmn2:dataInput id="_4C4DCCB6-C67A-49CA-ADFB-06E7E436C5CE_GroupIdInput" name="GroupId"/>
+        <bpmn2:dataInput id="_4C4DCCB6-C67A-49CA-ADFB-06E7E436C5CE_PriorityInput" name="Priority"/>
+        <bpmn2:dataInput id="_4C4DCCB6-C67A-49CA-ADFB-06E7E436C5CE_TaskNameInput" name="TaskName"/>
+        <bpmn2:inputSet id="_z2Iu8VSpEeG6RM8M8E8kUw">
+          <bpmn2:dataInputRefs>_4C4DCCB6-C67A-49CA-ADFB-06E7E436C5CE_CommentInput</bpmn2:dataInputRefs>
+          <bpmn2:dataInputRefs>_4C4DCCB6-C67A-49CA-ADFB-06E7E436C5CE_SkippableInput</bpmn2:dataInputRefs>
+          <bpmn2:dataInputRefs>_4C4DCCB6-C67A-49CA-ADFB-06E7E436C5CE_ContentInput</bpmn2:dataInputRefs>
+          <bpmn2:dataInputRefs>_4C4DCCB6-C67A-49CA-ADFB-06E7E436C5CE_GroupIdInput</bpmn2:dataInputRefs>
+          <bpmn2:dataInputRefs>_4C4DCCB6-C67A-49CA-ADFB-06E7E436C5CE_PriorityInput</bpmn2:dataInputRefs>
+          <bpmn2:dataInputRefs>_4C4DCCB6-C67A-49CA-ADFB-06E7E436C5CE_TaskNameInput</bpmn2:dataInputRefs>
+        </bpmn2:inputSet>
+        <bpmn2:outputSet id="_z2Iu8lSpEeG6RM8M8E8kUw"/>
+      </bpmn2:ioSpecification>
+      <bpmn2:dataInputAssociation id="_z2Iu81SpEeG6RM8M8E8kUw">
+        <bpmn2:targetRef>_4C4DCCB6-C67A-49CA-ADFB-06E7E436C5CE_CommentInput</bpmn2:targetRef>
+        <bpmn2:assignment id="_z2Iu9FSpEeG6RM8M8E8kUw">
+          <bpmn2:from xsi:type="bpmn2:tFormalExpression" id="_z2Iu9VSpEeG6RM8M8E8kUw">en-UK</bpmn2:from>
+          <bpmn2:to xsi:type="bpmn2:tFormalExpression" id="_z2Iu9lSpEeG6RM8M8E8kUw">_4C4DCCB6-C67A-49CA-ADFB-06E7E436C5CE_CommentInput</bpmn2:to>
+        </bpmn2:assignment>
+      </bpmn2:dataInputAssociation>
+      <bpmn2:dataInputAssociation id="_z2Iu91SpEeG6RM8M8E8kUw">
+        <bpmn2:targetRef>_4C4DCCB6-C67A-49CA-ADFB-06E7E436C5CE_SkippableInput</bpmn2:targetRef>
+        <bpmn2:assignment id="_z2Iu-FSpEeG6RM8M8E8kUw">
+          <bpmn2:from xsi:type="bpmn2:tFormalExpression" id="_z2Iu-VSpEeG6RM8M8E8kUw">false</bpmn2:from>
+          <bpmn2:to xsi:type="bpmn2:tFormalExpression" id="_z2Iu-lSpEeG6RM8M8E8kUw">_4C4DCCB6-C67A-49CA-ADFB-06E7E436C5CE_SkippableInput</bpmn2:to>
+        </bpmn2:assignment>
+      </bpmn2:dataInputAssociation>
+      <bpmn2:dataInputAssociation id="_z2Iu-1SpEeG6RM8M8E8kUw">
+        <bpmn2:targetRef>_4C4DCCB6-C67A-49CA-ADFB-06E7E436C5CE_ContentInput</bpmn2:targetRef>
+        <bpmn2:assignment id="_z2Iu_FSpEeG6RM8M8E8kUw">
+          <bpmn2:from xsi:type="bpmn2:tFormalExpression" id="_z2Iu_VSpEeG6RM8M8E8kUw"></bpmn2:from>
+          <bpmn2:to xsi:type="bpmn2:tFormalExpression" id="_z2Iu_lSpEeG6RM8M8E8kUw">_4C4DCCB6-C67A-49CA-ADFB-06E7E436C5CE_ContentInput</bpmn2:to>
+        </bpmn2:assignment>
+      </bpmn2:dataInputAssociation>
+      <bpmn2:dataInputAssociation id="_z2Iu_1SpEeG6RM8M8E8kUw">
+        <bpmn2:targetRef>_4C4DCCB6-C67A-49CA-ADFB-06E7E436C5CE_TaskNameInput</bpmn2:targetRef>
+        <bpmn2:assignment id="_z2IvAFSpEeG6RM8M8E8kUw">
+          <bpmn2:from xsi:type="bpmn2:tFormalExpression" id="_z2IvAVSpEeG6RM8M8E8kUw">Self Evaluation</bpmn2:from>
+          <bpmn2:to xsi:type="bpmn2:tFormalExpression" id="_z2IvAlSpEeG6RM8M8E8kUw">_4C4DCCB6-C67A-49CA-ADFB-06E7E436C5CE_TaskNameInput</bpmn2:to>
+        </bpmn2:assignment>
+      </bpmn2:dataInputAssociation>
+      <bpmn2:dataInputAssociation id="_z2IvA1SpEeG6RM8M8E8kUw">
+        <bpmn2:targetRef>_4C4DCCB6-C67A-49CA-ADFB-06E7E436C5CE_GroupIdInput</bpmn2:targetRef>
+        <bpmn2:assignment id="_z2IvBFSpEeG6RM8M8E8kUw">
+          <bpmn2:from xsi:type="bpmn2:tFormalExpression" id="_z2IvBVSpEeG6RM8M8E8kUw"></bpmn2:from>
+          <bpmn2:to xsi:type="bpmn2:tFormalExpression" id="_z2IvBlSpEeG6RM8M8E8kUw">_4C4DCCB6-C67A-49CA-ADFB-06E7E436C5CE_GroupIdInput</bpmn2:to>
+        </bpmn2:assignment>
+      </bpmn2:dataInputAssociation>
+      <bpmn2:dataInputAssociation id="_z2IvB1SpEeG6RM8M8E8kUw">
+        <bpmn2:targetRef>_4C4DCCB6-C67A-49CA-ADFB-06E7E436C5CE_PriorityInput</bpmn2:targetRef>
+        <bpmn2:assignment id="_z2IvCFSpEeG6RM8M8E8kUw">
+          <bpmn2:from xsi:type="bpmn2:tFormalExpression" id="_z2IvCVSpEeG6RM8M8E8kUw"></bpmn2:from>
+          <bpmn2:to xsi:type="bpmn2:tFormalExpression" id="_z2JWAFSpEeG6RM8M8E8kUw">_4C4DCCB6-C67A-49CA-ADFB-06E7E436C5CE_PriorityInput</bpmn2:to>
+        </bpmn2:assignment>
+      </bpmn2:dataInputAssociation>
+      <bpmn2:potentialOwner id="_z2JWAVSpEeG6RM8M8E8kUw">
+        <bpmn2:resourceAssignmentExpression id="_z2JWAlSpEeG6RM8M8E8kUw">
+          <bpmn2:formalExpression id="_z2JWA1SpEeG6RM8M8E8kUw">#{actor}</bpmn2:formalExpression>
+        </bpmn2:resourceAssignmentExpression>
+      </bpmn2:potentialOwner>
+    </bpmn2:userTask>
+    <bpmn2:userTask id="_E457D4BE-CB39-4CCC-A9AA-E9A9D9E6640C" drools:scriptFormat="http://www.java.com/java" name="Project Manager Evaluation">
+      <bpmn2:incoming>_E4061E27-CABD-4E1F-87AF-A785994B5E60</bpmn2:incoming>
+      <bpmn2:outgoing>_E2E5AE08-A247-495D-A196-83F008F571E5</bpmn2:outgoing>
+      <bpmn2:ioSpecification id="_z2JWBFSpEeG6RM8M8E8kUw">
+        <bpmn2:dataInput id="_E457D4BE-CB39-4CCC-A9AA-E9A9D9E6640C_CommentInput" name="Comment"/>
+        <bpmn2:dataInput id="_E457D4BE-CB39-4CCC-A9AA-E9A9D9E6640C_SkippableInput" name="Skippable"/>
+        <bpmn2:dataInput id="_E457D4BE-CB39-4CCC-A9AA-E9A9D9E6640C_ContentInput" name="Content"/>
+        <bpmn2:dataInput id="_E457D4BE-CB39-4CCC-A9AA-E9A9D9E6640C_GroupIdInput" name="GroupId"/>
+        <bpmn2:dataInput id="_E457D4BE-CB39-4CCC-A9AA-E9A9D9E6640C_PriorityInput" name="Priority"/>
+        <bpmn2:dataInput id="_E457D4BE-CB39-4CCC-A9AA-E9A9D9E6640C_TaskNameInput" name="TaskName"/>
+        <bpmn2:inputSet id="_z2JWBVSpEeG6RM8M8E8kUw">
+          <bpmn2:dataInputRefs>_E457D4BE-CB39-4CCC-A9AA-E9A9D9E6640C_CommentInput</bpmn2:dataInputRefs>
+          <bpmn2:dataInputRefs>_E457D4BE-CB39-4CCC-A9AA-E9A9D9E6640C_SkippableInput</bpmn2:dataInputRefs>
+          <bpmn2:dataInputRefs>_E457D4BE-CB39-4CCC-A9AA-E9A9D9E6640C_ContentInput</bpmn2:dataInputRefs>
+          <bpmn2:dataInputRefs>_E457D4BE-CB39-4CCC-A9AA-E9A9D9E6640C_GroupIdInput</bpmn2:dataInputRefs>
+          <bpmn2:dataInputRefs>_E457D4BE-CB39-4CCC-A9AA-E9A9D9E6640C_PriorityInput</bpmn2:dataInputRefs>
+          <bpmn2:dataInputRefs>_E457D4BE-CB39-4CCC-A9AA-E9A9D9E6640C_TaskNameInput</bpmn2:dataInputRefs>
+        </bpmn2:inputSet>
+        <bpmn2:outputSet id="_z2JWBlSpEeG6RM8M8E8kUw"/>
+      </bpmn2:ioSpecification>
+      <bpmn2:dataInputAssociation id="_z2JWB1SpEeG6RM8M8E8kUw">
+        <bpmn2:targetRef>_E457D4BE-CB39-4CCC-A9AA-E9A9D9E6640C_CommentInput</bpmn2:targetRef>
+        <bpmn2:assignment id="_z2JWCFSpEeG6RM8M8E8kUw">
+          <bpmn2:from xsi:type="bpmn2:tFormalExpression" id="_z2JWCVSpEeG6RM8M8E8kUw">en-UK</bpmn2:from>
+          <bpmn2:to xsi:type="bpmn2:tFormalExpression" id="_z2JWClSpEeG6RM8M8E8kUw">_E457D4BE-CB39-4CCC-A9AA-E9A9D9E6640C_CommentInput</bpmn2:to>
+        </bpmn2:assignment>
+      </bpmn2:dataInputAssociation>
+      <bpmn2:dataInputAssociation id="_z2JWC1SpEeG6RM8M8E8kUw">
+        <bpmn2:targetRef>_E457D4BE-CB39-4CCC-A9AA-E9A9D9E6640C_SkippableInput</bpmn2:targetRef>
+        <bpmn2:assignment id="_z2JWDFSpEeG6RM8M8E8kUw">
+          <bpmn2:from xsi:type="bpmn2:tFormalExpression" id="_z2JWDVSpEeG6RM8M8E8kUw">false</bpmn2:from>
+          <bpmn2:to xsi:type="bpmn2:tFormalExpression" id="_z2JWDlSpEeG6RM8M8E8kUw">_E457D4BE-CB39-4CCC-A9AA-E9A9D9E6640C_SkippableInput</bpmn2:to>
+        </bpmn2:assignment>
+      </bpmn2:dataInputAssociation>
+      <bpmn2:dataInputAssociation id="_z2JWD1SpEeG6RM8M8E8kUw">
+        <bpmn2:targetRef>_E457D4BE-CB39-4CCC-A9AA-E9A9D9E6640C_ContentInput</bpmn2:targetRef>
+        <bpmn2:assignment id="_z2JWEFSpEeG6RM8M8E8kUw">
+          <bpmn2:from xsi:type="bpmn2:tFormalExpression" id="_z2JWEVSpEeG6RM8M8E8kUw"></bpmn2:from>
+          <bpmn2:to xsi:type="bpmn2:tFormalExpression" id="_z2JWElSpEeG6RM8M8E8kUw">_E457D4BE-CB39-4CCC-A9AA-E9A9D9E6640C_ContentInput</bpmn2:to>
+        </bpmn2:assignment>
+      </bpmn2:dataInputAssociation>
+      <bpmn2:dataInputAssociation id="_z2JWE1SpEeG6RM8M8E8kUw">
+        <bpmn2:targetRef>_E457D4BE-CB39-4CCC-A9AA-E9A9D9E6640C_TaskNameInput</bpmn2:targetRef>
+        <bpmn2:assignment id="_z2JWFFSpEeG6RM8M8E8kUw">
+          <bpmn2:from xsi:type="bpmn2:tFormalExpression" id="_z2JWFVSpEeG6RM8M8E8kUw">Project Manager Evaluation</bpmn2:from>
+          <bpmn2:to xsi:type="bpmn2:tFormalExpression" id="_z2JWFlSpEeG6RM8M8E8kUw">_E457D4BE-CB39-4CCC-A9AA-E9A9D9E6640C_TaskNameInput</bpmn2:to>
+        </bpmn2:assignment>
+      </bpmn2:dataInputAssociation>
+      <bpmn2:dataInputAssociation id="_z2JWF1SpEeG6RM8M8E8kUw">
+        <bpmn2:targetRef>_E457D4BE-CB39-4CCC-A9AA-E9A9D9E6640C_GroupIdInput</bpmn2:targetRef>
+        <bpmn2:assignment id="_z2JWGFSpEeG6RM8M8E8kUw">
+          <bpmn2:from xsi:type="bpmn2:tFormalExpression" id="_z2JWGVSpEeG6RM8M8E8kUw">PM</bpmn2:from>
+          <bpmn2:to xsi:type="bpmn2:tFormalExpression" id="_z2JWGlSpEeG6RM8M8E8kUw">_E457D4BE-CB39-4CCC-A9AA-E9A9D9E6640C_GroupIdInput</bpmn2:to>
+        </bpmn2:assignment>
+      </bpmn2:dataInputAssociation>
+      <bpmn2:dataInputAssociation id="_z2JWG1SpEeG6RM8M8E8kUw">
+        <bpmn2:targetRef>_E457D4BE-CB39-4CCC-A9AA-E9A9D9E6640C_PriorityInput</bpmn2:targetRef>
+        <bpmn2:assignment id="_z2JWHFSpEeG6RM8M8E8kUw">
+          <bpmn2:from xsi:type="bpmn2:tFormalExpression" id="_z2JWHVSpEeG6RM8M8E8kUw"></bpmn2:from>
+          <bpmn2:to xsi:type="bpmn2:tFormalExpression" id="_z2JWHlSpEeG6RM8M8E8kUw">_E457D4BE-CB39-4CCC-A9AA-E9A9D9E6640C_PriorityInput</bpmn2:to>
+        </bpmn2:assignment>
+      </bpmn2:dataInputAssociation>
+    </bpmn2:userTask>
+    <bpmn2:endEvent id="_36DD7152-2A50-4635-B4EE-C586D85A3419" drools:bgcolor="#ffffff" name="End">
+      <bpmn2:incoming>_A8F9E841-8B0A-4F90-9BBA-81AAAEC1C94C</bpmn2:incoming>
+      <bpmn2:terminateEventDefinition id="_z2J9EFSpEeG6RM8M8E8kUw"/>
+    </bpmn2:endEvent>
+    <bpmn2:userTask id="_3F6E9305-BD53-4D56-9695-AC76D6F818E6" drools:scriptFormat="http://www.java.com/java" name="HR Manager Evaluation">
+      <bpmn2:incoming>_E2E5AE08-A247-495D-A196-83F008F571E5</bpmn2:incoming>
+      <bpmn2:outgoing>_A8F9E841-8B0A-4F90-9BBA-81AAAEC1C94C</bpmn2:outgoing>
+      <bpmn2:ioSpecification id="_z2J9EVSpEeG6RM8M8E8kUw">
+        <bpmn2:dataInput id="_3F6E9305-BD53-4D56-9695-AC76D6F818E6_CommentInput" name="Comment"/>
+        <bpmn2:dataInput id="_3F6E9305-BD53-4D56-9695-AC76D6F818E6_SkippableInput" name="Skippable"/>
+        <bpmn2:dataInput id="_3F6E9305-BD53-4D56-9695-AC76D6F818E6_ContentInput" name="Content"/>
+        <bpmn2:dataInput id="_3F6E9305-BD53-4D56-9695-AC76D6F818E6_GroupIdInput" name="GroupId"/>
+        <bpmn2:dataInput id="_3F6E9305-BD53-4D56-9695-AC76D6F818E6_PriorityInput" name="Priority"/>
+        <bpmn2:dataInput id="_3F6E9305-BD53-4D56-9695-AC76D6F818E6_TaskNameInput" name="TaskName"/>
+        <bpmn2:inputSet id="_z2J9ElSpEeG6RM8M8E8kUw">
+          <bpmn2:dataInputRefs>_3F6E9305-BD53-4D56-9695-AC76D6F818E6_CommentInput</bpmn2:dataInputRefs>
+          <bpmn2:dataInputRefs>_3F6E9305-BD53-4D56-9695-AC76D6F818E6_SkippableInput</bpmn2:dataInputRefs>
+          <bpmn2:dataInputRefs>_3F6E9305-BD53-4D56-9695-AC76D6F818E6_ContentInput</bpmn2:dataInputRefs>
+          <bpmn2:dataInputRefs>_3F6E9305-BD53-4D56-9695-AC76D6F818E6_GroupIdInput</bpmn2:dataInputRefs>
+          <bpmn2:dataInputRefs>_3F6E9305-BD53-4D56-9695-AC76D6F818E6_PriorityInput</bpmn2:dataInputRefs>
+          <bpmn2:dataInputRefs>_3F6E9305-BD53-4D56-9695-AC76D6F818E6_TaskNameInput</bpmn2:dataInputRefs>
+        </bpmn2:inputSet>
+        <bpmn2:outputSet id="_z2J9E1SpEeG6RM8M8E8kUw"/>
+      </bpmn2:ioSpecification>
+      <bpmn2:dataInputAssociation id="_z2J9FFSpEeG6RM8M8E8kUw">
+        <bpmn2:targetRef>_3F6E9305-BD53-4D56-9695-AC76D6F818E6_CommentInput</bpmn2:targetRef>
+        <bpmn2:assignment id="_z2J9FVSpEeG6RM8M8E8kUw">
+          <bpmn2:from xsi:type="bpmn2:tFormalExpression" id="_z2J9FlSpEeG6RM8M8E8kUw">en-UK</bpmn2:from>
+          <bpmn2:to xsi:type="bpmn2:tFormalExpression" id="_z2J9F1SpEeG6RM8M8E8kUw">_3F6E9305-BD53-4D56-9695-AC76D6F818E6_CommentInput</bpmn2:to>
+        </bpmn2:assignment>
+      </bpmn2:dataInputAssociation>
+      <bpmn2:dataInputAssociation id="_z2J9GFSpEeG6RM8M8E8kUw">
+        <bpmn2:targetRef>_3F6E9305-BD53-4D56-9695-AC76D6F818E6_SkippableInput</bpmn2:targetRef>
+        <bpmn2:assignment id="_z2J9GVSpEeG6RM8M8E8kUw">
+          <bpmn2:from xsi:type="bpmn2:tFormalExpression" id="_z2J9GlSpEeG6RM8M8E8kUw">false</bpmn2:from>
+          <bpmn2:to xsi:type="bpmn2:tFormalExpression" id="_z2J9G1SpEeG6RM8M8E8kUw">_3F6E9305-BD53-4D56-9695-AC76D6F818E6_SkippableInput</bpmn2:to>
+        </bpmn2:assignment>
+      </bpmn2:dataInputAssociation>
+      <bpmn2:dataInputAssociation id="_z2J9HFSpEeG6RM8M8E8kUw">
+        <bpmn2:targetRef>_3F6E9305-BD53-4D56-9695-AC76D6F818E6_ContentInput</bpmn2:targetRef>
+        <bpmn2:assignment id="_z2J9HVSpEeG6RM8M8E8kUw">
+          <bpmn2:from xsi:type="bpmn2:tFormalExpression" id="_z2J9HlSpEeG6RM8M8E8kUw"></bpmn2:from>
+          <bpmn2:to xsi:type="bpmn2:tFormalExpression" id="_z2J9H1SpEeG6RM8M8E8kUw">_3F6E9305-BD53-4D56-9695-AC76D6F818E6_ContentInput</bpmn2:to>
+        </bpmn2:assignment>
+      </bpmn2:dataInputAssociation>
+      <bpmn2:dataInputAssociation id="_z2J9IFSpEeG6RM8M8E8kUw">
+        <bpmn2:targetRef>_3F6E9305-BD53-4D56-9695-AC76D6F818E6_TaskNameInput</bpmn2:targetRef>
+        <bpmn2:assignment id="_z2J9IVSpEeG6RM8M8E8kUw">
+          <bpmn2:from xsi:type="bpmn2:tFormalExpression" id="_z2J9IlSpEeG6RM8M8E8kUw">HR Manager Evaluation</bpmn2:from>
+          <bpmn2:to xsi:type="bpmn2:tFormalExpression" id="_z2J9I1SpEeG6RM8M8E8kUw">_3F6E9305-BD53-4D56-9695-AC76D6F818E6_TaskNameInput</bpmn2:to>
+        </bpmn2:assignment>
+      </bpmn2:dataInputAssociation>
+      <bpmn2:dataInputAssociation id="_z2J9JFSpEeG6RM8M8E8kUw">
+        <bpmn2:targetRef>_3F6E9305-BD53-4D56-9695-AC76D6F818E6_GroupIdInput</bpmn2:targetRef>
+        <bpmn2:assignment id="_z2J9JVSpEeG6RM8M8E8kUw">
+          <bpmn2:from xsi:type="bpmn2:tFormalExpression" id="_z2J9JlSpEeG6RM8M8E8kUw">HR</bpmn2:from>
+          <bpmn2:to xsi:type="bpmn2:tFormalExpression" id="_z2J9J1SpEeG6RM8M8E8kUw">_3F6E9305-BD53-4D56-9695-AC76D6F818E6_GroupIdInput</bpmn2:to>
+        </bpmn2:assignment>
+      </bpmn2:dataInputAssociation>
+      <bpmn2:dataInputAssociation id="_z2J9KFSpEeG6RM8M8E8kUw">
+        <bpmn2:targetRef>_3F6E9305-BD53-4D56-9695-AC76D6F818E6_PriorityInput</bpmn2:targetRef>
+        <bpmn2:assignment id="_z2J9KVSpEeG6RM8M8E8kUw">
+          <bpmn2:from xsi:type="bpmn2:tFormalExpression" id="_z2J9KlSpEeG6RM8M8E8kUw"></bpmn2:from>
+          <bpmn2:to xsi:type="bpmn2:tFormalExpression" id="_z2J9K1SpEeG6RM8M8E8kUw">_3F6E9305-BD53-4D56-9695-AC76D6F818E6_PriorityInput</bpmn2:to>
+        </bpmn2:assignment>
+      </bpmn2:dataInputAssociation>
+    </bpmn2:userTask>
+    <bpmn2:sequenceFlow id="_B68352FB-A429-4B59-A88F-9D4F8B77B18E" sourceRef="_2515F9F9-8AC7-456B-BB4B-37B8ABA3F739" targetRef="_4C4DCCB6-C67A-49CA-ADFB-06E7E436C5CE"/>
+    <bpmn2:sequenceFlow id="_E4061E27-CABD-4E1F-87AF-A785994B5E60" sourceRef="_4C4DCCB6-C67A-49CA-ADFB-06E7E436C5CE" targetRef="_E457D4BE-CB39-4CCC-A9AA-E9A9D9E6640C"/>
+    <bpmn2:sequenceFlow id="_A8F9E841-8B0A-4F90-9BBA-81AAAEC1C94C" sourceRef="_3F6E9305-BD53-4D56-9695-AC76D6F818E6" targetRef="_36DD7152-2A50-4635-B4EE-C586D85A3419"/>
+    <bpmn2:sequenceFlow id="_E2E5AE08-A247-495D-A196-83F008F571E5" sourceRef="_E457D4BE-CB39-4CCC-A9AA-E9A9D9E6640C" targetRef="_3F6E9305-BD53-4D56-9695-AC76D6F818E6"/>
+  </bpmn2:process>
+  <bpmndi:BPMNDiagram id="_z2J9LFSpEeG6RM8M8E8kUw">
+    <bpmndi:BPMNPlane id="_z2J9LVSpEeG6RM8M8E8kUw" bpmnElement="chapter_06_simple_review">
+      <bpmndi:BPMNShape id="_z2J9LlSpEeG6RM8M8E8kUw" bpmnElement="_2515F9F9-8AC7-456B-BB4B-37B8ABA3F739">
+        <dc:Bounds height="30.0" width="30.0" x="25.0" y="25.0"/>
       </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape bpmnElement="_2" >
-        <dc:Bounds x="96" y="16" width="136" height="48" />
+      <bpmndi:BPMNShape id="_z2J9L1SpEeG6RM8M8E8kUw" bpmnElement="_4C4DCCB6-C67A-49CA-ADFB-06E7E436C5CE">
+        <dc:Bounds height="48.0" width="136.0" x="96.0" y="16.0"/>
       </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape bpmnElement="_3" >
-        <dc:Bounds x="264" y="16" width="194" height="48" />
+      <bpmndi:BPMNShape id="_z2KkIFSpEeG6RM8M8E8kUw" bpmnElement="_E457D4BE-CB39-4CCC-A9AA-E9A9D9E6640C">
+        <dc:Bounds height="48.0" width="194.0" x="264.0" y="16.0"/>
       </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape bpmnElement="_7" >
-        <dc:Bounds x="716" y="16" width="48" height="48" />
+      <bpmndi:BPMNShape id="_z2KkIVSpEeG6RM8M8E8kUw" bpmnElement="_36DD7152-2A50-4635-B4EE-C586D85A3419">
+        <dc:Bounds height="28.0" width="28.0" x="725.0" y="25.0"/>
       </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape bpmnElement="_9" >
-        <dc:Bounds x="490" y="16" width="194" height="48" />
+      <bpmndi:BPMNShape id="_z2KkIlSpEeG6RM8M8E8kUw" bpmnElement="_3F6E9305-BD53-4D56-9695-AC76D6F818E6">
+        <dc:Bounds height="48.0" width="194.0" x="490.0" y="16.0"/>
       </bpmndi:BPMNShape>
-      <bpmndi:BPMNEdge bpmnElement="_1-_2" >
-        <di:waypoint x="40" y="40" />
-        <di:waypoint x="164" y="40" />
+      <bpmndi:BPMNEdge id="_z2KkI1SpEeG6RM8M8E8kUw" bpmnElement="_B68352FB-A429-4B59-A88F-9D4F8B77B18E">
+        <di:waypoint xsi:type="dc:Point" x="40.0" y="40.0"/>
+        <di:waypoint xsi:type="dc:Point" x="164.0" y="40.0"/>
       </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge bpmnElement="_2-_3" >
-        <di:waypoint x="164" y="40" />
-        <di:waypoint x="361" y="40" />
+      <bpmndi:BPMNEdge id="_z2KkJFSpEeG6RM8M8E8kUw" bpmnElement="_E4061E27-CABD-4E1F-87AF-A785994B5E60">
+        <di:waypoint xsi:type="dc:Point" x="164.0" y="40.0"/>
+        <di:waypoint xsi:type="dc:Point" x="361.0" y="40.0"/>
       </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge bpmnElement="_9-_7" >
-        <di:waypoint x="587" y="40" />
-        <di:waypoint x="740" y="40" />
+      <bpmndi:BPMNEdge id="_z2KkJVSpEeG6RM8M8E8kUw" bpmnElement="_A8F9E841-8B0A-4F90-9BBA-81AAAEC1C94C">
+        <di:waypoint xsi:type="dc:Point" x="587.0" y="40.0"/>
+        <di:waypoint xsi:type="dc:Point" x="739.0" y="39.0"/>
       </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge bpmnElement="_3-_9" >
-        <di:waypoint x="361" y="40" />
-        <di:waypoint x="587" y="40" />
+      <bpmndi:BPMNEdge id="_z2KkJlSpEeG6RM8M8E8kUw" bpmnElement="_E2E5AE08-A247-495D-A196-83F008F571E5">
+        <di:waypoint xsi:type="dc:Point" x="361.0" y="40.0"/>
+        <di:waypoint xsi:type="dc:Point" x="587.0" y="40.0"/>
       </bpmndi:BPMNEdge>
     </bpmndi:BPMNPlane>
   </bpmndi:BPMNDiagram>
+</bpmn2:definitions>
 
-</definitions>
