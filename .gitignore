@@ -4,3 +4,5 @@ target/
 .DS_Store
 /chapter_02/jbpm5-first-project/.settings/
 /chapter_04/jBPM5-ServiceTasksSimple/.settings/
+/chapter_05/jBPM5-ExecutorTaskSimple/.settings/
+/chapter_06/jBPM5-Ldapcallback/.settings/

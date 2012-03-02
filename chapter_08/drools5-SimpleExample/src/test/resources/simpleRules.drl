@@ -1,0 +1,43 @@
+package com.salaboy;
+
+import com.salaboy.model.Person;
+import com.salaboy.model.Car;
+
+rule "over 18 enabled to drive"
+    when
+        $p: Person( age > 18, enabledToDrive == false )
+    then
+        $p.setEnabledToDrive(true);
+        update($p);
+end
+
+rule "over 21 enabled to vote"
+    when
+        $p: Person( age > 21, enabledToVote == false )
+    then
+        $p.setEnabledToVote(true);
+        update($p);
+end
+
+rule " enabled to drive, so you must have a car"
+    when
+        $p: Person(  enabledToDrive == true )
+    then
+        insert( new Car ( $p ) );
+end
+
+rule "if you can drive and have a car you are happy"
+    when
+        $p: Person()
+        Car( person == $p )
+    then
+        $p.setHappy(true);
+end
+
+//rule " Helper Log - Not a good practice "
+//    when
+//        $o: Object()
+//    then
+//        System.out.println(" ### Object Inserted : "+ $o);
+//end
+
