@@ -44,6 +44,10 @@ public class ExecutorImpl implements Executor {
 		this.em = em;
 	}
 	
+	public EntityManager getEntityManager() {
+		return em;
+	}
+	
 	public void init() {
         if (this.running != null) {
         	throw new IllegalArgumentException("Executor already running");
@@ -65,17 +69,28 @@ public class ExecutorImpl implements Executor {
                                 RequestInfo r = (RequestInfo) resultList.get(0);
                                 System.out.println("Request Status =" +r.getStatus());
                                 Command cmd = (Command) Class.forName(r.getCommandName()).newInstance();
-                                byte[] rData = r.getRequestData();
-                                if (rData != null) {
+                                CommandContext ctx = null;
+                                byte[] reqData = r.getRequestData();
+                                if (reqData != null) {
                                 	try {
-                                		ObjectInputStream in = new ObjectInputStream(new ByteArrayInputStream(rData));
-                                		CommandContext ctx = (CommandContext) in.readObject();
-                                		cmd.setContext(ctx);
+                                		ObjectInputStream in = new ObjectInputStream(new ByteArrayInputStream(reqData));
+                                		ctx = (CommandContext) in.readObject();
                                 	} catch (IOException e) {
-                                		cmd.setContext(null);
+                                		ctx = null;
                                 	}
                                 }
-                                cmd.execute();
+                                ExecutionResults results = cmd.execute(ctx);
+                                if (results != null) {
+                                	try {
+                                		ByteArrayOutputStream bout = new ByteArrayOutputStream();
+                                		ObjectOutputStream out = new ObjectOutputStream(bout);
+                                		out.writeObject(results);
+                                		byte[] respData = bout.toByteArray();
+                                		r.setResponseData(respData);
+                                	} catch (IOException e) {
+                                		r.setResponseData(null);
+                                	}
+                                }
                                 em.getTransaction().begin();
                                 r.setStatus(STATUS.DONE);
                                 em.getTransaction().commit();

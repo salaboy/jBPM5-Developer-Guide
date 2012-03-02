@@ -17,7 +17,6 @@ import org.drools.builder.ResourceType;
 import org.drools.io.impl.ClassPathResource;
 import org.drools.runtime.StatefulKnowledgeSession;
 import org.jbpm.process.workitem.wsht.SyncWSHumanTaskHandler;
-import org.jbpm.task.User;
 import org.jbpm.task.query.TaskSummary;
 import org.jbpm.task.service.TaskService;
 import org.jbpm.task.service.TaskServiceSession;
@@ -32,128 +31,116 @@ import org.springframework.security.ldap.server.ApacheDSContainer;
 
 public class LdapUerGroupCallbackTest {
 
-	private ApacheDSContainer container;
+    private ApacheDSContainer container;
+    private LdapQueryHelper ldapQuery;
+    private LocalTaskService service;
 
-	private LdapQueryHelper ldapQuery;
+    @Before
+    public void setUp() throws Exception {
+        container = new ApacheDSContainer("o=mojo", "classpath:test.ldif");
+        container.setPort(9898);
+        container.afterPropertiesSet();
 
-	private LocalTaskService service;
+        LdapContextSource cs = new LdapContextSource();
+        cs.setUrl("ldap://localhost:9898/");
+        cs.setBase("o=mojo");
+        cs.setUserDn("uid=admin,ou=system");
+        cs.setPassword("secret");
+        cs.afterPropertiesSet();
+        LdapTemplate ldapTemplate = new LdapTemplate(cs);
+        ldapTemplate.afterPropertiesSet();
+        ldapQuery = new LdapQueryHelper(ldapTemplate);
 
-	@Before
-	public void setUp() {
-		try {
-			container = new ApacheDSContainer("o=mojo", "classpath:test.ldif");
-			container.setPort(9898);
-			container.afterPropertiesSet();
+        // By Setting the jbpm.usergroup.callback property with the call
+        // back class full name, task server will use this to validate the
+        // user/group exists and its permissions are ok.
+        System.setProperty("jbpm.usergroup.callback",
+                "com.salaboy.jbpm5.dev.guide.ldap.LdapUserGroupCallback");
+        LdapUserGroupCallback callback = (LdapUserGroupCallback) UserGroupCallbackManager.getInstance().getCallback();
+        callback.setQuery(ldapQuery);
+    }
 
-			LdapContextSource cs = new LdapContextSource();
-			cs.setUrl("ldap://localhost:9898/");
-			cs.setBase("o=mojo");
-			cs.setUserDn("uid=admin,ou=system");
-			cs.setPassword("secret");
-			cs.afterPropertiesSet();
-			LdapTemplate ldapTemplate = new LdapTemplate(cs);
-			ldapTemplate.afterPropertiesSet();
-			ldapQuery = new LdapQueryHelper(ldapTemplate);
+    @Test
+    public void testLdapCallback() throws InterruptedException {
+        Assert.assertEquals(true, this.ldapQuery.existsUser("calcacuervo"));
+        Assert.assertEquals(false, this.ldapQuery.existsUser("calcacuervo2"));
+        System.out.println("Hi!");
 
-			// By Setting the jbpm.usergroup.callback property with the call
-			// back class full name, task server will use this to validate the
-			// user/group exists and its permissions are ok.
-			System.setProperty("jbpm.usergroup.callback",
-					"com.salaboy.jbpm5.dev.guide.ldap.LdapUserGroupCallback");
-			LdapUserGroupCallback callback = (LdapUserGroupCallback) UserGroupCallbackManager
-					.getInstance().getCallback();
-			callback.setQuery(ldapQuery);
+        StatefulKnowledgeSession ksession = this.initializeSession();
+        SyncWSHumanTaskHandler htHandler = this.createTaskHandler();
+        ksession.getWorkItemManager().registerWorkItemHandler("Human Task",
+                htHandler);
 
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-	}
+        Map<String, Object> initialParams = new HashMap<String, Object>();
+        initialParams.put("actor", "calcacuervo");
+        ksession.startProcess("chapter_06_simple_review", initialParams);
 
-	@Test
-	public void testLdapCallback() throws InterruptedException {
-		Assert.assertEquals(true, this.ldapQuery.existsUser("calcacuervo"));
-		Assert.assertEquals(false, this.ldapQuery.existsUser("calcacuervo2"));
-		System.out.println("Hi!");
+        // first, calcacuervo will make its own review..
+        List<TaskSummary> tasks = this.service.getTasksAssignedAsPotentialOwner("calcacuervo", "en-UK");
+        Assert.assertEquals(1, tasks.size());
 
-		StatefulKnowledgeSession ksession = this.initializeSession();
-		SyncWSHumanTaskHandler htHandler = this.createTaskHandler();
-		ksession.getWorkItemManager().registerWorkItemHandler("Human Task",
-				htHandler);
+        this.service.start(tasks.get(0).getId(), "calcacuervo");
+        this.service.complete(tasks.get(0).getId(), "calcacuervo", null);
 
-		Map<String, Object> initialParams = new HashMap<String, Object>();
-		initialParams.put("actor", "calcacuervo");
-		ksession.startProcess("chapter_06_simple_review", initialParams);
+        Thread.sleep(2000);
 
-		// first, calcacuervo will make its own review..
-		List<TaskSummary> tasks = this.service
-				.getTasksAssignedAsPotentialOwner("calcacuervo", "en-UK");
-		Assert.assertEquals(1, tasks.size());
+        // now, a user with role TL will see the task.. esteban is one of them
+        List<TaskSummary> estebanTasks = this.service.getTasksAssignedAsPotentialOwner("esteban",
+                this.ldapQuery.groupsForUser("esteban"), "en-UK");
+        Assert.assertEquals(1, estebanTasks.size());
+        this.service.claim(estebanTasks.get(0).getId(), "esteban");
+        this.service.start(estebanTasks.get(0).getId(), "esteban");
+        this.service.complete(estebanTasks.get(0).getId(), "esteban", null);
 
-		this.service.start(tasks.get(0).getId(), "calcacuervo");
-		this.service.complete(tasks.get(0).getId(), "calcacuervo", null);
+        Thread.sleep(2000);
 
-		Thread.sleep(2000);
-		
-		// now, a user with role TL will see the task.. esteban is one of them
-		List<TaskSummary> estebanTasks = this.service
-				.getTasksAssignedAsPotentialOwner("esteban",
-						this.ldapQuery.groupsForUser("esteban"), "en-UK");
-		Assert.assertEquals(1, estebanTasks.size());
-		this.service.claim(estebanTasks.get(0).getId(), "esteban");
-		this.service.start(estebanTasks.get(0).getId(), "esteban");
-		this.service.complete(estebanTasks.get(0).getId(), "esteban", null);
-		
-		Thread.sleep(2000);
-		
-		// now, a user with role HR will see the task.. mariano is one of them
-		List<TaskSummary> marianoTasks = this.service
-				.getTasksAssignedAsPotentialOwner("mariano",
-						this.ldapQuery.groupsForUser("mariano"), "en-UK");
-		Assert.assertEquals(1, marianoTasks.size());
-		this.service.claim(marianoTasks.get(0).getId(), "mariano");
-		this.service.start(marianoTasks.get(0).getId(), "mariano");
-		this.service.complete(marianoTasks.get(0).getId(), "mariano", null);
+        // now, a user with role HR will see the task.. mariano is one of them
+        List<TaskSummary> marianoTasks = this.service.getTasksAssignedAsPotentialOwner("mariano",
+                this.ldapQuery.groupsForUser("mariano"), "en-UK");
+        Assert.assertEquals(1, marianoTasks.size());
+        this.service.claim(marianoTasks.get(0).getId(), "mariano");
+        this.service.start(marianoTasks.get(0).getId(), "mariano");
+        this.service.complete(marianoTasks.get(0).getId(), "mariano", null);
 
-	}
+    }
 
-	@After
-	public void tearDown() {
-		container.stop();
-	}
+    @After
+    public void tearDown() {
+        container.stop();
+    }
 
-	//init the Knowledge Session
-	private StatefulKnowledgeSession initializeSession() {
-		KnowledgeBuilder kbuilder = KnowledgeBuilderFactory
-				.newKnowledgeBuilder();
+    //init the Knowledge Session
+    private StatefulKnowledgeSession initializeSession() {
+        KnowledgeBuilder kbuilder = KnowledgeBuilderFactory.newKnowledgeBuilder();
 
-		kbuilder.add(
-				new ClassPathResource(
-						"com/salaboy/jbpm5/dev/guide/controller/simple-review-process.bpmn"),
-				ResourceType.BPMN2);
-		if (kbuilder.hasErrors()) {
-			KnowledgeBuilderErrors errors = kbuilder.getErrors();
+        kbuilder.add(
+                new ClassPathResource(
+                "com/salaboy/jbpm5/dev/guide/controller/simple-review-process.bpmn"),
+                ResourceType.BPMN2);
+        if (kbuilder.hasErrors()) {
+            KnowledgeBuilderErrors errors = kbuilder.getErrors();
 
-			for (KnowledgeBuilderError error : errors) {
-				System.out.println(">>> Error:" + error.getMessage());
+            for (KnowledgeBuilderError error : errors) {
+                System.out.println(">>> Error:" + error.getMessage());
 
-			}
-			throw new IllegalStateException(
-					">>> Knowledge couldn't be parsed! ");
-		}
-		return kbuilder.newKnowledgeBase().newStatefulKnowledgeSession();
-	}
+            }
+            throw new IllegalStateException(
+                    ">>> Knowledge couldn't be parsed! ");
+        }
+        return kbuilder.newKnowledgeBase().newStatefulKnowledgeSession();
+    }
 
-	//Creates a local task service and attaches it to a human task handler
-	private SyncWSHumanTaskHandler createTaskHandler() {
-		TaskService ts = new TaskService(
-				Persistence.createEntityManagerFactory("org.jbpm.task"),
-				SystemEventListenerFactory.getSystemEventListener());
-		TaskServiceSession taskSession = ts.createSession();
-		LocalTaskService taskService = new LocalTaskService(taskSession);
-		SyncWSHumanTaskHandler taskHandler = new SyncWSHumanTaskHandler(
-				taskService);
-		taskHandler.connect();
-		this.service = taskService;
-		return taskHandler;
-	}
+    //Creates a local task service and attaches it to a human task handler
+    private SyncWSHumanTaskHandler createTaskHandler() {
+        TaskService ts = new TaskService(
+                Persistence.createEntityManagerFactory("org.jbpm.task"),
+                SystemEventListenerFactory.getSystemEventListener());
+        TaskServiceSession taskSession = ts.createSession();
+        LocalTaskService taskService = new LocalTaskService(taskSession);
+        SyncWSHumanTaskHandler taskHandler = new SyncWSHumanTaskHandler(
+                taskService);
+        taskHandler.connect();
+        this.service = taskService;
+        return taskHandler;
+    }
 }

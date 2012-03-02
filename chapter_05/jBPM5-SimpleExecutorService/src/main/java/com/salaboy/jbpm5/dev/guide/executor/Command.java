@@ -9,6 +9,5 @@ package com.salaboy.jbpm5.dev.guide.executor;
  * @author salaboy
  */
 public interface Command {
-	public void setContext(CommandContext ctx);
-    public void execute();
+    public ExecutionResults execute(CommandContext ctx);
 }

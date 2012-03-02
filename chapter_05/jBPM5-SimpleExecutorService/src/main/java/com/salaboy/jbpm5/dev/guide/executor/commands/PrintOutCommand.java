@@ -6,6 +6,7 @@ package com.salaboy.jbpm5.dev.guide.executor.commands;
 
 import com.salaboy.jbpm5.dev.guide.executor.Command;
 import com.salaboy.jbpm5.dev.guide.executor.CommandContext;
+import com.salaboy.jbpm5.dev.guide.executor.ExecutionResults;
 
 /**
  *
@@ -13,11 +14,9 @@ import com.salaboy.jbpm5.dev.guide.executor.CommandContext;
  */
 public class PrintOutCommand implements Command{
 
-	public void setContext(CommandContext ctx) {
-	}
-	
-    public void execute() {
+    public ExecutionResults execute(CommandContext ctx) {
         System.out.println(">>> Hi This is the first command!");
+        return null;
     }
     
 }

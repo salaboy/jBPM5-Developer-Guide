@@ -26,6 +26,8 @@ public class RequestInfo {
     private String key;
     @Lob
     private byte[] requestData;
+    @Lob
+    private byte[] responseData;
 
     public RequestInfo() {
     }
@@ -84,5 +86,13 @@ public class RequestInfo {
 
 	public void setRequestData(byte[] requestData) {
 		this.requestData = requestData;
+	}
+
+	public byte[] getResponseData() {
+		return responseData;
+	}
+
+	public void setResponseData(byte[] responseData) {
+		this.responseData = responseData;
 	}
 }
