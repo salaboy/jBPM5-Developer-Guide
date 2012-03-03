@@ -1,0 +1,145 @@
+<?xml version="1.0" encoding="UTF-8"?> 
+<definitions id="Definition"
+             targetNamespace="http://www.jboss.org/drools"
+             typeLanguage="http://www.java.com/javaTypes"
+             expressionLanguage="http://www.mvel.org/2.0"
+             xmlns="http://www.omg.org/spec/BPMN/20100524/MODEL"
+             xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+             xsi:schemaLocation="http://www.omg.org/spec/BPMN/20100524/MODEL BPMN20.xsd"
+             xmlns:g="http://www.jboss.org/drools/flow/gpd"
+             xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI"
+             xmlns:dc="http://www.omg.org/spec/DD/20100524/DC"
+             xmlns:di="http://www.omg.org/spec/DD/20100524/DI"
+             xmlns:tns="http://www.jboss.org/drools">
+
+  <itemDefinition id="_personItem" structureRef="com.salaboy.model.Person" />
+
+  <process processType="Private" isExecutable="true" id="com.salaboy.process.SimpleDecision" name="Simple Decision Process" tns:packageName="defaultPackage" >
+
+    <extensionElements>
+     <tns:import name="com.salaboy.model.Person" />
+     <tns:import name="org.jbpm.workflow.instance.impl.WorkflowProcessInstanceImpl" />
+     <tns:import name="org.drools.runtime.rule.FactHandle" />
+    </extensionElements>
+    <!-- process variables -->
+    <property id="person" itemSubjectRef="_personItem"/>
+
+    <!-- nodes -->
+    <startEvent id="_1" name="StartProcess" />
+    <scriptTask id="_2" name="Script 0" >
+      <script>System.out.println(" ### Script 0: "+kcontext.getVariable("person"));</script>
+    </scriptTask>
+    <inclusiveGateway id="_3" name="Gateway" gatewayDirection="Diverging" />
+    <scriptTask id="_4" name="Script 1" scriptFormat="http://www.java.com/java" >
+      <script>System.out.println(" ### Script 1: "+kcontext.getVariable("person"));
+      </script>
+    </scriptTask>
+    <scriptTask id="_5" name="Script 2" scriptFormat="http://www.java.com/java" >
+      <script>System.out.println(" ### Script 2: "+kcontext.getVariable("person"));
+      </script>
+    </scriptTask>
+    <scriptTask id="_6" name="Script 3" scriptFormat="http://www.java.com/java" >
+      <script>System.out.println(" ### Script 3: "+kcontext.getVariable("person"));
+      </script>
+    </scriptTask>
+    <exclusiveGateway id="_7" name="Gateway" gatewayDirection="Converging" />
+    <endEvent id="_8" name="End" >
+        <terminateEventDefinition/>
+    </endEvent>
+    <scriptTask id="_9" name="Script 4" >
+      <script>System.out.println(" ### Script 4: "+kcontext.getVariable("person"));</script>
+    </scriptTask>
+
+    <!-- connections -->
+    <sequenceFlow id="_1-_2" sourceRef="_1" targetRef="_2" />
+    <sequenceFlow id="_2-_3" sourceRef="_2" targetRef="_3" />
+    <sequenceFlow id="_3-_4" sourceRef="_3" targetRef="_4" name="between 18 and 25" tns:priority="1" >
+      <conditionExpression xsi:type="tFormalExpression" >return (((Person)kcontext.getVariable("person")).getAge() &gt; 18 &amp;&amp;  ((Person)kcontext.getVariable("person")).getAge() &lt; 25)</conditionExpression>
+    </sequenceFlow>
+    <sequenceFlow id="_3-_5" sourceRef="_3" targetRef="_5" name="between 25 and 40" tns:priority="1" >
+      <conditionExpression xsi:type="tFormalExpression" >return (((Person)kcontext.getVariable("person")).getAge() &gt; 25 &amp;&amp;  ((Person)kcontext.getVariable("person")).getAge() &lt; 40)</conditionExpression>
+    </sequenceFlow>
+    <sequenceFlow id="_3-_6" sourceRef="_3" targetRef="_6" name="under 18" tns:priority="1" >
+      <conditionExpression xsi:type="tFormalExpression" >return (((Person)kcontext.getVariable("person")).getAge() &lt; 18 )</conditionExpression>
+    </sequenceFlow>
+    <sequenceFlow id="_4-_7" sourceRef="_4" targetRef="_7" />
+    <sequenceFlow id="_5-_7" sourceRef="_5" targetRef="_7" />
+    <sequenceFlow id="_6-_7" sourceRef="_6" targetRef="_7" />
+    <sequenceFlow id="_9-_8" sourceRef="_9" targetRef="_8" />
+    <sequenceFlow id="_7-_9" sourceRef="_7" targetRef="_9" />
+
+  </process>
+
+  <bpmndi:BPMNDiagram>
+    <bpmndi:BPMNPlane bpmnElement="com.salaboy.process.SimpleDecision" >
+      <bpmndi:BPMNShape bpmnElement="_1" >
+        <dc:Bounds x="16" y="96" width="48" height="48" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="_2" >
+        <dc:Bounds x="96" y="96" width="80" height="48" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="_3" >
+        <dc:Bounds x="208" y="96" width="48" height="48" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="_4" >
+        <dc:Bounds x="289" y="16" width="80" height="48" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="_5" >
+        <dc:Bounds x="289" y="96" width="80" height="48" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="_6" >
+        <dc:Bounds x="289" y="176" width="80" height="48" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="_7" >
+        <dc:Bounds x="401" y="96" width="48" height="48" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="_8" >
+        <dc:Bounds x="594" y="96" width="48" height="48" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="_9" >
+        <dc:Bounds x="482" y="96" width="80" height="48" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge bpmnElement="_1-_2" >
+        <di:waypoint x="40" y="120" />
+        <di:waypoint x="136" y="120" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="_2-_3" >
+        <di:waypoint x="136" y="120" />
+        <di:waypoint x="232" y="120" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="_3-_4" >
+        <di:waypoint x="232" y="120" />
+        <di:waypoint x="329" y="40" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="_3-_5" >
+        <di:waypoint x="232" y="120" />
+        <di:waypoint x="329" y="120" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="_3-_6" >
+        <di:waypoint x="232" y="120" />
+        <di:waypoint x="329" y="200" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="_4-_7" >
+        <di:waypoint x="329" y="40" />
+        <di:waypoint x="425" y="120" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="_5-_7" >
+        <di:waypoint x="329" y="120" />
+        <di:waypoint x="425" y="120" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="_6-_7" >
+        <di:waypoint x="329" y="200" />
+        <di:waypoint x="425" y="120" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="_9-_8" >
+        <di:waypoint x="522" y="120" />
+        <di:waypoint x="618" y="120" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="_7-_9" >
+        <di:waypoint x="425" y="120" />
+        <di:waypoint x="522" y="120" />
+      </bpmndi:BPMNEdge>
+    </bpmndi:BPMNPlane>
+  </bpmndi:BPMNDiagram>
+
+</definitions>

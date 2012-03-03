@@ -13,6 +13,7 @@
     <url>http://salaboy.com</url>
     <modules>
     <module>drools5-SimpleExample</module>
+    <module>jBPM5-Process-Rules-Patterns</module>
   </modules>
     
    

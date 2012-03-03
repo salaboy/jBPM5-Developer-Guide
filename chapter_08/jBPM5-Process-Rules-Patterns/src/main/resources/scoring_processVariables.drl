@@ -1,0 +1,13 @@
+package com.salaboy.process;
+import com.salaboy.jbpm5.*;
+import com.salaboy.model.*;
+import org.jbpm.workflow.instance.impl.WorkflowProcessInstanceImpl;
+
+rule "Calculate Todays Score - Based on Plan"
+    when
+        WorkflowProcessInstanceImpl($id: id)
+        ProcessVariable(processInstanceId == $id, name == "person", $value: value) 
+        $p: Person() from $value
+    then
+       System.out.println(" ### Person inside the rule: "+$p);
+end

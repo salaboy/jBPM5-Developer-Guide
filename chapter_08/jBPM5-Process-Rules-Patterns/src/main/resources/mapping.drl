@@ -1,0 +1,37 @@
+package com.salaboy.mapping;
+
+import org.jbpm.workflow.instance.impl.WorkflowProcessInstanceImpl;
+import com.salaboy.jbpm5.*;
+
+query allProcessVariables()
+    $pv: ProcessVariable()
+end
+
+query allProcessVariablesByProcessId(long $processInstanceId)
+    $pv: ProcessVariable(processInstanceId == $processInstanceId)
+end
+
+query allProcessVariablesByName(String $name)
+    $pv: ProcessVariable(name == $name)
+end
+
+query allProcessVariablesByNameFromProcessId(long $processInstanceId, String $name)
+    $pv: ProcessVariable(processInstanceId == $processInstanceId, name == $name)
+end
+
+rule "Log"
+    when
+        $o: Object()
+    then
+        System.out.println(" >>> Object : "+$o);
+end     
+
+rule "init"
+    salience 9999
+    when
+        WorkflowProcessInstanceImpl($id: id, $vars: variables)
+    then
+        for(int i = 0; i < $vars.keySet().size(); i++){
+            insert(new ProcessVariable($id, (String)$vars.keySet().toArray()[i],$vars.values().toArray()[i]));
+        }
+end
