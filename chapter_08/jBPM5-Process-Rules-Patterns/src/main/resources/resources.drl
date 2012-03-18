@@ -1,0 +1,14 @@
+package com.salaboy.resources;
+
+import com.salaboy.model.Resources;
+
+query getResources()
+    $r: Resources()
+end
+
+rule "Out of resources"
+    when
+        $r: Resources( available == 0 )
+    then
+        throw new IllegalStateException("No More Resources Available = "+$r);
+end

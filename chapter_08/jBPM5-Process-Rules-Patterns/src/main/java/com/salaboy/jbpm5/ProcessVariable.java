@@ -9,12 +9,13 @@ package com.salaboy.jbpm5;
  * @author salaboy
  */
 //@PropertySpecific
-public class ProcessVariable {
+
+public class ProcessVariable<T> {
     private long processInstanceId;
     private String name;
-    private Object value;
+    private T value;
 
-    public ProcessVariable(long processInstanceId, String name, Object value) {
+    public ProcessVariable(long processInstanceId, String name, T value) {
         this.processInstanceId = processInstanceId;
         this.name = name;
         this.value = value;
@@ -37,11 +38,11 @@ public class ProcessVariable {
         this.name = name;
     }
 
-    public Object getValue() {
+    public T getValue() {
         return value;
     }
-
-    public void setValue(Object value) {
+    
+    public void setValue(T value) {
         this.value = value;
     }
 

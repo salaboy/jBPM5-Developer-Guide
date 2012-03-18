@@ -11,3 +11,4 @@ rule "Calculate Todays Score - Based on Plan"
     then
        System.out.println(" ### Person inside the rule: "+$p);
 end
+

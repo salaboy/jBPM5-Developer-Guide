@@ -31,7 +31,7 @@
 
     <!-- nodes -->
     <startEvent id="_1" name="StartProcess" />
-    <scriptTask id="_2" name="Script 0" >
+    <scriptTask id="_2" name="Script 0" scriptFormat="http://www.java.com/java">
       <script>System.out.println(" ### Script 0: "+kcontext.getVariable("person"));</script>
     </scriptTask>
     <inclusiveGateway id="_3" name="Gateway" gatewayDirection="Diverging" />

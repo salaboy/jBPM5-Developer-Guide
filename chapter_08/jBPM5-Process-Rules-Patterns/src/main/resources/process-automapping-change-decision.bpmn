@@ -1,0 +1,226 @@
+<?xml version="1.0" encoding="UTF-8"?> 
+<definitions id="Definition"
+             targetNamespace="http://www.jboss.org/drools"
+             typeLanguage="http://www.java.com/javaTypes"
+             expressionLanguage="http://www.mvel.org/2.0"
+             xmlns="http://www.omg.org/spec/BPMN/20100524/MODEL"
+             xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+             xsi:schemaLocation="http://www.omg.org/spec/BPMN/20100524/MODEL BPMN20.xsd"
+             xmlns:g="http://www.jboss.org/drools/flow/gpd"
+             xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI"
+             xmlns:dc="http://www.omg.org/spec/DD/20100524/DC"
+             xmlns:di="http://www.omg.org/spec/DD/20100524/DI"
+             xmlns:tns="http://www.jboss.org/drools">
+
+  <itemDefinition id="_personItem" structureRef="com.salaboy.model.Person" />
+  <itemDefinition id="_ratesItem" structureRef="com.salaboy.model.RatesToday" />
+
+  <process processType="Private" isExecutable="true" id="com.salaboy.process.SimpleDecision" name="Simple Decision Process" tns:packageName="defaultPackage" >
+
+    <extensionElements>
+     <tns:import name="com.salaboy.model.Person" />
+     <tns:import name="com.salaboy.model.RatesToday" />
+     <tns:import name="org.jbpm.workflow.instance.impl.WorkflowProcessInstanceImpl" />
+     <tns:import name="org.drools.runtime.rule.FactHandle" />
+     <tns:import name="com.salaboy.jbpm5.ProcessVariable" />
+     <tns:import name="org.drools.runtime.rule.QueryResults" />
+     <tns:import name="org.drools.runtime.rule.QueryResultsRow" />
+     <tns:import name="com.salaboy.jbpm5.OnEntryNodeEvent" />
+     <tns:import name="com.salaboy.jbpm5.OnExitNodeEvent" />
+     <tns:import name="java.util.Iterator" />
+     <tns:import name="org.drools.runtime.KnowledgeRuntime" />
+    </extensionElements>
+    <!-- process variables -->
+    <property id="person" itemSubjectRef="_personItem"/>
+    <property id="rates" itemSubjectRef="_ratesItem"/>
+
+    <!-- nodes -->
+    <startEvent id="_1" name="StartProcess" />
+    <inclusiveGateway id="_3" name="Gateway" gatewayDirection="Diverging" />
+    <exclusiveGateway id="_7" name="Gateway" gatewayDirection="Converging" />
+    <endEvent id="_8" name="End" >
+        <terminateEventDefinition/>
+    </endEvent>
+    <userTask id="_9" name="User Task 1" >
+        <extensionElements>
+        <tns:onEntry-script scriptFormat="http://www.java.com/java">
+          <script>System.out.println("On-entry1");
+          kcontext.getKnowledgeRuntime().insert(new OnEntryNodeEvent());</script>
+        </tns:onEntry-script>
+        <tns:onEntry-script scriptFormat="http://www.java.com/java">
+          <script>System.out.println("On-entry2");</script>
+        </tns:onEntry-script >
+        <tns:onExit-script scriptFormat="http://www.java.com/java">
+          <script>System.out.println("On-exit1");
+          kcontext.getKnowledgeRuntime().insert(new OnExitNodeEvent());  </script>
+        </tns:onExit-script>
+        <tns:onExit-script scriptFormat="http://www.java.com/java">
+          <script>System.out.println("On-exit2");</script>
+        </tns:onExit-script>
+      </extensionElements>
+      <ioSpecification>
+        <dataInput id='person' name='person'/>
+        <inputSet>
+          <dataInputRefs>person</dataInputRefs>
+        </inputSet>
+        <outputSet>
+        </outputSet>
+      </ioSpecification>
+      <dataInputAssociation>
+        <targetRef>person</targetRef>
+        <assignment>
+          <from>person</from>
+          <to>person</to>
+        </assignment>
+      </dataInputAssociation>
+      
+    </userTask>
+    <userTask id="_10" name="User Task 2" >
+        <extensionElements>
+        <tns:onEntry-script scriptFormat="http://www.java.com/java">
+          <script>System.out.println("On-entry1");
+                  kcontext.getKnowledgeRuntime().insert(new OnEntryNodeEvent());
+          </script>
+        </tns:onEntry-script>
+        <tns:onEntry-script scriptFormat="http://www.java.com/java">
+          <script>System.out.println("On-entry2");</script>
+        </tns:onEntry-script>
+        <tns:onExit-script scriptFormat="http://www.java.com/java">
+          <script>System.out.println("On-exit1");
+                  kcontext.getKnowledgeRuntime().insert(new OnExitNodeEvent());  
+            </script>
+        </tns:onExit-script>
+        <tns:onExit-script scriptFormat="http://www.java.com/java">
+          <script>System.out.println("On-exit2");</script>
+        </tns:onExit-script>
+      </extensionElements>
+      <ioSpecification>
+        <inputSet>
+        </inputSet>
+        <outputSet>
+        </outputSet>
+      </ioSpecification>
+    </userTask>
+    <userTask id="_11" name="User Task 3" >
+        <extensionElements>
+        <tns:onEntry-script>
+          <script>System.out.println("On-entry1");</script>
+        </tns:onEntry-script>
+        <tns:onEntry-script scriptFormat="http://www.java.com/java">
+          <script>System.out.println("On-entry2");</script>
+        </tns:onEntry-script>
+        <tns:onExit-script>
+          <script>System.out.println("On-exit1");</script>
+        </tns:onExit-script>
+        <tns:onExit-script scriptFormat="http://www.java.com/java">
+          <script>System.out.println("On-exit2");</script>
+        </tns:onExit-script>
+      </extensionElements>
+      <ioSpecification>
+        <inputSet>
+        </inputSet>
+        <outputSet>
+        </outputSet>
+      </ioSpecification>
+    </userTask>
+    <userTask id="_12" name="User Task 4" >
+        <extensionElements>
+        <tns:onEntry-script>
+          <script>System.out.println("On-entry1");</script>
+        </tns:onEntry-script>
+        <tns:onEntry-script scriptFormat="http://www.java.com/java">
+          <script>System.out.println("On-entry2");</script>
+        </tns:onEntry-script>
+        <tns:onExit-script>
+          <script>System.out.println("On-exit1");</script>
+        </tns:onExit-script>
+        <tns:onExit-script scriptFormat="http://www.java.com/java">
+          <script>System.out.println("On-exit2");</script>
+        </tns:onExit-script>
+      </extensionElements>
+      <ioSpecification>
+        <inputSet>
+        </inputSet>
+        <outputSet>
+        </outputSet>
+      </ioSpecification>
+    </userTask>
+
+    <!-- connections -->
+    <sequenceFlow id="_9-_3" sourceRef="_9" targetRef="_3" />
+    <sequenceFlow id="_10-_7" sourceRef="_10" targetRef="_7" />
+    <sequenceFlow id="_11-_7" sourceRef="_11" targetRef="_7" />
+    <sequenceFlow id="_12-_8" sourceRef="_12" targetRef="_8" />
+    <sequenceFlow id="_1-_9" sourceRef="_1" targetRef="_9" />
+    <sequenceFlow id="_3-_10" sourceRef="_3" targetRef="_10" >
+      <conditionExpression xsi:type="tFormalExpression" language="http://www.jboss.org/drools/rule" >ProcessVariable(name == "person",  value.age &gt; 18 &amp;&amp; &lt; 25) </conditionExpression>
+    </sequenceFlow>
+    <sequenceFlow id="_3-_11" sourceRef="_3" targetRef="_11" >
+      <conditionExpression xsi:type="tFormalExpression" language="http://www.jboss.org/drools/rule" >ProcessVariable(name == "person", value.age &gt; 25 &amp;&amp; &lt; 40 ) </conditionExpression>
+    </sequenceFlow>
+    <sequenceFlow id="_7-_12" sourceRef="_7" targetRef="_12" />
+
+  </process>
+
+  <bpmndi:BPMNDiagram>
+    <bpmndi:BPMNPlane bpmnElement="com.salaboy.process.SimpleDecision" >
+      <bpmndi:BPMNShape bpmnElement="_1" >
+        <dc:Bounds x="16" y="56" width="48" height="48" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="_3" >
+        <dc:Bounds x="228" y="56" width="48" height="48" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="_7" >
+        <dc:Bounds x="441" y="56" width="48" height="48" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="_8" >
+        <dc:Bounds x="654" y="56" width="48" height="48" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="_9" >
+        <dc:Bounds x="96" y="56" width="100" height="48" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="_10" >
+        <dc:Bounds x="309" y="16" width="100" height="48" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="_11" >
+        <dc:Bounds x="309" y="96" width="100" height="48" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="_12" >
+        <dc:Bounds x="522" y="56" width="100" height="48" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge bpmnElement="_9-_3" >
+        <di:waypoint x="146" y="80" />
+        <di:waypoint x="252" y="80" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="_10-_7" >
+        <di:waypoint x="359" y="40" />
+        <di:waypoint x="465" y="80" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="_11-_7" >
+        <di:waypoint x="359" y="120" />
+        <di:waypoint x="465" y="80" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="_12-_8" >
+        <di:waypoint x="572" y="80" />
+        <di:waypoint x="678" y="80" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="_1-_9" >
+        <di:waypoint x="40" y="80" />
+        <di:waypoint x="146" y="80" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="_3-_10" >
+        <di:waypoint x="252" y="80" />
+        <di:waypoint x="359" y="40" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="_3-_11" >
+        <di:waypoint x="252" y="80" />
+        <di:waypoint x="359" y="120" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="_7-_12" >
+        <di:waypoint x="465" y="80" />
+        <di:waypoint x="572" y="80" />
+      </bpmndi:BPMNEdge>
+    </bpmndi:BPMNPlane>
+  </bpmndi:BPMNDiagram>
+
+</definitions>

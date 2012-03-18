@@ -13,63 +13,77 @@
              xmlns:tns="http://www.jboss.org/drools">
 
   <itemDefinition id="_personItem" structureRef="com.salaboy.model.Person" />
+  <itemDefinition id="_ratesItem" structureRef="com.salaboy.model.RatesToday" />
 
   <process processType="Private" isExecutable="true" id="com.salaboy.process.SimpleDecision" name="Simple Decision Process" tns:packageName="defaultPackage" >
 
     <extensionElements>
      <tns:import name="com.salaboy.model.Person" />
+     <tns:import name="com.salaboy.model.RatesToday" />   
      <tns:import name="org.jbpm.workflow.instance.impl.WorkflowProcessInstanceImpl" />
      <tns:import name="org.drools.runtime.rule.FactHandle" />
+     <tns:import name="com.salaboy.jbpm5.ProcessVariable" />
+     <tns:import name="org.drools.runtime.rule.QueryResults" />
+     <tns:import name="org.drools.runtime.rule.QueryResultsRow" />
+     <tns:import name="java.util.Iterator" />
+     <tns:import name="org.drools.runtime.KnowledgeRuntime" />
     </extensionElements>
     <!-- process variables -->
     <property id="person" itemSubjectRef="_personItem"/>
+    <property id="rates" itemSubjectRef="_ratesItem"/>
 
     <!-- nodes -->
     <startEvent id="_1" name="StartProcess" />
-    <scriptTask id="_2" name="Script 0" scriptFormat="http://www.java.com/java" >
+    <scriptTask id="_2" name="Script 0" scriptFormat="http://www.java.com/java">
       <script>System.out.println(" ### Script 0: "+kcontext.getVariable("person"));</script>
     </scriptTask>
     <inclusiveGateway id="_3" name="Gateway" gatewayDirection="Diverging" />
     <scriptTask id="_4" name="Script 1" scriptFormat="http://www.java.com/java" >
-      <script>System.out.println(" ### Script 1 (before): "+kcontext.getVariable("person"));
-FactHandle handle = kcontext.getKnowledgeRuntime().getFactHandle(kcontext.getVariable("person"));
-((Person)kcontext.getVariable("person")).setPlan("Young Plan");
-kcontext.getKnowledgeRuntime().update(handle, kcontext.getVariable("person"));
-System.out.println(" ### Script 1 (after): "+kcontext.getVariable("person"));</script>
+      <script>System.out.println(" ### Script 1 - Person : "+kcontext.getVariable("person"));
+              System.out.println(" ### Script 1 - Rates : "+kcontext.getVariable("rates"));
+               KnowledgeRuntime runtime = kcontext.getKnowledgeRuntime();
+              System.out.println(" ### Runtime: "+runtime);  
+      </script>
     </scriptTask>
     <scriptTask id="_5" name="Script 2" scriptFormat="http://www.java.com/java" >
-      <script>System.out.println(" ### Script 2 (before): "+kcontext.getVariable("person"));
-FactHandle handle = kcontext.getKnowledgeRuntime().getFactHandle(kcontext.getVariable("person"));
-((Person)kcontext.getVariable("person")).setPlan("Senior Plan");
-kcontext.getKnowledgeRuntime().update(handle, kcontext.getVariable("person"));
-System.out.println(" ### Script 2 (after): "+kcontext.getVariable("person"));</script>
+      <script>System.out.println(" ### Script 2: "+kcontext.getVariable("person"));
+            KnowledgeRuntime runtime = kcontext.getKnowledgeRuntime();
+              System.out.println(" ### Runtime: "+runtime); 
+      </script>
     </scriptTask>
     <scriptTask id="_6" name="Script 3" scriptFormat="http://www.java.com/java" >
-      <script>System.out.println(" ### Script 3 (before): "+kcontext.getVariable("person"));
-FactHandle handle = kcontext.getKnowledgeRuntime().getFactHandle(kcontext.getVariable("person"));
-((Person)kcontext.getVariable("person")).setPlan("Platinum Plan");
-kcontext.getKnowledgeRuntime().update(handle, kcontext.getVariable("person"));
-System.out.println(" ### Script 3 (after): "+kcontext.getVariable("person"));</script>
+      <script>System.out.println(" ### Script 3: "+kcontext.getVariable("person"));
+              KnowledgeRuntime runtime = kcontext.getKnowledgeRuntime();
+              System.out.println(" ### Runtime: "+runtime); 
+    </script>
     </scriptTask>
     <exclusiveGateway id="_7" name="Gateway" gatewayDirection="Converging" />
     <endEvent id="_8" name="End" >
         <terminateEventDefinition/>
     </endEvent>
     <scriptTask id="_9" name="Script 4" scriptFormat="http://www.java.com/java">
-      <script>System.out.println(" ### Script 4: "+kcontext.getVariable("person"));</script>
+      <script>System.out.println(" ### Script 4: "+kcontext.getVariable("person"));
+              QueryResults queryResults = kcontext.getKnowledgeRuntime().getQueryResults("allProcessVariables", new Object[]{});
+              Iterator iterator = queryResults.iterator();
+              while(iterator.hasNext()){
+                QueryResultsRow next = (QueryResultsRow)iterator.next();
+                System.out.println(" ### Process Variable (inside process): "+((ProcessVariable)next.get("$pv")).getValue());
+              }
+              
+      </script>
     </scriptTask>
 
     <!-- connections -->
     <sequenceFlow id="_1-_2" sourceRef="_1" targetRef="_2" />
     <sequenceFlow id="_2-_3" sourceRef="_2" targetRef="_3" />
     <sequenceFlow id="_3-_4" sourceRef="_3" targetRef="_4" name="between 18 and 25" tns:priority="1" >
-      <conditionExpression xsi:type="tFormalExpression" language="http://www.jboss.org/drools/rule" >Person( age &gt; 18 &amp;&amp; &lt; 25) </conditionExpression>
+      <conditionExpression xsi:type="tFormalExpression" language="http://www.jboss.org/drools/rule" >ProcessVariable(name == "person", $value: value) Person( age &gt; 18 &amp;&amp; &lt; 25) from $value</conditionExpression>
     </sequenceFlow>
     <sequenceFlow id="_3-_5" sourceRef="_3" targetRef="_5" name="between 25 and 40" tns:priority="1" >
-      <conditionExpression xsi:type="tFormalExpression" language="http://www.jboss.org/drools/rule" >Person( age &gt; 25 &amp;&amp; &lt; 40 ) </conditionExpression>
+      <conditionExpression xsi:type="tFormalExpression" language="http://www.jboss.org/drools/rule" >ProcessVariable(name == "person", $value: value) Person( age &gt; 25 &amp;&amp; &lt; 40 ) from $value</conditionExpression>
     </sequenceFlow>
     <sequenceFlow id="_3-_6" sourceRef="_3" targetRef="_6" name="under 18" tns:priority="1" >
-      <conditionExpression xsi:type="tFormalExpression" language="http://www.jboss.org/drools/rule" >Person( age &lt; 18 )</conditionExpression>
+      <conditionExpression xsi:type="tFormalExpression" language="http://www.jboss.org/drools/rule" >ProcessVariable(name == "person", $value: value) Person( age &lt; 18 ) from $value </conditionExpression>
     </sequenceFlow>
     <sequenceFlow id="_4-_7" sourceRef="_4" targetRef="_7" />
     <sequenceFlow id="_5-_7" sourceRef="_5" targetRef="_7" />

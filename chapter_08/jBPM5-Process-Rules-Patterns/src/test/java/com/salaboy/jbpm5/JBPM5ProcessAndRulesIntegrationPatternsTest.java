@@ -19,10 +19,10 @@ import org.drools.runtime.process.ProcessInstance;
 import org.jbpm.workflow.instance.impl.WorkflowProcessInstanceImpl;
 import org.junit.Test;
 
-public class jBPM5ProcessAndRulesTest {
+public class JBPM5ProcessAndRulesIntegrationPatternsTest {
 
     @Test
-    public void testSimpleDecision() {
+    public void testSimpleRulesDecision() {
 
         KnowledgeBuilder kbuilder = KnowledgeBuilderFactory.newKnowledgeBuilder();
 
@@ -97,6 +97,7 @@ public class jBPM5ProcessAndRulesTest {
         assertEquals(processInstance.getState(), ProcessInstance.STATE_PENDING);
 
         ksession.startProcessInstance(processInstance.getId());
+        // We need to fire all the rules in order to execute the activated rules
         ksession.fireAllRules();
         
         

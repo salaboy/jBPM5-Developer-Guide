@@ -1,0 +1,32 @@
+package com.salaboy.process;
+import com.salaboy.jbpm5.*;
+import com.salaboy.model.*;
+import org.jbpm.workflow.instance.impl.WorkflowProcessInstanceImpl;
+
+
+
+rule "Calculate Todays Score - Based on Plan"
+    when
+        WorkflowProcessInstanceImpl($id: id)
+        ProcessVariable(processInstanceId == $id, name == "person", $value: value) 
+        $p: Person() from $value
+    then
+       System.out.println(" ### Person inside the rule: "+$p);
+end
+
+rule "For Each Process of Type Person - Validate the Name and the Agent"
+    when
+        ProcessVariable( name == "person", $name: value.name == "Salaboy", $age: value.age > 18) 
+        
+    then
+       System.out.println(" ### Person's name inside the rule: "+$name + " - age: "+ $age );
+end
+
+
+rule "For Each Process of Type RatesToday - Validate A and B"
+    when
+        ProcessVariable( name == "rates", $rateA: value.rateA > 0, $rateB: value.rateB > 80) 
+        
+    then
+       System.out.println(" ### RatesToday's inside the rules A: "+$rateA + " - B: "+ $rateB );
+end
