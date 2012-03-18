@@ -3,14 +3,14 @@
                xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
                xsi:schemaLocation="http://java.sun.com/xml/ns/persistence/orm orm_1_0.xsd"
                version="1.0">  
-      <!--named-query name="ProcessInstancesWaitingForEvent">
+      <named-query name="QueuedRequestInfos">
           <query>
-select 
-    processInstanceInfo.processInstanceId
-from 
-    ProcessInstanceInfo processInstanceInfo join processInstanceInfo.eventTypes eventTypes
-where
-    eventTypes = :type
+              Select r from RequestInfo as r where r.status ='QUEUED'
           </query>
-      </named-query-->
+      </named-query>
+      <named-query name="ExecutedRequests">
+          <query>
+              Select r from RequestInfo as r where r.status ='DONE'
+          </query>
+      </named-query>
 </entity-mappings>

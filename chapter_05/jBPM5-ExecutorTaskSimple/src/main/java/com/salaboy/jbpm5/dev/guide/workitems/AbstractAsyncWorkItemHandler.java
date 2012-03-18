@@ -9,29 +9,27 @@ import org.drools.runtime.process.WorkItemManager;
 
 import com.salaboy.jbpm5.dev.guide.executor.CommandContext;
 import com.salaboy.jbpm5.dev.guide.executor.Executor;
-import com.salaboy.jbpm5.dev.guide.executor.ExecutorListener;
-import com.salaboy.jbpm5.dev.guide.executor.ExecutorListenerBuilder;
+
 
 public class AbstractAsyncWorkItemHandler implements WorkItemHandler {
 	
 	private final Executor executor;
-	private final ExecutorListenerBuilder listenerBuilder;
-	private ExecutorListener listener = null;
+	
 	
 	private String execKey;
-	
-	public AbstractAsyncWorkItemHandler(Executor executor, ExecutorListenerBuilder listenerBuilder) {
+	private String callback;
+        
+	public AbstractAsyncWorkItemHandler(Executor executor, String execKey, String callback) {
 		this.executor = executor;
-		this.listenerBuilder = listenerBuilder;
+		this.execKey = execKey;
+                this.callback = callback;
 	}
 	
 	public void executeWorkItem(WorkItem workItem, WorkItemManager manager) {
-		if (listenerBuilder != null) {
-			this.listener = listenerBuilder.build();
-		}
+		
 		long workItemId = workItem.getId();
 		String command = (String) workItem.getParameter("commandClass");
-		this.execKey = workItem.getName() + "_" + workItem.getProcessInstanceId() + "_" + workItemId;
+		//this.execKey = workItem.getName() + "_" + workItem.getProcessInstanceId() + "_" + workItemId;
 		CommandContext ctx = new CommandContext();
 		for (Map.Entry<String, Object> entry : workItem.getParameters().entrySet()) {
 			if (entry.getValue() instanceof Serializable) {
@@ -39,28 +37,24 @@ public class AbstractAsyncWorkItemHandler implements WorkItemHandler {
 			}
 		}
 		ctx.setData("_workItemId", String.valueOf(workItemId));
-		this.executor.schedule(command, this.execKey, ctx);
+                ctx.setData("callback", callback);
+		this.executor.scheduleRequest(command, this.execKey, ctx);
 		String sWaitTillComplete = (String) workItem.getParameter("waitTillComplete");
 		Boolean waitTillComplete = sWaitTillComplete == null ? null : Boolean.valueOf(sWaitTillComplete);
 		if (waitTillComplete == null || !waitTillComplete.booleanValue()) {
 			manager.completeWorkItem(workItemId, workItem.getResults());
 		}
-		if (listener != null) {
-			listener.setExecutionKey(this.execKey);
-			listener.init();
-		} 
+		
 	}
 
 	public void abortWorkItem(WorkItem workItem, WorkItemManager manager) {
-		executor.unschedule(this.execKey);
+		executor.cancelRequest(this.execKey);
 		String sWaitTillComplete = (String) workItem.getParameter("waitTillComplete");
 		Boolean waitTillComplete = sWaitTillComplete == null ? null : Boolean.valueOf(sWaitTillComplete);
 		if (waitTillComplete == null || !waitTillComplete.booleanValue()) {
 			manager.abortWorkItem(workItem.getId());
 		}
-		if (listener != null) {
-			listener.destroy();
-		} 
+		
 	}
 	
 	public Executor getExecutor() {

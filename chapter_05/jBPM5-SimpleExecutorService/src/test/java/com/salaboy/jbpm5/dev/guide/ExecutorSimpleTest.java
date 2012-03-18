@@ -4,17 +4,33 @@
  */
 package com.salaboy.jbpm5.dev.guide;
 
+import com.salaboy.jbpm5.dev.guide.executor.CommandContext;
 import com.salaboy.jbpm5.dev.guide.executor.Executor;
-import com.salaboy.jbpm5.dev.guide.executor.ExecutorFactoryBean;
+import com.salaboy.jbpm5.dev.guide.executor.commands.PrintOutCommand;
+import java.sql.SQLException;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import javax.persistence.EntityManager;
+import javax.persistence.EntityManagerFactory;
+import org.h2.tools.DeleteDbFiles;
+import org.h2.tools.Server;
 
 import org.junit.*;
+import static org.junit.Assert.*;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.support.ClassPathXmlApplicationContext;
 
 /**
  *
  * @author salaboy
  */
 public class ExecutorSimpleTest {
+
     private Executor executor;
+    private Server server;
+    private ApplicationContext ctx;
+    public static Map<String, Object> cachedEntities = new HashMap<String, Object>();
     public ExecutorSimpleTest() {
     }
 
@@ -28,21 +44,70 @@ public class ExecutorSimpleTest {
 
     @Before
     public void setUp() throws Exception {
-    	ExecutorFactoryBean factoryBean = new ExecutorFactoryBean();
-    	executor = factoryBean.getObject();
+        DeleteDbFiles.execute("~", "mydb", false);
+
+        try {
+
+            server = Server.createTcpServer(new String[]{"-tcp", "-tcpAllowOthers", "-tcpDaemon", "-trace"}).start();
+        } catch (SQLException ex) {
+            System.out.println("ex: " + ex);
+        }
+
+        ctx = new ClassPathXmlApplicationContext("applicationContext.xml");
+        executor = (Executor) ctx.getBean("executorService");
+        executor.init();
     }
 
     @After
     public void tearDown() {
         executor.destroy();
         executor = null;
+        server.stop();
     }
 
     @Test
     public void executorSimpleTest() throws InterruptedException {
+
+        executor.scheduleRequest("com.salaboy.jbpm5.dev.guide.executor.commands.PrintOutCommand", "myKey", null);
+
+        Thread.sleep(10000);
+
+        EntityManagerFactory emf = (EntityManagerFactory) ctx.getBean("entityManagerFactory");
+        EntityManager em = emf.createEntityManager();
+        List resultList = em.createNamedQuery("ExecutedRequests").getResultList();
+
+        assertEquals(1, resultList.size());
+
+
+    }
+
+    @Test
+    public void executorSetupSpringTest() {
+        EntityManagerFactory emf = (EntityManagerFactory) ctx.getBean("entityManagerFactory");
+
+        assertNotNull(emf);
+        EntityManager em = emf.createEntityManager();
+        List resultList = em.createNamedQuery("QueuedRequestInfos").getResultList();
+
+        assertEquals(0, resultList.size());
+
+
+    }
+
+    @Test
+    public void executorSimpleTestWithCallback() throws InterruptedException {
+        cachedEntities.put("myKey", new Object());
+        CommandContext commandContext = new CommandContext();
+        commandContext.setData("callback", SimpleCommandDoneHandler.class.getCanonicalName());
+        executor.scheduleRequest(PrintOutCommand.class.getCanonicalName(), "myKey", commandContext);
+
+        Thread.sleep(10000);
+
+        EntityManagerFactory emf = (EntityManagerFactory) ctx.getBean("entityManagerFactory");
+        EntityManager em = emf.createEntityManager();
+        List resultList = em.createNamedQuery("ExecutedRequests").getResultList();
+
+        assertEquals(1, resultList.size());
         
-        executor.schedule("com.salaboy.jbpm5.dev.guide.executor.commands.PrintOutCommand", "myKey", null);
-        
-        Thread.sleep(15000);
     }
 }

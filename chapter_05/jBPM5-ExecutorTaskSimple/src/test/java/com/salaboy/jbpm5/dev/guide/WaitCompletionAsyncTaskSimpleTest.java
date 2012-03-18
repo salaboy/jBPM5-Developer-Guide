@@ -6,7 +6,6 @@ package com.salaboy.jbpm5.dev.guide;
 
 import static org.junit.Assert.assertEquals;
 
-import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -33,14 +32,17 @@ import org.junit.Before;
 import org.junit.Test;
 
 import com.salaboy.jbpm5.dev.guide.commands.CheckInCommand;
-import com.salaboy.jbpm5.dev.guide.executor.CommandContext;
-import com.salaboy.jbpm5.dev.guide.executor.CommandDoneHandler;
-import com.salaboy.jbpm5.dev.guide.executor.ExecutionResults;
 import com.salaboy.jbpm5.dev.guide.executor.Executor;
-import com.salaboy.jbpm5.dev.guide.executor.ExecutorFactoryBean;
 import com.salaboy.jbpm5.dev.guide.executor.ExecutorImpl;
-import com.salaboy.jbpm5.dev.guide.executor.ExecutorListenerBuilder;
+
 import com.salaboy.jbpm5.dev.guide.workitems.AbstractAsyncWorkItemHandler;
+import java.sql.SQLException;
+import javax.persistence.EntityManagerFactory;
+import org.h2.tools.DeleteDbFiles;
+import org.h2.tools.Server;
+import org.junit.Ignore;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.support.ClassPathXmlApplicationContext;
 
 /**
  *
@@ -48,39 +50,45 @@ import com.salaboy.jbpm5.dev.guide.workitems.AbstractAsyncWorkItemHandler;
  */
 public class WaitCompletionAsyncTaskSimpleTest {
 
-	protected Executor executor;
-	protected EntityManager em;
+    protected Executor executor;
     protected StatefulKnowledgeSession session;
+    protected ApplicationContext ctx;
+    protected static Map<String, StatefulKnowledgeSession> sessionCache = new HashMap<String, StatefulKnowledgeSession>();
+    private Server server;
 
     public WaitCompletionAsyncTaskSimpleTest() {
     }
 
     @Before
     public void setUp() throws Exception {
-    	initializeExecutionEnvironment();
+        DeleteDbFiles.execute("~", "mydb", false);
+
+        try {
+
+            server = Server.createTcpServer(new String[]{"-tcp", "-tcpAllowOthers", "-tcpDaemon", "-trace"}).start();
+        } catch (SQLException ex) {
+            System.out.println("ex: " + ex);
+        }
+        initializeExecutionEnvironment();
         initializeSession();
     }
-    
-    @After
-    public void tearDown(){
-    	stopExecutionEnvironment();
-    }
-    
-    protected void initializeExecutionEnvironment() throws Exception {
-    	CheckInCommand.reset();
-    	ExecutorFactoryBean factoryBean = new ExecutorFactoryBean();
-    	factoryBean.setWaitTime(5000);
-		executor = factoryBean.getObject();
-		em = factoryBean.createEntityManager();
-    }
-    
-    protected void stopExecutionEnvironment() {
-		executor.destroy();
-		executor = null;
-		em = null;
-	}
 
-	private void initializeSession() {
+    @After
+    public void tearDown() {
+        executor.destroy();
+        server.stop();
+    }
+
+    protected void initializeExecutionEnvironment() throws Exception {
+        CheckInCommand.reset();
+        ctx = new ClassPathXmlApplicationContext("applicationContext.xml");
+        executor = (Executor) ctx.getBean("executorService");
+        executor.init();
+    }
+
+    
+
+    private void initializeSession() {
         KnowledgeBuilder kbuilder = KnowledgeBuilderFactory.newKnowledgeBuilder();
 
         kbuilder.add(new ClassPathResource("DeferExecutionScenarioV2-data.bpmn"), ResourceType.BPMN2);
@@ -100,42 +108,56 @@ public class WaitCompletionAsyncTaskSimpleTest {
 
         session = kbase.newStatefulKnowledgeSession();
         KnowledgeRuntimeLoggerFactory.newConsoleLogger(session);
-        
-        ((StatefulKnowledgeSessionImpl)session).session.addEventListener(new org.drools.event.AgendaEventListener() {
-            public void activationCreated(org.drools.event.ActivationCreatedEvent event, WorkingMemory workingMemory) { }
-            public void activationCancelled(org.drools.event.ActivationCancelledEvent event, WorkingMemory workingMemory) { }
-            public void beforeActivationFired(org.drools.event.BeforeActivationFiredEvent event, WorkingMemory workingMemory) { }
-            public void afterActivationFired(org.drools.event.AfterActivationFiredEvent event, WorkingMemory workingMemory) { }
-            public void agendaGroupPopped(org.drools.event.AgendaGroupPoppedEvent event, WorkingMemory workingMemory) { }
-            public void agendaGroupPushed(org.drools.event.AgendaGroupPushedEvent event, WorkingMemory workingMemory) { }
-            public void beforeRuleFlowGroupActivated(RuleFlowGroupActivatedEvent event, WorkingMemory workingMemory) { }
+
+        ((StatefulKnowledgeSessionImpl) session).session.addEventListener(new org.drools.event.AgendaEventListener() {
+
+            public void activationCreated(org.drools.event.ActivationCreatedEvent event, WorkingMemory workingMemory) {
+            }
+
+            public void activationCancelled(org.drools.event.ActivationCancelledEvent event, WorkingMemory workingMemory) {
+            }
+
+            public void beforeActivationFired(org.drools.event.BeforeActivationFiredEvent event, WorkingMemory workingMemory) {
+            }
+
+            public void afterActivationFired(org.drools.event.AfterActivationFiredEvent event, WorkingMemory workingMemory) {
+            }
+
+            public void agendaGroupPopped(org.drools.event.AgendaGroupPoppedEvent event, WorkingMemory workingMemory) {
+            }
+
+            public void agendaGroupPushed(org.drools.event.AgendaGroupPushedEvent event, WorkingMemory workingMemory) {
+            }
+
+            public void beforeRuleFlowGroupActivated(RuleFlowGroupActivatedEvent event, WorkingMemory workingMemory) {
+            }
+
             public void afterRuleFlowGroupActivated(RuleFlowGroupActivatedEvent event, WorkingMemory workingMemory) {
                 workingMemory.fireAllRules();
             }
-            public void beforeRuleFlowGroupDeactivated(RuleFlowGroupDeactivatedEvent event, WorkingMemory workingMemory) { }
-            public void afterRuleFlowGroupDeactivated(RuleFlowGroupDeactivatedEvent event, WorkingMemory workingMemory) { }
+
+            public void beforeRuleFlowGroupDeactivated(RuleFlowGroupDeactivatedEvent event, WorkingMemory workingMemory) {
+            }
+
+            public void afterRuleFlowGroupDeactivated(RuleFlowGroupDeactivatedEvent event, WorkingMemory workingMemory) {
+            }
         });
-        
-        
+
+
     }
 
     @Test
     public void executorCheckInTestFinishesWithoutHandler() throws InterruptedException {
         HashMap<String, Object> input = new HashMap<String, Object>();
-        
-        String patientName = "John Doe";
-		input.put("bedrequest_patientname", patientName);
 
-		ExecutorListenerBuilder listenerBuilder = new ExecutorListenerBuilder(em, new CommandDoneHandler() {
-			public void onCommandDone(CommandContext ctx, ExecutionResults execResults) {
-				//do nothing
-				System.out.println("I'm not completing the workItem");
-			}
-		});
-		
-        AbstractAsyncWorkItemHandler asyncHandler = new AbstractAsyncWorkItemHandler(executor, listenerBuilder);
-        session.getWorkItemManager().registerWorkItemHandler("Async Work", asyncHandler);
+        String patientName = "John Doe";
+        input.put("bedrequest_patientname", patientName);
+
         
+
+        AbstractAsyncWorkItemHandler asyncHandler = new AbstractAsyncWorkItemHandler(executor, "myBusinessKey", DoNothingCallback.class.getCanonicalName());
+        session.getWorkItemManager().registerWorkItemHandler("Async Work", asyncHandler);
+
         WorkflowProcessInstance pI = (WorkflowProcessInstance) session.startProcess("PatientDeferredCheckIn", input);
 
         assertEquals(ProcessInstance.STATE_ACTIVE, pI.getState());
@@ -143,31 +165,22 @@ public class WaitCompletionAsyncTaskSimpleTest {
         assertEquals(0, CheckInCommand.getCheckInCount());
 
         Thread.sleep(((ExecutorImpl) executor).getWaitTime() + 1000);
-        
+
         assertEquals(1, CheckInCommand.getCheckInCount());
     }
 
     @Test
     public void executorCheckInTestFinishesWithHandler() throws InterruptedException {
         HashMap<String, Object> input = new HashMap<String, Object>();
-        
-        String patientName = "John Doe";
-		input.put("bedrequest_patientname", patientName);
 
-		ExecutorListenerBuilder listenerBuilder = new ExecutorListenerBuilder(em, new CommandDoneHandler() {
-			public void onCommandDone(CommandContext ctx, ExecutionResults execResults) {
-				Map<String, Object> results = new HashMap<String, Object>();
-				for (Map.Entry<String, Serializable> entry : ctx.getData().entrySet()) {
-					results.put(entry.getKey(), entry.getValue());
-				}
-				String sWorkItemId = (String) ctx.getData("_workItemId");
-				session.getWorkItemManager().completeWorkItem(Long.valueOf(sWorkItemId), results);
-			}
-		});
-		
-        AbstractAsyncWorkItemHandler asyncHandler = new AbstractAsyncWorkItemHandler(executor, listenerBuilder);
+        String patientName = "John Doe";
+        input.put("bedrequest_patientname", patientName);
+
+        sessionCache.put("myBusinessKey", session);
+
+        AbstractAsyncWorkItemHandler asyncHandler = new AbstractAsyncWorkItemHandler(executor, "myBusinessKey", CompleteWorkItemCallback.class.getCanonicalName());
         session.getWorkItemManager().registerWorkItemHandler("Async Work", asyncHandler);
-        
+
         WorkflowProcessInstance pI = (WorkflowProcessInstance) session.startProcess("PatientDeferredCheckIn", input);
 
         assertEquals(ProcessInstance.STATE_ACTIVE, pI.getState());
@@ -175,38 +188,32 @@ public class WaitCompletionAsyncTaskSimpleTest {
         assertEquals(0, CheckInCommand.getCheckInCount());
 
         Thread.sleep(((ExecutorImpl) executor).getWaitTime() * 2);
-        
+
         assertEquals(1, CheckInCommand.getCheckInCount());
-        
+
         assertEquals(ProcessInstance.STATE_COMPLETED, pI.getState());
     }
-    
+
     @Test
+    @Ignore // what's the point of this test??
     public void executorCheckInTestStoppedBefore() throws InterruptedException {
         HashMap<String, Object> input = new HashMap<String, Object>();
-        
+
         String patientName = "John Doe";
-		input.put("bedrequest_patientname", patientName);
-        
-		ExecutorListenerBuilder listenerBuilder = new ExecutorListenerBuilder(em, new CommandDoneHandler() {
-			public void onCommandDone(CommandContext ctx, ExecutionResults execResults) {
-				//do nothing
-				System.out.println("I'm not completing the workItem");
-			}
-		});
-		
-        AbstractAsyncWorkItemHandler asyncHandler = new AbstractAsyncWorkItemHandler(executor, listenerBuilder);
+        input.put("bedrequest_patientname", patientName);
+
+
+        AbstractAsyncWorkItemHandler asyncHandler = new AbstractAsyncWorkItemHandler(executor, "myBusinessKey", DoNothingCallback.class.getCanonicalName());
         session.getWorkItemManager().registerWorkItemHandler("Async Work", asyncHandler);
-        
+
         WorkflowProcessInstance pI = (WorkflowProcessInstance) session.startProcess("PatientDeferredCheckIn", input);
 
         assertEquals(ProcessInstance.STATE_ACTIVE, pI.getState());
 
         assertEquals(0, CheckInCommand.getCheckInCount());
-        
+
         Thread.sleep(((ExecutorImpl) executor).getWaitTime() - 1000);
-        
+
         assertEquals(0, CheckInCommand.getCheckInCount());
     }
-
 }

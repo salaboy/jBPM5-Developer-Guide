@@ -7,30 +7,36 @@ import java.util.Set;
 
 public class ExecutionResults implements Serializable {
 
-	private static final long serialVersionUID = -1738336024526084091L;
-	
-	private Map<String, Serializable> data = new HashMap<String, Serializable>();
-	
-	public ExecutionResults() {
-	}
-	
-	public void setData(Map<String, Serializable> data) {
-		this.data = data;
-	}
-	
-	public Map<String, Serializable> getData() {
-		return data;
-	}
+    private static final long serialVersionUID = -1738336024526084091L;
+    private Map<String, Serializable> data = new HashMap<String, Serializable>();
 
-	public Serializable getData(String key) {
-		return data.get(key);
-	}
+    public ExecutionResults() {
+    }
 
-	public void setData(String key, Serializable value) {
-		data.put(key, value);
-	}
+    public void setData(Map<String, Serializable> data) {
+        this.data = data;
+    }
 
-	public Set<String> keySet() {
-		return data.keySet();
-	}
+    public Map<String, Serializable> getData() {
+        return data;
+    }
+
+    public Serializable getData(String key) {
+        return data.get(key);
+    }
+
+    public void setData(String key, Serializable value) {
+        data.put(key, value);
+    }
+
+    public Set<String> keySet() {
+        return data.keySet();
+    }
+
+    @Override
+    public String toString() {
+        return "ExecutionResults{" + "data=" + data + '}';
+    }
+    
+    
 }

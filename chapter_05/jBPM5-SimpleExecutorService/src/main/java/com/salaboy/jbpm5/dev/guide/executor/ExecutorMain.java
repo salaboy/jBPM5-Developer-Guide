@@ -1,28 +1,22 @@
 package com.salaboy.jbpm5.dev.guide.executor;
 
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.support.ClassPathXmlApplicationContext;
+
 public class ExecutorMain {
 
-	public static void main(String[] args) {
-		String waitTimeString = args.length > 0 ? args[0] : "5000";
-		int waitTime = 5000;
-		try {
-			waitTime = Integer.parseInt(waitTimeString);
-		} catch (NumberFormatException e) {
-			waitTime = 5000;
-		}
-		final ExecutorImpl executor = new ExecutorImpl();
-		executor.setWaitTime(waitTime);
-		executor.init();
+    public static void main(String[] args) {
+        ApplicationContext ctx = new ClassPathXmlApplicationContext("applicationContext.xml");
+        final Executor executor = (Executor) ctx.getBean("executorService");
+        Runtime.getRuntime().addShutdownHook(new Thread() {
 
-		try {
-			executor.join();
-		} catch (InterruptedException e) {
-			//do nothing
-		}
-		Runtime.getRuntime().addShutdownHook(new Thread() {
-		    public void run() {
-		    	executor.destroy();
-		    }
-		});
-	}
+            public void run() {
+                System.out.println(" >>> Destroying Executor Service!");
+                executor.destroy();
+            }
+        });
+        
+        executor.init();
+
+    }
 }

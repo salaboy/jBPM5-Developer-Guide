@@ -16,7 +16,8 @@ public class PrintOutCommand implements Command{
 
     public ExecutionResults execute(CommandContext ctx) {
         System.out.println(">>> Hi This is the first command!");
-        return null;
+        ExecutionResults executionResults = new ExecutionResults();
+        return executionResults;
     }
     
 }
