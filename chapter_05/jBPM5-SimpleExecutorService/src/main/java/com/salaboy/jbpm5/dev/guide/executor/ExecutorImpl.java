@@ -154,11 +154,15 @@ public class ExecutorImpl implements Executor {
 
     }
 
-    public void scheduleRequest(String requestName, String key, CommandContext ctx) {
+    public void scheduleRequest(String requestName, CommandContext ctx) {
+        if(ctx == null){
+            throw new IllegalStateException("A Context Must Be Provided! ");
+        }
+        String businessKey = (String) ctx.getData("businessKey");
         EntityManager em = emf.createEntityManager();
         RequestInfo requestInfo = new RequestInfo();
         requestInfo.setCommandName(requestName);
-        requestInfo.setKey(key);
+        requestInfo.setKey(businessKey);
         requestInfo.setStatus(STATUS.QUEUED);
         requestInfo.setMessage("Ready to execute");
 

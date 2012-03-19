@@ -11,6 +11,7 @@ import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import org.h2.tools.DeleteDbFiles;
@@ -66,9 +67,10 @@ public class ExecutorSimpleTest {
     }
 
     @Test
-    public void executorSimpleTest() throws InterruptedException {
-
-        executor.scheduleRequest("com.salaboy.jbpm5.dev.guide.executor.commands.PrintOutCommand", "myKey", null);
+    public void requestNoCallBackTest() throws InterruptedException {
+        CommandContext ctxCMD = new CommandContext();
+        ctxCMD.setData("businessKey", UUID.randomUUID().toString());
+        executor.scheduleRequest(PrintOutCommand.class.getCanonicalName(), ctxCMD);
 
         Thread.sleep(10000);
 
@@ -96,10 +98,12 @@ public class ExecutorSimpleTest {
 
     @Test
     public void executorSimpleTestWithCallback() throws InterruptedException {
-        cachedEntities.put("myKey", new Object());
+        
         CommandContext commandContext = new CommandContext();
+        commandContext.setData("businessKey", UUID.randomUUID().toString());
+        cachedEntities.put((String)commandContext.getData("businessKey"), new Object());
         commandContext.setData("callback", SimpleCommandDoneHandler.class.getCanonicalName());
-        executor.scheduleRequest(PrintOutCommand.class.getCanonicalName(), "myKey", commandContext);
+        executor.scheduleRequest(PrintOutCommand.class.getCanonicalName(), commandContext);
 
         Thread.sleep(10000);
 
