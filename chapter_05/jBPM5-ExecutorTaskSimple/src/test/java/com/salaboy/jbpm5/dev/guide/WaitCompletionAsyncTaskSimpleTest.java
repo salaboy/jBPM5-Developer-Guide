@@ -197,7 +197,6 @@ public class WaitCompletionAsyncTaskSimpleTest {
     }
 
     @Test
-    @Ignore // what's the point of this test??
     public void executorCheckInTestStoppedBefore() throws InterruptedException {
         HashMap<String, Object> input = new HashMap<String, Object>();
 
@@ -218,5 +217,9 @@ public class WaitCompletionAsyncTaskSimpleTest {
         Thread.sleep(((ExecutorImpl) executor).getWaitTime() - 1000);
 
         assertEquals(0, CheckInCommand.getCheckInCount());
+
+        Thread.sleep(1500);
+
+        assertEquals(1, CheckInCommand.getCheckInCount());
     }
 }
