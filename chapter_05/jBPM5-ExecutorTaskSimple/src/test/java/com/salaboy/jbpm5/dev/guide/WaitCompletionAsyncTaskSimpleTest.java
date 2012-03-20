@@ -9,7 +9,6 @@ import static org.junit.Assert.assertEquals;
 import java.util.HashMap;
 import java.util.Map;
 
-import javax.persistence.EntityManager;
 
 import org.drools.KnowledgeBase;
 import org.drools.KnowledgeBaseFactory;
@@ -37,7 +36,8 @@ import com.salaboy.jbpm5.dev.guide.executor.ExecutorImpl;
 
 import com.salaboy.jbpm5.dev.guide.workitems.AbstractAsyncWorkItemHandler;
 import java.sql.SQLException;
-import javax.persistence.EntityManagerFactory;
+import java.util.ArrayList;
+import java.util.List;
 import org.h2.tools.DeleteDbFiles;
 import org.h2.tools.Server;
 import org.junit.Ignore;
@@ -154,8 +154,9 @@ public class WaitCompletionAsyncTaskSimpleTest {
         input.put("bedrequest_patientname", patientName);
 
         
-
-        AbstractAsyncWorkItemHandler asyncHandler = new AbstractAsyncWorkItemHandler(executor, "myBusinessKey", DoNothingCallback.class.getCanonicalName());
+        List<String> callbacks = new ArrayList<String>();
+        callbacks.add(DoNothingCallback.class.getCanonicalName());
+        AbstractAsyncWorkItemHandler asyncHandler = new AbstractAsyncWorkItemHandler(executor, "myBusinessKey", callbacks);
         session.getWorkItemManager().registerWorkItemHandler("Async Work", asyncHandler);
 
         WorkflowProcessInstance pI = (WorkflowProcessInstance) session.startProcess("PatientDeferredCheckIn", input);
@@ -177,8 +178,9 @@ public class WaitCompletionAsyncTaskSimpleTest {
         input.put("bedrequest_patientname", patientName);
 
         sessionCache.put("myBusinessKey", session);
-
-        AbstractAsyncWorkItemHandler asyncHandler = new AbstractAsyncWorkItemHandler(executor, "myBusinessKey", CompleteWorkItemCallback.class.getCanonicalName());
+        List<String> callbacks = new ArrayList<String>();
+        callbacks.add(CompleteWorkItemCallback.class.getCanonicalName());
+        AbstractAsyncWorkItemHandler asyncHandler = new AbstractAsyncWorkItemHandler(executor, "myBusinessKey", callbacks);
         session.getWorkItemManager().registerWorkItemHandler("Async Work", asyncHandler);
 
         WorkflowProcessInstance pI = (WorkflowProcessInstance) session.startProcess("PatientDeferredCheckIn", input);
@@ -202,8 +204,9 @@ public class WaitCompletionAsyncTaskSimpleTest {
         String patientName = "John Doe";
         input.put("bedrequest_patientname", patientName);
 
-
-        AbstractAsyncWorkItemHandler asyncHandler = new AbstractAsyncWorkItemHandler(executor, "myBusinessKey", DoNothingCallback.class.getCanonicalName());
+        List<String> callbacks = new ArrayList<String>();
+        callbacks.add(DoNothingCallback.class.getCanonicalName());
+        AbstractAsyncWorkItemHandler asyncHandler = new AbstractAsyncWorkItemHandler(executor, "myBusinessKey", callbacks);
         session.getWorkItemManager().registerWorkItemHandler("Async Work", asyncHandler);
 
         WorkflowProcessInstance pI = (WorkflowProcessInstance) session.startProcess("PatientDeferredCheckIn", input);

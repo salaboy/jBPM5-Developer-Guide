@@ -9,6 +9,7 @@ import org.drools.runtime.process.WorkItemManager;
 
 import com.salaboy.jbpm5.dev.guide.executor.CommandContext;
 import com.salaboy.jbpm5.dev.guide.executor.Executor;
+import java.util.List;
 
 
 public class AbstractAsyncWorkItemHandler implements WorkItemHandler {
@@ -17,12 +18,12 @@ public class AbstractAsyncWorkItemHandler implements WorkItemHandler {
 	
 	
 	private String execKey;
-	private String callback;
+	private List<String> callbacks;
         
-	public AbstractAsyncWorkItemHandler(Executor executor, String execKey, String callback) {
+	public AbstractAsyncWorkItemHandler(Executor executor, String execKey, List<String> callbacks) {
 		this.executor = executor;
 		this.execKey = execKey;
-                this.callback = callback;
+                this.callbacks = callbacks;
 	}
 	
 	public void executeWorkItem(WorkItem workItem, WorkItemManager manager) {
@@ -37,9 +38,10 @@ public class AbstractAsyncWorkItemHandler implements WorkItemHandler {
 			}
 		}
 		ctx.setData("_workItemId", String.valueOf(workItemId));
-                ctx.setData("callback", callback);
+                ctx.setData("callbacks", callbacks);
                 ctx.setData("businessKey",this.execKey);     
-		this.executor.scheduleRequest(command, ctx);
+                Long requestId = this.executor.scheduleRequest(command, ctx);
+                workItem.getParameters().put("requestId", requestId);
 		String sWaitTillComplete = (String) workItem.getParameter("waitTillComplete");
 		Boolean waitTillComplete = sWaitTillComplete == null ? null : Boolean.valueOf(sWaitTillComplete);
 		if (waitTillComplete == null || !waitTillComplete.booleanValue()) {
@@ -49,7 +51,8 @@ public class AbstractAsyncWorkItemHandler implements WorkItemHandler {
 	}
 
 	public void abortWorkItem(WorkItem workItem, WorkItemManager manager) {
-		executor.cancelRequest(this.execKey);
+                Long requestId = (Long) workItem.getParameter("requestId");    
+                executor.cancelRequest(requestId);
 		String sWaitTillComplete = (String) workItem.getParameter("waitTillComplete");
 		Boolean waitTillComplete = sWaitTillComplete == null ? null : Boolean.valueOf(sWaitTillComplete);
 		if (waitTillComplete == null || !waitTillComplete.booleanValue()) {

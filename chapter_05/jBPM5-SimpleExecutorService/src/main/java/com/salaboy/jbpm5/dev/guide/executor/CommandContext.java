@@ -8,24 +8,24 @@ import java.util.Set;
 public class CommandContext implements Serializable {
 
     private static final long serialVersionUID = -1440017934399413860L;
-    private Map<String, Serializable> data = new HashMap<String, Serializable>();
+    private Map<String, Object> data = new HashMap<String, Object>();
 
     public CommandContext() {
     }
 
-    public void setData(Map<String, Serializable> data) {
+    public void setData(Map<String, Object> data) {
         this.data = data;
     }
 
-    public Map<String, Serializable> getData() {
+    public Map<String, Object> getData() {
         return data;
     }
 
-    public Serializable getData(String key) {
+    public Object getData(String key) {
         return data.get(key);
     }
 
-    public void setData(String key, Serializable value) {
+    public void setData(String key, Object value) {
         data.put(key, value);
     }
 

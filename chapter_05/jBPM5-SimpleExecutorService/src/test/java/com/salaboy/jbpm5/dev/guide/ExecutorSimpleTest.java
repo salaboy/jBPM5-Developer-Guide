@@ -8,10 +8,7 @@ import com.salaboy.jbpm5.dev.guide.executor.CommandContext;
 import com.salaboy.jbpm5.dev.guide.executor.Executor;
 import com.salaboy.jbpm5.dev.guide.executor.commands.PrintOutCommand;
 import java.sql.SQLException;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.UUID;
+import java.util.*;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import org.h2.tools.DeleteDbFiles;
@@ -102,7 +99,9 @@ public class ExecutorSimpleTest {
         CommandContext commandContext = new CommandContext();
         commandContext.setData("businessKey", UUID.randomUUID().toString());
         cachedEntities.put((String)commandContext.getData("businessKey"), new Object());
-        commandContext.setData("callback", SimpleCommandDoneHandler.class.getCanonicalName());
+        List<String> callbacks = new ArrayList<String>();
+        callbacks.add(SimpleCommandDoneHandler.class.getCanonicalName());
+        commandContext.setData("callbacks", callbacks);
         executor.scheduleRequest(PrintOutCommand.class.getCanonicalName(), commandContext);
 
         Thread.sleep(10000);
@@ -113,5 +112,26 @@ public class ExecutorSimpleTest {
 
         assertEquals(1, resultList.size());
         
+    }
+    
+    @Test
+    public void cancelRequestTest() throws InterruptedException {
+        CommandContext ctxCMD = new CommandContext();
+        ctxCMD.setData("businessKey", UUID.randomUUID().toString());
+        Long requestId = executor.scheduleRequest(PrintOutCommand.class.getCanonicalName(), ctxCMD);
+
+        Thread.sleep(500);
+        
+        executor.cancelRequest(requestId);
+        
+        Thread.sleep(9000);
+
+        EntityManagerFactory emf = (EntityManagerFactory) ctx.getBean("entityManagerFactory");
+        EntityManager em = emf.createEntityManager();
+        List resultList = em.createNamedQuery("ExecutedRequests").getResultList();
+
+        assertEquals(0, resultList.size());
+
+
     }
 }

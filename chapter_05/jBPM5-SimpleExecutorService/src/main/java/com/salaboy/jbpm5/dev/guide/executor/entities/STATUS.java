@@ -9,7 +9,7 @@ package com.salaboy.jbpm5.dev.guide.executor.entities;
  * @author salaboy
  */
 public enum STATUS {
-   QUEUED, DONE, NOTIFIED, ERROR;
+   QUEUED, DONE, CANCELLED, ERROR;
 
    
 }
