@@ -16,6 +16,8 @@ import com.salaboy.jbpm5.dev.guide.executor.entities.RequestInfo;
 import com.salaboy.jbpm5.dev.guide.executor.entities.STATUS;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.persistence.EntityManager;
@@ -31,7 +33,7 @@ public class ExecutorImpl implements Executor {
     private int waitTime = 5000;
     private EntityManagerFactory emf;
     private int nroOfThreads = 1;
-    private static ExecutorService executorService;
+    private static ScheduledExecutorService scheduler;
 
     public ExecutorImpl() {
     }
@@ -68,7 +70,7 @@ public class ExecutorImpl implements Executor {
         final Runnable task = new Runnable() {
 
             public void run() {
-
+                System.out.println(" >>> Waking Up!!!");
                 EntityManager em = emf.createEntityManager();
                 List<?> resultList = em.createQuery("Select r from RequestInfo as r where r.status ='QUEUED'").getResultList();
 
@@ -89,12 +91,12 @@ public class ExecutorImpl implements Executor {
                             }
                         }
                         ExecutionResults results = cmd.execute(ctx);
-                        if(ctx != null && ctx.getData("callback") != null){
-                            System.out.println(" ### Callback: "+ctx.getData("callback"));
+                        if (ctx != null && ctx.getData("callback") != null) {
+                            System.out.println(" ### Callback: " + ctx.getData("callback"));
                             CommandDoneHandler handler = (CommandDoneHandler) Class.forName(ctx.getData("callback").toString()).newInstance();
                             ctx.setData("key", r.getKey());
                             handler.onCommandDone(ctx, results);
-                        }else{
+                        } else {
                             System.out.println(" ### Callback: NULL");
                         }
                         if (results != null) {
@@ -120,6 +122,7 @@ public class ExecutorImpl implements Executor {
                         Logger.getLogger(ExecutorImpl.class.getName()).log(Level.SEVERE, null, ex);
                     }
                 }
+                System.out.println(" >>> Going to Sleep!!!");
 
             }
         };
@@ -128,34 +131,17 @@ public class ExecutorImpl implements Executor {
 
         // Execute tasks
         //
-        executorService = Executors.newFixedThreadPool(THREAD_COUNT);
-        new Thread() {
-
-            @Override
-            public void run() {
-                while (running) {
-
-                    
-                    System.out.println("Submiting Task ..." + task + "in executor = "+executorService.toString());
-                    executorService.execute(task);
-                    System.out.println("Going to sleep for ..."+waitTime/THREAD_COUNT+" ms.");
-                    try {
-                        Thread.currentThread().sleep(waitTime/THREAD_COUNT);
-                    } catch (InterruptedException ex) {
-                        Logger.getLogger(ExecutorImpl.class.getName()).log(Level.SEVERE, null, ex);
-                    }
-                    System.out.println("Waking Up! ...");
-
-                }
-            }
-        }.start();
-
+        
+        scheduler = Executors.newScheduledThreadPool(THREAD_COUNT);
+        
+        scheduler.scheduleAtFixedRate(task, 0, waitTime, TimeUnit.MILLISECONDS);
+        
 
 
     }
 
     public void scheduleRequest(String requestName, CommandContext ctx) {
-        if(ctx == null){
+        if (ctx == null) {
             throw new IllegalStateException("A Context Must Be Provided! ");
         }
         String businessKey = (String) ctx.getData("businessKey");
@@ -200,11 +186,11 @@ public class ExecutorImpl implements Executor {
     public void destroy() {
         System.out.println(" >>>>> Destroying Executor!!!!");
         running = false;
-        executorService.shutdown();
+        scheduler.shutdown();
         if (emf.isOpen()) {
             emf.close();
         }
-        
-        
+
+
     }
 }

@@ -38,7 +38,8 @@ public class AbstractAsyncWorkItemHandler implements WorkItemHandler {
 		}
 		ctx.setData("_workItemId", String.valueOf(workItemId));
                 ctx.setData("callback", callback);
-		this.executor.scheduleRequest(command, this.execKey, ctx);
+                ctx.setData("businessKey",this.execKey);     
+		this.executor.scheduleRequest(command, ctx);
 		String sWaitTillComplete = (String) workItem.getParameter("waitTillComplete");
 		Boolean waitTillComplete = sWaitTillComplete == null ? null : Boolean.valueOf(sWaitTillComplete);
 		if (waitTillComplete == null || !waitTillComplete.booleanValue()) {
