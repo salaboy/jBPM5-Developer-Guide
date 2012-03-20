@@ -120,9 +120,7 @@ public class ExecutorSimpleTest {
         CommandContext ctxCMD = new CommandContext();
         ctxCMD.setData("businessKey", UUID.randomUUID().toString());
         Long requestId = executor.scheduleRequest(PrintOutCommand.class.getCanonicalName(), ctxCMD);
-
-        Thread.sleep(500);
-        
+        // cancel the task immediately
         executor.cancelRequest(requestId);
         
         Thread.sleep(9000);

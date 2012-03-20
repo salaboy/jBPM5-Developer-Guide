@@ -190,7 +190,7 @@ public class ExecutorImpl implements Executor {
 
     public void destroy() {
         System.out.println(" >>>>> Destroying Executor!!!!");
-        scheduler.shutdown();
+        scheduler.shutdownNow();
         if (emf.isOpen()) {
             emf.close();
         }
