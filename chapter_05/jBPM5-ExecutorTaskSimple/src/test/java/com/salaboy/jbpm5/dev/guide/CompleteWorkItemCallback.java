@@ -26,7 +26,7 @@ public class CompleteWorkItemCallback implements CommandDoneHandler {
             }
         }
         String sWorkItemId = (String) ctx.getData("_workItemId");
-        String businessKey = (String) ctx.getData("key");
+        String businessKey = (String) ctx.getData("businessKey");
         System.out.println(" xxxxxxxx WorkItemId = "+sWorkItemId + " - - - key = "+businessKey);
         StatefulKnowledgeSession session = WaitCompletionAsyncTaskSimpleTest.sessionCache.get(businessKey);
         System.out.println(" xxxxxxxx  session = "+session);

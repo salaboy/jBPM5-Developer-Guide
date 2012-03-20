@@ -12,12 +12,15 @@ import com.salaboy.jbpm5.dev.guide.executor.ExecutionResults;
  *
  * @author salaboy
  */
-public class SimpleCommandDoneHandler implements CommandDoneHandler{
+public class SimpleIncrementCommandDoneHandler implements CommandDoneHandler{
 
     public void onCommandDone(CommandContext ctx, ExecutionResults results) {
-        System.out.println(" ??? Business key: "+ctx.getData("key"));
-        Object get = ExecutorSimpleTest.cachedEntities.get(ctx.getData("key"));
-        System.out.println("GET = "+get);
+        String businessKey = (String)ctx.getData("businessKey");
+        System.out.println(" ??? Business key: "+businessKey);
+        Long increment = (Long)ExecutorSimpleTest.cachedEntities.get(businessKey);
+        System.out.println(" >>> Before Incrementing = "+increment);
+        ExecutorSimpleTest.cachedEntities.put(businessKey, increment + 1);
+        System.out.println(" >>> After Incrementing = "+ExecutorSimpleTest.cachedEntities.get(businessKey));
         System.out.println(" ??? Command Done!");
         System.out.println(" ??? Command Full Context = "+ctx);
         System.out.println(" ??? Command Full Results = "+results);

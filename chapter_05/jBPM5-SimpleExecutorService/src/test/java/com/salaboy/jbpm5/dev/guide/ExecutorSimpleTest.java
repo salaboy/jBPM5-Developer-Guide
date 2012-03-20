@@ -98,9 +98,9 @@ public class ExecutorSimpleTest {
         
         CommandContext commandContext = new CommandContext();
         commandContext.setData("businessKey", UUID.randomUUID().toString());
-        cachedEntities.put((String)commandContext.getData("businessKey"), new Object());
+        cachedEntities.put((String)commandContext.getData("businessKey"), new Long(1));
         List<String> callbacks = new ArrayList<String>();
-        callbacks.add(SimpleCommandDoneHandler.class.getCanonicalName());
+        callbacks.add(SimpleIncrementCommandDoneHandler.class.getCanonicalName());
         commandContext.setData("callbacks", callbacks);
         executor.scheduleRequest(PrintOutCommand.class.getCanonicalName(), commandContext);
 
@@ -111,6 +111,7 @@ public class ExecutorSimpleTest {
         List resultList = em.createNamedQuery("ExecutedRequests").getResultList();
 
         assertEquals(1, resultList.size());
+        assertEquals(2, ((Long)cachedEntities.get((String)commandContext.getData("businessKey"))).intValue());
         
     }
     

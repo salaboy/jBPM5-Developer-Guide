@@ -97,7 +97,6 @@ public class ExecutorImpl implements Executor {
                             List<String> callbacks = (List<String>) ctx.getData("callbacks");
                             for (String callback : callbacks) {
                                 CommandDoneHandler handler = (CommandDoneHandler) Class.forName(callback).newInstance();
-                                ctx.setData("key", r.getKey());
                                 handler.onCommandDone(ctx, results);
                             }
                         } else {
