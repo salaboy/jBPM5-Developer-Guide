@@ -13,4 +13,23 @@
               Select r from RequestInfo as r where r.status ='DONE'
           </query>
       </named-query>
+      
+       <named-query name="InErrorRequests">
+          <query>
+              Select r from RequestInfo as r where r.status ='ERROR'
+          </query>
+      </named-query>
+      
+      <named-query name="CancelledRequests">
+          <query>
+              Select r from RequestInfo as r where r.status ='CANCELLED'
+          </query>
+      </named-query>
+      
+      <named-query name="allErrors">
+          <query>
+              Select e from ErrorInfo as e 
+          </query>
+      </named-query>
+      
 </entity-mappings>

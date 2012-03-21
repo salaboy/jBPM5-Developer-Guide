@@ -3,6 +3,7 @@
   <persistence-unit name="org.jbpm.executor" transaction-type="RESOURCE_LOCAL">
     <provider>org.hibernate.ejb.HibernatePersistence</provider>
     <class>com.salaboy.jbpm5.dev.guide.executor.entities.RequestInfo</class>
+    <class>com.salaboy.jbpm5.dev.guide.executor.entities.ErrorInfo</class>
     <properties>
       <property name="hibernate.max_fetch_depth" value="3"/>
       <property name="hibernate.hbm2ddl.auto" value="update"/>

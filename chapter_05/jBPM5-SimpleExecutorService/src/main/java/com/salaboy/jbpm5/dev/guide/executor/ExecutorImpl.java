@@ -4,6 +4,7 @@
  */
 package com.salaboy.jbpm5.dev.guide.executor;
 
+import com.salaboy.jbpm5.dev.guide.executor.entities.ErrorInfo;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -23,6 +24,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
+import org.hibernate.exception.ExceptionUtils;
 
 /**
  *
@@ -64,20 +66,22 @@ public class ExecutorImpl implements Executor {
 
     public void init() {
         final int THREAD_COUNT = nroOfThreads;
-
+        
 
 
         final Runnable task = new Runnable() {
 
             public void run() {
-                System.out.println(" >>> Waking Up!!!");
+                System.out.println(System.currentTimeMillis()+" >>> Waking Up!!!");
                 EntityManager em = emf.createEntityManager();
                 List<?> resultList = em.createQuery("Select r from RequestInfo as r where r.status ='QUEUED'").getResultList();
 
                 System.out.println(" >>> Number of request pending for execution = " + resultList.size());
                 if (resultList.size() > 0) {
+                    RequestInfo r = null;
+                    Throwable exception = null;
                     try {
-                        RequestInfo r = (RequestInfo) resultList.get(0);
+                        r = (RequestInfo) resultList.get(0);
                         System.out.println(" >> Processing Request Id: " + r.getId());
                         System.out.println(" >> Request Status =" + r.getStatus());
                         Command cmd = (Command) Class.forName(r.getCommandName()).newInstance();
@@ -113,17 +117,33 @@ public class ExecutorImpl implements Executor {
                                 r.setResponseData(null);
                             }
                         }
+                    
+                    } catch (Exception e) {
+                        exception = e;
+                    }
+                    if(exception != null){
+                        System.out.println(System.currentTimeMillis()+" >>> Before - Error Found!!!"+exception.getMessage());
+                        em.getTransaction().begin();
+                        ErrorInfo errorInfo = new ErrorInfo(exception.getMessage(), ExceptionUtils.getFullStackTrace(exception.fillInStackTrace()));
+                        errorInfo.setRequestInfo(r);
+                        r.setStatus(STATUS.ERROR);
+                        
+                        r.setErrorInfo(errorInfo);
+                        
+                        //em.merge(r);
+                        em.persist(errorInfo);
+                        em.getTransaction().commit();
+                        em.close();
+                        System.out.println(System.currentTimeMillis()+" >>> After - Error Found!!!"+exception.getMessage());
+                        
+                    
+                    }else{
+                    
                         em.getTransaction().begin();
                         r.setStatus(STATUS.DONE);
                         em.merge(r);
                         em.getTransaction().commit();
                         em.close();
-                    } catch (InstantiationException ex) {
-                        Logger.getLogger(ExecutorImpl.class.getName()).log(Level.SEVERE, null, ex);
-                    } catch (IllegalAccessException ex) {
-                        Logger.getLogger(ExecutorImpl.class.getName()).log(Level.SEVERE, null, ex);
-                    } catch (ClassNotFoundException ex) {
-                        Logger.getLogger(ExecutorImpl.class.getName()).log(Level.SEVERE, null, ex);
                     }
                 }
                 System.out.println(" >>> Going to Sleep!!!");
@@ -134,13 +154,12 @@ public class ExecutorImpl implements Executor {
 
 
         scheduler = Executors.newScheduledThreadPool(THREAD_COUNT);
-        // The scheduler will starts in 3 seconds to allow the applicaiton to initialize
-        scheduler.scheduleAtFixedRate(task, 3, waitTime, TimeUnit.MILLISECONDS);
+        scheduler.scheduleAtFixedRate(task, 0, waitTime, TimeUnit.MILLISECONDS);
 
     }
 
     public Long scheduleRequest(String commandId, CommandContext ctx) {
-        
+
         if (ctx == null) {
             throw new IllegalStateException("A Context Must Be Provided! ");
         }
@@ -167,12 +186,12 @@ public class ExecutorImpl implements Executor {
         em.persist(requestInfo);
         em.getTransaction().commit();
         em.close();
-        System.out.println(" >>> Scheduling request for Command: "+commandId + " - requestId: "+requestInfo.getId());
+        System.out.println(" >>> Scheduling request for Command: " + commandId + " - requestId: " + requestInfo.getId());
         return requestInfo.getId();
     }
 
     public void cancelRequest(Long requestId) {
-        System.out.println(" >>> Before - Cancelling Request with Id: "+requestId);
+        System.out.println(" >>> Before - Cancelling Request with Id: " + requestId);
         EntityManager em = emf.createEntityManager();
         String eql = "Select r from RequestInfo as r where r.status ='QUEUED' and id = :id";
         List<?> result = em.createQuery(eql).setParameter("id", requestId).getResultList();
@@ -185,7 +204,7 @@ public class ExecutorImpl implements Executor {
         em.merge(r);
         em.getTransaction().commit();
         em.close();
-        System.out.println(" >>> After - Cancelling Request with Id: "+requestId);
+        System.out.println(" >>> After - Cancelling Request with Id: " + requestId);
     }
 
     public void destroy() {

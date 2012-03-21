@@ -90,7 +90,7 @@ public class ExecutorSimpleTest {
 
         assertEquals(0, resultList.size());
 
-
+        em.close();
     }
 
     @Test
@@ -112,7 +112,34 @@ public class ExecutorSimpleTest {
 
         assertEquals(1, resultList.size());
         assertEquals(2, ((Long)cachedEntities.get((String)commandContext.getData("businessKey"))).intValue());
+        em.close();
+    }
+    
+    @Test
+    public void executorExceptionTest() throws InterruptedException {
         
+        CommandContext commandContext = new CommandContext();
+        commandContext.setData("businessKey", UUID.randomUUID().toString());
+        cachedEntities.put((String)commandContext.getData("businessKey"), new Long(1));
+        List<String> callbacks = new ArrayList<String>();
+        callbacks.add(SimpleIncrementCommandDoneHandler.class.getCanonicalName());
+        commandContext.setData("callbacks", callbacks);
+        executor.scheduleRequest(ThrowExceptionCommand.class.getCanonicalName(), commandContext);
+        System.out.println(System.currentTimeMillis()+"  >>> Sleeping for 10 secs");
+        Thread.sleep(10000);
+        System.out.println(System.currentTimeMillis()+" >>> Waking up from Sleeping for 10 secs");
+        EntityManagerFactory emf = (EntityManagerFactory) ctx.getBean("entityManagerFactory");
+        EntityManager em = emf.createEntityManager();
+        List resultList = em.createNamedQuery("InErrorRequests").getResultList();
+
+        assertEquals(1, resultList.size());
+        System.out.println("Error: "+resultList.get(0));
+        
+        resultList = em.createNamedQuery("allErrors").getResultList();
+        
+        assertEquals(1, resultList.size());
+        
+        em.close();
     }
     
     @Test
@@ -123,14 +150,17 @@ public class ExecutorSimpleTest {
         // cancel the task immediately
         executor.cancelRequest(requestId);
         
-        Thread.sleep(9000);
-
         EntityManagerFactory emf = (EntityManagerFactory) ctx.getBean("entityManagerFactory");
         EntityManager em = emf.createEntityManager();
-        List resultList = em.createNamedQuery("ExecutedRequests").getResultList();
+       // List resultList = em.createNamedQuery("ExecutedRequests").getResultList();
 
-        assertEquals(0, resultList.size());
+        //assertEquals(0, resultList.size());
 
 
+        List resultList = em.createNamedQuery("CancelledRequests").getResultList();
+
+        assertEquals(1, resultList.size());
+        em.close();
+        
     }
 }

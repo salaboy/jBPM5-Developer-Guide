@@ -4,6 +4,7 @@
  */
 package com.salaboy.jbpm5.dev.guide;
 
+import com.salaboy.jbpm5.dev.guide.executor.entities.ErrorInfo;
 import com.salaboy.jbpm5.dev.guide.executor.entities.RequestInfo;
 import com.salaboy.jbpm5.dev.guide.executor.entities.STATUS;
 import java.sql.SQLException;
@@ -13,6 +14,7 @@ import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
 import org.h2.tools.DeleteDbFiles;
 import org.h2.tools.Server;
+import org.hibernate.exception.ExceptionUtils;
 import org.junit.*;
 import static org.junit.Assert.*;
 import org.springframework.context.ApplicationContext;
@@ -28,18 +30,16 @@ public class PersistenceTest {
     private EntityManager em;
     private Server server;
     private ApplicationContext ctx;
+
     public PersistenceTest() {
     }
 
     @BeforeClass
     public static void setUpClass() throws Exception {
-         
-         
     }
 
     @AfterClass
     public static void tearDownClass() throws Exception {
-        
     }
 
     @Before
@@ -47,25 +47,26 @@ public class PersistenceTest {
         DeleteDbFiles.execute("~", "mydb", false);
 
         try {
-            
-            server = Server.createTcpServer(new String[] {"-tcp","-tcpAllowOthers","-tcpDaemon","-trace"}).start(); 
+
+            server = Server.createTcpServer(new String[]{"-tcp", "-tcpAllowOthers", "-tcpDaemon", "-trace"}).start();
         } catch (SQLException ex) {
-            System.out.println("ex: "+ex);
+            System.out.println("ex: " + ex);
         }
         ctx = new ClassPathXmlApplicationContext("applicationContext.xml");
         emf = (EntityManagerFactory) ctx.getBean("entityManagerFactory");
-        em = emf.createEntityManager();
+       
     }
 
     @After
     public void tearDown() {
-        em.close();
+        
         emf.close();
         server.stop();
     }
 
     @Test
     public void persistenceSimple() {
+         em = emf.createEntityManager();
         RequestInfo requestInfo = new RequestInfo();
         requestInfo.setKey("HI");
         requestInfo.setStatus(STATUS.QUEUED);
@@ -75,7 +76,30 @@ public class PersistenceTest {
         em.getTransaction().commit();
         List<?> resultList = em.createQuery("Select r from RequestInfo as r").getResultList();
         assertEquals(1, resultList.size());
+        em.close();
     }
-    
-    
+
+    @Test
+    public void persistenceWithExceptionSimple() {
+        em = emf.createEntityManager();
+        RequestInfo requestInfo = new RequestInfo();
+        requestInfo.setKey("HI");
+        requestInfo.setMessage("Ready to execute");
+        
+        Throwable exception = new RuntimeException("Text Expcetion!!");
+        System.out.println(System.currentTimeMillis() + " >>> Before - Error Found!!!" + exception.getMessage());
+        em.getTransaction().begin();
+        ErrorInfo errorInfo = new ErrorInfo(exception.getMessage(), ExceptionUtils.getFullStackTrace(exception.fillInStackTrace()));
+        errorInfo.setRequestInfo(requestInfo);
+        requestInfo.setStatus(STATUS.ERROR);
+
+        requestInfo.setErrorInfo(errorInfo);
+
+        em.persist(requestInfo);
+        //em.persist(errorInfo);
+        em.getTransaction().commit();
+        
+        System.out.println(System.currentTimeMillis() + " >>> After - Error Found!!!" + exception.getMessage());
+        em.close();
+    }
 }
