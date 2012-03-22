@@ -24,6 +24,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
+import javax.persistence.LockModeType;
 import org.hibernate.exception.ExceptionUtils;
 
 /**
@@ -35,6 +36,7 @@ public class ExecutorImpl implements Executor {
     private int waitTime = 5000;
     private EntityManagerFactory emf;
     private int nroOfThreads = 1;
+    private int defaultNroOfRetries = 0;
     private static ScheduledExecutorService scheduler;
 
     public ExecutorImpl() {
@@ -48,6 +50,14 @@ public class ExecutorImpl implements Executor {
         this.waitTime = waitTime;
     }
 
+    public int getDefaultNroOfRetries() {
+        return defaultNroOfRetries;
+    }
+
+    public void setDefaultNroOfRetries(int defaultNroOfRetries) {
+        this.defaultNroOfRetries = defaultNroOfRetries;
+    }
+    
     public EntityManagerFactory getEmf() {
         return emf;
     }
@@ -74,7 +84,7 @@ public class ExecutorImpl implements Executor {
             public void run() {
                 System.out.println(System.currentTimeMillis()+" >>> Waking Up!!!");
                 EntityManager em = emf.createEntityManager();
-                List<?> resultList = em.createQuery("Select r from RequestInfo as r where r.status ='QUEUED'").getResultList();
+                List<?> resultList = em.createQuery("Select r from RequestInfo as r where r.status ='QUEUED' or r.status = 'RETRYING'").getResultList();
 
                 System.out.println(" >>> Number of request pending for execution = " + resultList.size());
                 if (resultList.size() > 0) {
@@ -124,21 +134,31 @@ public class ExecutorImpl implements Executor {
                     if(exception != null){
                         System.out.println(System.currentTimeMillis()+" >>> Before - Error Found!!!"+exception.getMessage());
                         em.getTransaction().begin();
+                        
                         ErrorInfo errorInfo = new ErrorInfo(exception.getMessage(), ExceptionUtils.getFullStackTrace(exception.fillInStackTrace()));
                         errorInfo.setRequestInfo(r);
-                        r.setStatus(STATUS.ERROR);
+                        r.getErrorInfo().add(errorInfo);
+                        System.out.println(" >>> Number of Error: "+r.getErrorInfo().size());
+                        if( r.getRetries() > 0 ){
+                            r.setStatus(STATUS.RETRYING);
+                            r.setRetries(r.getRetries()-1);
+                            r.setExecutions(r.getExecutions()+1);
+                            System.out.println(System.currentTimeMillis()+" >>> Retrying ("+r.getRetries()+") still available!");
+                        }else{
+                            System.out.println(System.currentTimeMillis()+" >>> Error no retries left!");
+                            r.setStatus(STATUS.ERROR);
+                            r.setExecutions(r.getExecutions()+1);
+                        }
                         
-                        r.setErrorInfo(errorInfo);
-                        
-                        //em.merge(r);
-                        em.persist(errorInfo);
+                        em.merge(r);
+                        //em.persist(errorInfo);
                         em.getTransaction().commit();
                         em.close();
                         System.out.println(System.currentTimeMillis()+" >>> After - Error Found!!!"+exception.getMessage());
                         
                     
                     }else{
-                    
+                        
                         em.getTransaction().begin();
                         r.setStatus(STATUS.DONE);
                         em.merge(r);
@@ -170,7 +190,11 @@ public class ExecutorImpl implements Executor {
         requestInfo.setKey(businessKey);
         requestInfo.setStatus(STATUS.QUEUED);
         requestInfo.setMessage("Ready to execute");
-
+        if(ctx.getData("retries")!= null){
+            requestInfo.setRetries((Integer)ctx.getData("retries"));
+        }else{
+            requestInfo.setRetries(defaultNroOfRetries);
+        }
         if (ctx != null) {
             try {
                 ByteArrayOutputStream bout = new ByteArrayOutputStream();
@@ -186,23 +210,27 @@ public class ExecutorImpl implements Executor {
         em.persist(requestInfo);
         em.getTransaction().commit();
         em.close();
-        System.out.println(" >>> Scheduling request for Command: " + commandId + " - requestId: " + requestInfo.getId());
+        System.out.println(" >>> Scheduling request for Command: " + commandId + " - requestId: " + requestInfo.getId()+" with "+requestInfo.getRetries()+" retries");
         return requestInfo.getId();
     }
 
     public void cancelRequest(Long requestId) {
         System.out.println(" >>> Before - Cancelling Request with Id: " + requestId);
         EntityManager em = emf.createEntityManager();
-        String eql = "Select r from RequestInfo as r where r.status ='QUEUED' and id = :id";
+        
+        String eql = "Select r from RequestInfo as r where (r.status ='QUEUED' or r.status ='RETRYING') and id = :id";
         List<?> result = em.createQuery(eql).setParameter("id", requestId).getResultList();
         if (result.isEmpty()) {
             return;
         }
         RequestInfo r = (RequestInfo) result.iterator().next();
+        
         em.getTransaction().begin();
+        em.lock(r, LockModeType.READ);
         r.setStatus(STATUS.CANCELLED);
         em.merge(r);
         em.getTransaction().commit();
+        
         em.close();
         System.out.println(" >>> After - Cancelling Request with Id: " + requestId);
     }

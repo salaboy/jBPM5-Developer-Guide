@@ -93,11 +93,42 @@ public class PersistenceTest {
         errorInfo.setRequestInfo(requestInfo);
         requestInfo.setStatus(STATUS.ERROR);
 
-        requestInfo.setErrorInfo(errorInfo);
+        requestInfo.getErrorInfo().add(errorInfo);
 
         em.persist(requestInfo);
         //em.persist(errorInfo);
         em.getTransaction().commit();
+        
+        System.out.println(System.currentTimeMillis() + " >>> After - Error Found!!!" + exception.getMessage());
+        em.close();
+    }
+    
+    @Test
+    public void persistenceWithExceptionMulti() {
+        em = emf.createEntityManager();
+        RequestInfo requestInfo = new RequestInfo();
+        requestInfo.setKey("HI");
+        requestInfo.setMessage("Ready to execute");
+        
+        Throwable exception = new RuntimeException("Text Expcetion!!");
+        System.out.println(System.currentTimeMillis() + " >>> Before - Error Found!!!" + exception.getMessage());
+        em.getTransaction().begin();
+        ErrorInfo errorInfo = new ErrorInfo(exception.getMessage(), ExceptionUtils.getFullStackTrace(exception.fillInStackTrace()));
+        errorInfo.setRequestInfo(requestInfo);
+        requestInfo.setStatus(STATUS.ERROR);
+        ErrorInfo errorInfo2 = new ErrorInfo(exception.getMessage(), ExceptionUtils.getFullStackTrace(exception.fillInStackTrace()));
+        errorInfo2.setRequestInfo(requestInfo);
+        requestInfo.setStatus(STATUS.ERROR);
+
+        requestInfo.getErrorInfo().add(errorInfo);
+        requestInfo.getErrorInfo().add(errorInfo2);
+        em.persist(requestInfo);
+        
+        em.getTransaction().commit();
+        
+        
+        List<?> resultList = em.createQuery("Select e from ErrorInfo as e").getResultList();
+        assertEquals(2, resultList.size());
         
         System.out.println(System.currentTimeMillis() + " >>> After - Error Found!!!" + exception.getMessage());
         em.close();

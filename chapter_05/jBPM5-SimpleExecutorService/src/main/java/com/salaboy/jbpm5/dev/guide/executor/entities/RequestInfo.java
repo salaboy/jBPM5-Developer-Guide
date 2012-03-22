@@ -4,10 +4,11 @@
  */
 package com.salaboy.jbpm5.dev.guide.executor.entities;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
+import java.util.List;
 import javax.persistence.*;
-import org.hibernate.annotations.Cascade;
 
 /**
  *
@@ -27,24 +28,27 @@ public class RequestInfo {
     private String message;
     //Business Key for callback
     private String key;
+    //Number of times that this request must be retryied
+    private int retries = 0;
+    //Number of times that this request has been executed
+    private int executions = 0;
+    
     @Lob
     private byte[] requestData;
     @Lob
     private byte[] responseData;
-    @OneToOne(optional = true, cascade= CascadeType.ALL)
-    @JoinColumn(
-    	name="ERROR_ID", unique=true, nullable=true, updatable=false)
-    private ErrorInfo errorInfo;
+    @OneToMany(cascade= CascadeType.ALL, mappedBy="requestInfo")
+    private List<ErrorInfo> errorInfo = new ArrayList<ErrorInfo>();
 
     public RequestInfo() {
     }
 
-    public ErrorInfo getErrorInfo() {
+    public List<ErrorInfo> getErrorInfo() {
         return errorInfo;
     }
 
-    public void setErrorInfo(ErrorInfo error) {
-        this.errorInfo = error;
+    public void setErrorInfo(List<ErrorInfo> errorInfo) {
+        this.errorInfo = errorInfo;
     }
 
     public Long getId() {
@@ -55,6 +59,23 @@ public class RequestInfo {
         this.id = id;
     }
 
+    public int getRetries() {
+        return retries;
+    }
+
+    public void setRetries(int retries) {
+        this.retries = retries;
+    }
+
+    public int getExecutions() {
+        return executions;
+    }
+
+    public void setExecutions(int executions) {
+        this.executions = executions;
+    }
+
+    
     public String getCommandName() {
         return commandName;
     }

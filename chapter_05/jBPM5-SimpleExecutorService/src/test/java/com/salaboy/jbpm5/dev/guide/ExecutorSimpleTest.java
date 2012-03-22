@@ -58,8 +58,7 @@ public class ExecutorSimpleTest {
 
     @After
     public void tearDown() {
-        executor.destroy();
-        executor = null;
+        ((ClassPathXmlApplicationContext) ctx).close();
         server.stop();
     }
 
@@ -76,7 +75,8 @@ public class ExecutorSimpleTest {
         List resultList = em.createNamedQuery("ExecutedRequests").getResultList();
 
         assertEquals(1, resultList.size());
-
+        
+        em.close();
 
     }
 
@@ -124,6 +124,7 @@ public class ExecutorSimpleTest {
         List<String> callbacks = new ArrayList<String>();
         callbacks.add(SimpleIncrementCommandDoneHandler.class.getCanonicalName());
         commandContext.setData("callbacks", callbacks);
+        commandContext.setData("retries", 0);
         executor.scheduleRequest(ThrowExceptionCommand.class.getCanonicalName(), commandContext);
         System.out.println(System.currentTimeMillis()+"  >>> Sleeping for 10 secs");
         Thread.sleep(10000);
@@ -136,7 +137,7 @@ public class ExecutorSimpleTest {
         System.out.println("Error: "+resultList.get(0));
         
         resultList = em.createNamedQuery("allErrors").getResultList();
-        
+        System.out.println(" >>> Errors: "+resultList);
         assertEquals(1, resultList.size());
         
         em.close();
@@ -152,14 +153,33 @@ public class ExecutorSimpleTest {
         
         EntityManagerFactory emf = (EntityManagerFactory) ctx.getBean("entityManagerFactory");
         EntityManager em = emf.createEntityManager();
-       // List resultList = em.createNamedQuery("ExecutedRequests").getResultList();
-
-        //assertEquals(0, resultList.size());
-
-
+       
         List resultList = em.createNamedQuery("CancelledRequests").getResultList();
 
         assertEquals(1, resultList.size());
+        em.close();
+        
+    }
+    
+     @Test
+    public void defaultRequestRetryTest() throws InterruptedException {
+        CommandContext ctxCMD = new CommandContext();
+        ctxCMD.setData("businessKey", UUID.randomUUID().toString());
+        
+        executor.scheduleRequest(ThrowExceptionCommand.class.getCanonicalName(), ctxCMD);
+        
+        Thread.sleep(20000);
+        
+        EntityManagerFactory emf = (EntityManagerFactory) ctx.getBean("entityManagerFactory");
+        EntityManager em = emf.createEntityManager();
+       
+        List resultList = em.createNamedQuery("InErrorRequests").getResultList();
+
+        assertEquals(1, resultList.size());
+        
+        resultList = em.createNamedQuery("allErrors").getResultList();
+        // Three retries means 4 executions in total 1(regular) + 3(retries)
+        assertEquals(4, resultList.size());
         em.close();
         
     }

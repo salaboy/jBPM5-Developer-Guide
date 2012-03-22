@@ -7,6 +7,7 @@ http://www.springframework.org/schema/beans http://www.springframework.org/schem
    <bean id="executorService" class="com.salaboy.jbpm5.dev.guide.executor.ExecutorImpl" destroy-method="destroy">
       <property name="waitTime" value="5000"/>
       <property name="nroOfThreads" value="1"/>
+      <property name="defaultNroOfRetries" value="3"/>
       <property name="emf" ref="entityManagerFactory"/>
       
    </bean>

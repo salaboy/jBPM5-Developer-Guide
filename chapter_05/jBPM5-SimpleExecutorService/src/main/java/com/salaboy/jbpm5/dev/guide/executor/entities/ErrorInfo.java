@@ -23,7 +23,9 @@ public class ErrorInfo implements Serializable {
     private String message;
     @Column(length=5000)
     private String stacktrace;
-    @OneToOne(optional=false, mappedBy="errorInfo")
+    
+    @ManyToOne
+    @JoinColumn(name="REQUEST_ID", nullable=false)
     private RequestInfo requestInfo;
     
     public ErrorInfo() {
@@ -77,7 +79,7 @@ public class ErrorInfo implements Serializable {
 
     @Override
     public String toString() {
-        return "ErrorInfo{" + "id=" + id + ", time=" + time + ", message=" + message + ", stacktrace=" + stacktrace + ", requestInfo=" + requestInfo + '}';
+        return "ErrorInfo{" + "id=" + id + ", time=" + time + ", message=" + message + ", stacktrace=" + stacktrace + ", requestInfo=" + requestInfo.getId() + '}';
     }
 
     @Override
