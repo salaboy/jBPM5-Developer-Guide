@@ -149,7 +149,7 @@ public class DontWaitCompletionAsyncTaskSimpleTest {
         String patientName = "John Doe";
         input.put("bedrequest_patientname", patientName);
 
-        AbstractAsyncWorkItemHandler asyncHandler = new AbstractAsyncWorkItemHandler(executor, "myBusinessKey", null);
+        AbstractAsyncWorkItemHandler asyncHandler = new AbstractAsyncWorkItemHandler(executor, session.getId(), null);
         session.getWorkItemManager().registerWorkItemHandler("Async Work", asyncHandler);
 
         WorkflowProcessInstance pI = (WorkflowProcessInstance) session.startProcess("PatientDeferredCheckIn", input);
@@ -170,7 +170,7 @@ public class DontWaitCompletionAsyncTaskSimpleTest {
         String patientName = "John Doe";
         input.put("bedrequest_patientname", patientName);
 
-        AbstractAsyncWorkItemHandler asyncHandler = new AbstractAsyncWorkItemHandler(executor, "myBusinessKey", null);
+        AbstractAsyncWorkItemHandler asyncHandler = new AbstractAsyncWorkItemHandler(executor, session.getId(), null);
         session.getWorkItemManager().registerWorkItemHandler("Async Work", asyncHandler);
 
         WorkflowProcessInstance pI = (WorkflowProcessInstance) session.startProcess("PatientDeferredCheckIn", input);

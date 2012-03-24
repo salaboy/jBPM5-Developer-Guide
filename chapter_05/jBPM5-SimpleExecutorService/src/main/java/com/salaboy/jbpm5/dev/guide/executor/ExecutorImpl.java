@@ -110,7 +110,7 @@ public class ExecutorImpl implements Executor {
                             System.out.println(" ### Callback: " + ctx.getData("callbacks"));
                             List<String> callbacks = (List<String>) ctx.getData("callbacks");
                             for (String callback : callbacks) {
-                                CommandDoneHandler handler = (CommandDoneHandler) Class.forName(callback).newInstance();
+                                CommandCallback handler = (CommandCallback) Class.forName(callback).newInstance();
                                 handler.onCommandDone(ctx, results);
                             }
                         } else {

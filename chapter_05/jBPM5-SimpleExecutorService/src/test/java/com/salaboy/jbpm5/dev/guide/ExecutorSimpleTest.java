@@ -100,7 +100,7 @@ public class ExecutorSimpleTest {
         commandContext.setData("businessKey", UUID.randomUUID().toString());
         cachedEntities.put((String)commandContext.getData("businessKey"), new Long(1));
         List<String> callbacks = new ArrayList<String>();
-        callbacks.add(SimpleIncrementCommandDoneHandler.class.getCanonicalName());
+        callbacks.add(SimpleIncrementCallback.class.getCanonicalName());
         commandContext.setData("callbacks", callbacks);
         executor.scheduleRequest(PrintOutCommand.class.getCanonicalName(), commandContext);
 
@@ -122,7 +122,7 @@ public class ExecutorSimpleTest {
         commandContext.setData("businessKey", UUID.randomUUID().toString());
         cachedEntities.put((String)commandContext.getData("businessKey"), new Long(1));
         List<String> callbacks = new ArrayList<String>();
-        callbacks.add(SimpleIncrementCommandDoneHandler.class.getCanonicalName());
+        callbacks.add(SimpleIncrementCallback.class.getCanonicalName());
         commandContext.setData("callbacks", callbacks);
         commandContext.setData("retries", 0);
         executor.scheduleRequest(ThrowExceptionCommand.class.getCanonicalName(), commandContext);
@@ -141,24 +141,6 @@ public class ExecutorSimpleTest {
         assertEquals(1, resultList.size());
         
         em.close();
-    }
-    
-    @Test
-    public void cancelRequestTest() throws InterruptedException {
-        CommandContext ctxCMD = new CommandContext();
-        ctxCMD.setData("businessKey", UUID.randomUUID().toString());
-        Long requestId = executor.scheduleRequest(PrintOutCommand.class.getCanonicalName(), ctxCMD);
-        // cancel the task immediately
-        executor.cancelRequest(requestId);
-        
-        EntityManagerFactory emf = (EntityManagerFactory) ctx.getBean("entityManagerFactory");
-        EntityManager em = emf.createEntityManager();
-       
-        List resultList = em.createNamedQuery("CancelledRequests").getResultList();
-
-        assertEquals(1, resultList.size());
-        em.close();
-        
     }
     
      @Test

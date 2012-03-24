@@ -5,7 +5,7 @@
 package com.salaboy.jbpm5.dev.guide;
 
 import com.salaboy.jbpm5.dev.guide.executor.CommandContext;
-import com.salaboy.jbpm5.dev.guide.executor.CommandDoneHandler;
+import com.salaboy.jbpm5.dev.guide.executor.CommandCallback;
 import com.salaboy.jbpm5.dev.guide.executor.ExecutionResults;
 import java.io.Serializable;
 import java.util.HashMap;
@@ -16,7 +16,7 @@ import org.drools.runtime.StatefulKnowledgeSession;
  *
  * @author salaboy
  */
-public class CompleteWorkItemCallback implements CommandDoneHandler {
+public class CompleteWorkItemCallback implements CommandCallback {
 
     public void onCommandDone(CommandContext ctx, ExecutionResults results) {
         Map<String, Object> output = new HashMap<String, Object>();
@@ -27,9 +27,11 @@ public class CompleteWorkItemCallback implements CommandDoneHandler {
         }
         String sWorkItemId = (String) ctx.getData("_workItemId");
         String businessKey = (String) ctx.getData("businessKey");
-        System.out.println(" xxxxxxxx WorkItemId = "+sWorkItemId + " - - - key = "+businessKey);
-        StatefulKnowledgeSession session = WaitCompletionAsyncTaskSimpleTest.sessionCache.get(businessKey);
-        System.out.println(" xxxxxxxx  session = "+session);
+        System.out.println(" >>> WorkItemId = "+sWorkItemId + " - key = "+businessKey);
+        String[] key = businessKey.split("@");
+        System.out.println("Key[1]="+key[1]);
+        StatefulKnowledgeSession session = WaitCompletionAsyncTaskSimpleTest.sessionCache.get(key[1]);
+        System.out.println(" >>> session = "+session);
         session.getWorkItemManager().completeWorkItem(Long.valueOf(sWorkItemId), output);
     }
 }

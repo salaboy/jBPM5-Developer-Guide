@@ -4,11 +4,15 @@
  */
 package com.salaboy.jbpm5.dev.guide;
 
+import com.salaboy.jbpm5.dev.guide.executor.CommandContext;
+import com.salaboy.jbpm5.dev.guide.executor.Executor;
+import com.salaboy.jbpm5.dev.guide.executor.commands.PrintOutCommand;
 import com.salaboy.jbpm5.dev.guide.executor.entities.ErrorInfo;
 import com.salaboy.jbpm5.dev.guide.executor.entities.RequestInfo;
 import com.salaboy.jbpm5.dev.guide.executor.entities.STATUS;
 import java.sql.SQLException;
 import java.util.List;
+import java.util.UUID;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
@@ -133,4 +137,30 @@ public class PersistenceTest {
         System.out.println(System.currentTimeMillis() + " >>> After - Error Found!!!" + exception.getMessage());
         em.close();
     }
+    
+    
+    
+      @Test
+    public void cancelRequestTest() throws InterruptedException { 
+
+        ctx = new ClassPathXmlApplicationContext("applicationContext.xml");
+        Executor executor = (Executor) ctx.getBean("executorService");
+        //  The executor is on purpose not started to not fight again race condition 
+        // with the request cancelations.
+        CommandContext ctxCMD = new CommandContext();
+        ctxCMD.setData("businessKey", UUID.randomUUID().toString());
+        Long requestId = executor.scheduleRequest(PrintOutCommand.class.getCanonicalName(), ctxCMD);
+        // cancel the task immediately
+        executor.cancelRequest(requestId);
+        
+        EntityManagerFactory emf = (EntityManagerFactory) ctx.getBean("entityManagerFactory");
+        EntityManager em = emf.createEntityManager();
+       
+        List resultList = em.createNamedQuery("CancelledRequests").getResultList();
+
+        assertEquals(1, resultList.size());
+        em.close();
+
+    }
+    
 }

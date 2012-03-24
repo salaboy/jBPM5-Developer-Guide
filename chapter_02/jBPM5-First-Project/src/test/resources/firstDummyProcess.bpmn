@@ -16,10 +16,10 @@
 
     <!-- nodes -->
     <startEvent id="_1" name="StartProcess" />
-    <scriptTask id="_2" name="Script 1" >
+    <scriptTask id="_2" name="Script 1" scriptFormat="http://www.java.com/java">
       <script>System.out.println("Script 1 - Executing .. ");</script>
     </scriptTask>
-    <scriptTask id="_3" name="Script 2" >
+    <scriptTask id="_3" name="Script 2" scriptFormat="http://www.java.com/java">
       <script>System.out.println("Script 2 - Executing .. ");</script>
     </scriptTask>
     <endEvent id="_4" name="End" >

@@ -156,7 +156,7 @@ public class WaitCompletionAsyncTaskSimpleTest {
         
         List<String> callbacks = new ArrayList<String>();
         callbacks.add(DoNothingCallback.class.getCanonicalName());
-        AbstractAsyncWorkItemHandler asyncHandler = new AbstractAsyncWorkItemHandler(executor, "myBusinessKey", callbacks);
+        AbstractAsyncWorkItemHandler asyncHandler = new AbstractAsyncWorkItemHandler(executor, session.getId(), callbacks);
         session.getWorkItemManager().registerWorkItemHandler("Async Work", asyncHandler);
 
         WorkflowProcessInstance pI = (WorkflowProcessInstance) session.startProcess("PatientDeferredCheckIn", input);
@@ -177,10 +177,10 @@ public class WaitCompletionAsyncTaskSimpleTest {
         String patientName = "John Doe";
         input.put("bedrequest_patientname", patientName);
 
-        sessionCache.put("myBusinessKey", session);
+        sessionCache.put("sessionId="+session.getId(), session);
         List<String> callbacks = new ArrayList<String>();
         callbacks.add(CompleteWorkItemCallback.class.getCanonicalName());
-        AbstractAsyncWorkItemHandler asyncHandler = new AbstractAsyncWorkItemHandler(executor, "myBusinessKey", callbacks);
+        AbstractAsyncWorkItemHandler asyncHandler = new AbstractAsyncWorkItemHandler(executor, session.getId(), callbacks);
         session.getWorkItemManager().registerWorkItemHandler("Async Work", asyncHandler);
 
         WorkflowProcessInstance pI = (WorkflowProcessInstance) session.startProcess("PatientDeferredCheckIn", input);
@@ -205,7 +205,7 @@ public class WaitCompletionAsyncTaskSimpleTest {
 
         List<String> callbacks = new ArrayList<String>();
         callbacks.add(DoNothingCallback.class.getCanonicalName());
-        AbstractAsyncWorkItemHandler asyncHandler = new AbstractAsyncWorkItemHandler(executor, "myBusinessKey", callbacks);
+        AbstractAsyncWorkItemHandler asyncHandler = new AbstractAsyncWorkItemHandler(executor, session.getId(), callbacks);
         session.getWorkItemManager().registerWorkItemHandler("Async Work", asyncHandler);
 
         WorkflowProcessInstance pI = (WorkflowProcessInstance) session.startProcess("PatientDeferredCheckIn", input);

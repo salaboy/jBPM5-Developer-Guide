@@ -73,12 +73,7 @@ public class AutoMappingVariablesTest {
 
         final StatefulKnowledgeSession ksession = kbase.newStatefulKnowledgeSession();
         KnowledgeRuntimeLoggerFactory.newConsoleLogger(ksession);
-        new Thread(new Runnable() {
 
-            public void run() {
-                ksession.fireUntilHalt();
-            }
-        }).start();
         Person person = new Person("Salaboy", 28);
 
         Map<String, Object> params = new HashMap<String, Object>();
@@ -89,8 +84,12 @@ public class AutoMappingVariablesTest {
         assertEquals(processInstance.getState(), ProcessInstance.STATE_PENDING);
         FactHandle processtHandle = ksession.insert(processInstance);
 
+        ksession.fireAllRules();
+        
         ksession.startProcessInstance(processInstance.getId());
-
+        
+        
+        
         assertEquals(processInstance.getState(), ProcessInstance.STATE_COMPLETED);
         QueryResults queryResults = ksession.getQueryResults("allProcessVariables", new Object[]{});
         Iterator<QueryResultsRow> iterator = queryResults.iterator();

@@ -169,6 +169,8 @@ public class AdvancedProcessAndRulesIntegrationTest {
 
         ksession.startProcessInstance(processInstance.getId());
 
+        Thread.sleep(1000);
+        
         assertEquals(processInstance.getState(), ProcessInstance.STATE_COMPLETED);
         QueryResults queryResults = ksession.getQueryResults("allProcessVariables", new Object[]{});
         Iterator<QueryResultsRow> iterator = queryResults.iterator();
