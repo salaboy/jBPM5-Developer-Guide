@@ -4,13 +4,14 @@
  */
 package com.salaboy.jbpm5.dev.guide.model;
 
+import java.io.Serializable;
 import java.math.BigDecimal;
 
 /**
  *
  * @author salaboy
  */
-public class ConceptCode {
+public class ConceptCode implements Serializable{
     private String code;
     private BigDecimal rate;
     private String desc;

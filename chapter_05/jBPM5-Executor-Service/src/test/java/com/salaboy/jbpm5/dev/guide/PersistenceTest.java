@@ -63,7 +63,6 @@ public class PersistenceTest {
 
     @After
     public void tearDown() {
-        
         emf.close();
         server.stop();
     }
@@ -100,7 +99,7 @@ public class PersistenceTest {
         requestInfo.getErrorInfo().add(errorInfo);
 
         em.persist(requestInfo);
-        //em.persist(errorInfo);
+        
         em.getTransaction().commit();
         
         System.out.println(System.currentTimeMillis() + " >>> After - Error Found!!!" + exception.getMessage());
@@ -159,6 +158,8 @@ public class PersistenceTest {
 
         assertEquals(1, resultList.size());
         em.close();
+
+        executor.destroy();
 
     }
     

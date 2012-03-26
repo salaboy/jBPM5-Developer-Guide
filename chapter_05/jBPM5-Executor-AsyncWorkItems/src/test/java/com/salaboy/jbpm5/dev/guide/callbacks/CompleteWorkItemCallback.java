@@ -8,7 +8,6 @@ import com.salaboy.jbpm5.dev.guide.SessionStoreUtil;
 import com.salaboy.jbpm5.dev.guide.executor.CommandContext;
 import com.salaboy.jbpm5.dev.guide.executor.CommandCallback;
 import com.salaboy.jbpm5.dev.guide.executor.ExecutionResults;
-import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;
 import org.drools.runtime.StatefulKnowledgeSession;
@@ -22,7 +21,7 @@ public class CompleteWorkItemCallback implements CommandCallback {
     public void onCommandDone(CommandContext ctx, ExecutionResults results) {
         Map<String, Object> output = new HashMap<String, Object>();
         if (results != null) {
-            for (Map.Entry<String, Serializable> entry : results.getData().entrySet()) {
+            for (Map.Entry<String, Object> entry : results.getData().entrySet()) {
                 output.put(entry.getKey(), entry.getValue());
             }
         }

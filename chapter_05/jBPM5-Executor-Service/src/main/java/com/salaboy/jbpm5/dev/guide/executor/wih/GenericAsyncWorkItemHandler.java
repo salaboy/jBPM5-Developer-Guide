@@ -12,16 +12,14 @@ import com.salaboy.jbpm5.dev.guide.executor.Executor;
 import java.util.List;
 
 
-public class AbstractAsyncWorkItemHandler implements WorkItemHandler {
+public class GenericAsyncWorkItemHandler implements WorkItemHandler {
 	
 	private final Executor executor;
 	private String execKey;
-	private List<String> callbacks;
         private int sessionId;
         
-	public AbstractAsyncWorkItemHandler(Executor executor, int sessionId, List<String> callbacks) {
+	public GenericAsyncWorkItemHandler(Executor executor, int sessionId) {
 		this.executor = executor;
-                this.callbacks = callbacks;
                 this.sessionId = sessionId;
 	}
 	
@@ -29,16 +27,17 @@ public class AbstractAsyncWorkItemHandler implements WorkItemHandler {
 		
 		long workItemId = workItem.getId();
 		String command = (String) workItem.getParameter("commandClass");
+                String callbacks = (String) workItem.getParameter("callbacks");
 		this.execKey = workItem.getName() + "_" + workItem.getProcessInstanceId() + "_" + workItemId + "@sessionId="+this.sessionId;
                 System.out.println(" >>> Execution Key = "+this.execKey);
 		CommandContext ctx = new CommandContext();
 		for (Map.Entry<String, Object> entry : workItem.getParameters().entrySet()) {
-			if (entry.getValue() instanceof Serializable) {
-				ctx.setData(entry.getKey(), (Serializable) entry.getValue());
+			if (entry.getValue() instanceof Object) {
+				ctx.setData(entry.getKey(), entry.getValue());
 			}
 		}
 		ctx.setData("_workItemId", String.valueOf(workItemId));
-                ctx.setData("callbacks", this.callbacks);
+                ctx.setData("callbacks", callbacks);
                 ctx.setData("businessKey", this.execKey);     
                 Long requestId = this.executor.scheduleRequest(command, ctx);
                 workItem.getParameters().put("requestId", requestId);

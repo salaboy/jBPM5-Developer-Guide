@@ -21,7 +21,7 @@ public class CompleteWorkItemWithPersistenceCallback implements CommandCallback 
     public void onCommandDone(CommandContext ctx, ExecutionResults results) {
         Map<String, Object> output = new HashMap<String, Object>();
         if (results != null) {
-            for (Map.Entry<String, Serializable> entry : results.getData().entrySet()) {
+            for (Map.Entry<String, Object> entry : results.getData().entrySet()) {
                 output.put(entry.getKey(), entry.getValue());
             }
         }

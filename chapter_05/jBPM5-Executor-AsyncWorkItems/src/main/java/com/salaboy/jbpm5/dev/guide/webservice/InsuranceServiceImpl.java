@@ -25,6 +25,8 @@ public class InsuranceServiceImpl implements InsuranceService {
     }
 
     public boolean isPatientInsured(String patientId) {
+        System.out.println(" >>> Is Patient Insured? patient -> "+patientId);
+        System.out.println(" >>> Is Patient Insured? yes/no -> "+insuredPatients.get(patientId));
         return insuredPatients.get(patientId);
     }
 

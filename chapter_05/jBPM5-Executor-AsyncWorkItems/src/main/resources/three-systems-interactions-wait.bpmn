@@ -38,6 +38,7 @@
         <dataInput id="_3_wsdlUrlInput" name="wsdlUrl" />
         <dataInput id="_3_methodNameInput" name="methodName" />
         <dataInput id="_3_commandClassInput" name="commandClass" />
+        <dataInput id="_3_callbacksInput" name="callbacks" />
         <dataInput id="_3_waitTillCompleteInput" name="waitTillComplete" />
         <dataOutput id="_3_slowservice_resultOneOutput" name="slowservice_resultOne" />
         <inputSet>
@@ -47,6 +48,7 @@
           <dataInputRefs>_3_wsdlUrlInput</dataInputRefs>
           <dataInputRefs>_3_methodNameInput</dataInputRefs>
           <dataInputRefs>_3_commandClassInput</dataInputRefs>
+          <dataInputRefs>_3_callbacksInput</dataInputRefs>
           <dataInputRefs>_3_waitTillCompleteInput</dataInputRefs>
         </inputSet>
         <outputSet>
@@ -58,6 +60,13 @@
         <assignment>
           <from xsi:type="tFormalExpression">com.salaboy.jbpm5.dev.guide.commands.CXFWebServiceCommand</from>
           <to xsi:type="tFormalExpression">_3_commandClassInput</to>
+        </assignment>
+      </dataInputAssociation>
+      <dataInputAssociation>
+        <targetRef>_3_callbacksInput</targetRef>
+        <assignment>
+          <from xsi:type="tFormalExpression">com.salaboy.jbpm5.dev.guide.callbacks.CompleteWorkItemCallback,com.salaboy.jbpm5.dev.guide.callbacks.PrintResultsCallback</from>
+          <to xsi:type="tFormalExpression">_3_callbacksInput</to>
         </assignment>
       </dataInputAssociation>
       <dataInputAssociation>
@@ -112,6 +121,7 @@
         <dataInput id="_4_wsdlUrlInput" name="wsdlUrl" />
         <dataInput id="_4_methodNameInput" name="methodName" />
         <dataInput id="_4_commandClassInput" name="commandClass" />
+        <dataInput id="_4_callbacksInput" name="callbacks" />
         <dataInput id="_4_waitTillCompleteInput" name="waitTillComplete" />
         <dataOutput id="_4_slowservice_resultTwoOutput" name="slowservice_resultTwo" />
         <inputSet>
@@ -121,6 +131,7 @@
           <dataInputRefs>_4_wsdlUrlInput</dataInputRefs>
           <dataInputRefs>_4_methodNameInput</dataInputRefs>
           <dataInputRefs>_4_commandClassInput</dataInputRefs>
+          <dataInputRefs>_4_callbacksInput</dataInputRefs>
           <dataInputRefs>_4_waitTillCompleteInput</dataInputRefs>
         </inputSet>
         <outputSet>
@@ -132,6 +143,13 @@
         <assignment>
           <from xsi:type="tFormalExpression">com.salaboy.jbpm5.dev.guide.commands.CXFWebServiceCommand</from>
           <to xsi:type="tFormalExpression">_4_commandClassInput</to>
+        </assignment>
+      </dataInputAssociation>
+      <dataInputAssociation>
+        <targetRef>_4_callbacksInput</targetRef>
+        <assignment>
+          <from xsi:type="tFormalExpression">com.salaboy.jbpm5.dev.guide.callbacks.CompleteWorkItemCallback,com.salaboy.jbpm5.dev.guide.callbacks.PrintResultsCallback</from>
+          <to xsi:type="tFormalExpression">_4_callbacksInput</to>
         </assignment>
       </dataInputAssociation>
       <dataInputAssociation>
@@ -186,6 +204,7 @@
         <dataInput id="_5_wsdlUrlInput" name="wsdlUrl" />
         <dataInput id="_5_methodNameInput" name="methodName" />
         <dataInput id="_5_commandClassInput" name="commandClass" />
+        <dataInput id="_5_callbacksInput" name="callbacks" />
         <dataInput id="_5_waitTillCompleteInput" name="waitTillComplete" />
         <dataOutput id="_5_slowservice_resultThreeOutput" name="slowservice_resultThree" />
         <inputSet>
@@ -195,6 +214,7 @@
           <dataInputRefs>_5_wsdlUrlInput</dataInputRefs>
           <dataInputRefs>_5_methodNameInput</dataInputRefs>
           <dataInputRefs>_5_commandClassInput</dataInputRefs>
+          <dataInputRefs>_5_callbacksInput</dataInputRefs>
           <dataInputRefs>_5_waitTillCompleteInput</dataInputRefs>
         </inputSet>
         <outputSet>
@@ -206,6 +226,13 @@
         <assignment>
           <from xsi:type="tFormalExpression">com.salaboy.jbpm5.dev.guide.commands.CXFWebServiceCommand</from>
           <to xsi:type="tFormalExpression">_5_commandClassInput</to>
+        </assignment>
+      </dataInputAssociation>
+      <dataInputAssociation>
+        <targetRef>_5_callbacksInput</targetRef>
+        <assignment>
+          <from xsi:type="tFormalExpression">com.salaboy.jbpm5.dev.guide.callbacks.CompleteWorkItemCallback,com.salaboy.jbpm5.dev.guide.callbacks.PrintResultsCallback</from>
+          <to xsi:type="tFormalExpression">_5_callbacksInput</to>
         </assignment>
       </dataInputAssociation>
       <dataInputAssociation>

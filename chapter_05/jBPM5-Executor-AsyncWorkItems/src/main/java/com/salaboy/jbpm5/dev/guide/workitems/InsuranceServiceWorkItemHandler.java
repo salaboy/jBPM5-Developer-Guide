@@ -20,28 +20,7 @@ import java.util.logging.Logger;
 public class InsuranceServiceWorkItemHandler implements WorkItemHandler {
 
     public void executeWorkItem(WorkItem wi, WorkItemManager wim) {
-//        long workItemId = workItem.getId();
-//        Map<String, Object> input = workItem.getParameters();
-//
-//        String outputName = (String) input.get("outputName");
-//        String clientNameVariable = (String) input.get("clientNameVariable");
-//        String clientName = (String) input.get(clientNameVariable);
-//        try {
-//            InsuranceService client = getClient();
-//            Boolean result = client.isPatientInsured(clientName);
-//            Map<String, Object> output = new HashMap<String, Object>();
-//            if (result == null) {
-//                System.out.println("Null response");
-//                output.put(outputName, null);
-//            } else {
-//                System.out.println("Echo response: " + result);
-//                output.put(outputName, result);
-//            }
-//            manager.completeWorkItem(workItemId, output);
-//        } catch (MalformedURLException e) {
-//            e.printStackTrace(System.out);
-//            //This shouldn't happen. {wsdlURL} is a hardcoded URL
-//        }
+
         String patientId = (String) wi.getParameter("insured_patientName");
         boolean isPatientInsured = false;
         try {

@@ -99,8 +99,7 @@ public class ExecutorSimpleTest {
         CommandContext commandContext = new CommandContext();
         commandContext.setData("businessKey", UUID.randomUUID().toString());
         cachedEntities.put((String)commandContext.getData("businessKey"), new Long(1));
-        List<String> callbacks = new ArrayList<String>();
-        callbacks.add(SimpleIncrementCallback.class.getCanonicalName());
+        String callbacks = SimpleIncrementCallback.class.getCanonicalName();
         commandContext.setData("callbacks", callbacks);
         executor.scheduleRequest(PrintOutCommand.class.getCanonicalName(), commandContext);
 
@@ -121,8 +120,7 @@ public class ExecutorSimpleTest {
         CommandContext commandContext = new CommandContext();
         commandContext.setData("businessKey", UUID.randomUUID().toString());
         cachedEntities.put((String)commandContext.getData("businessKey"), new Long(1));
-        List<String> callbacks = new ArrayList<String>();
-        callbacks.add(SimpleIncrementCallback.class.getCanonicalName());
+        String callbacks = SimpleIncrementCallback.class.getCanonicalName();
         commandContext.setData("callbacks", callbacks);
         commandContext.setData("retries", 0);
         executor.scheduleRequest(ThrowExceptionCommand.class.getCanonicalName(), commandContext);
@@ -150,7 +148,7 @@ public class ExecutorSimpleTest {
         
         executor.scheduleRequest(ThrowExceptionCommand.class.getCanonicalName(), ctxCMD);
         
-        Thread.sleep(20000);
+        Thread.sleep(25000);
         
         EntityManagerFactory emf = (EntityManagerFactory) ctx.getBean("entityManagerFactory");
         EntityManager em = emf.createEntityManager();

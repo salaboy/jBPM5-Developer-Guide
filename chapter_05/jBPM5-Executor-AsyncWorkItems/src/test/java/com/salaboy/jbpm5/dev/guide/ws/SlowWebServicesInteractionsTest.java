@@ -1,14 +1,12 @@
 package com.salaboy.jbpm5.dev.guide.ws;
 
+
 import com.salaboy.jbpm5.dev.guide.SessionStoreUtil;
-import com.salaboy.jbpm5.dev.guide.callbacks.CompleteWorkItemCallback;
-import com.salaboy.jbpm5.dev.guide.callbacks.PrintResultsCallback;
 import com.salaboy.jbpm5.dev.guide.executor.Executor;
-import com.salaboy.jbpm5.dev.guide.executor.wih.AbstractAsyncWorkItemHandler;
+import com.salaboy.jbpm5.dev.guide.executor.wih.GenericAsyncWorkItemHandler;
 import com.salaboy.jbpm5.dev.guide.webservice.SlowService;
 import com.salaboy.jbpm5.dev.guide.webservice.SlowServiceImpl;
 import java.sql.SQLException;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import javax.persistence.EntityManager;
@@ -156,10 +154,9 @@ public class SlowWebServicesInteractionsTest {
 
         String patientName = "John Doe";
         input.put("bedrequest_patientname", patientName);
-        List<String> callbacks = new ArrayList<String>();
-        callbacks.add(PrintResultsCallback.class.getCanonicalName());
+       
         
-        AbstractAsyncWorkItemHandler webServiceHandler = new AbstractAsyncWorkItemHandler(executor,session.getId(), callbacks);
+        GenericAsyncWorkItemHandler webServiceHandler = new GenericAsyncWorkItemHandler(executor,session.getId());
         session.getWorkItemManager().registerWorkItemHandler("Slow Web Service", webServiceHandler);
 
         WorkflowProcessInstance pI = (WorkflowProcessInstance) session.startProcess("Three Systems Interactions", input);
@@ -183,11 +180,9 @@ public class SlowWebServicesInteractionsTest {
         
         String patientName = "John Doe";
         input.put("bedrequest_patientname", patientName);
-        List<String> callbacks = new ArrayList<String>();
-        callbacks.add(CompleteWorkItemCallback.class.getCanonicalName());
-        callbacks.add(PrintResultsCallback.class.getCanonicalName());
         
-        AbstractAsyncWorkItemHandler webServiceHandler = new AbstractAsyncWorkItemHandler(executor,session.getId(), callbacks);
+        
+        GenericAsyncWorkItemHandler webServiceHandler = new GenericAsyncWorkItemHandler(executor,session.getId());
         session.getWorkItemManager().registerWorkItemHandler("Slow Web Service", webServiceHandler);
 
         WorkflowProcessInstance pI = (WorkflowProcessInstance) session.startProcess("Three Systems Interactions", input);

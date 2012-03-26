@@ -15,6 +15,8 @@ import java.util.List;
 
 import com.salaboy.jbpm5.dev.guide.executor.entities.RequestInfo;
 import com.salaboy.jbpm5.dev.guide.executor.entities.STATUS;
+import com.sun.xml.internal.bind.v2.runtime.unmarshaller.XsiNilLoader;
+import java.util.Arrays;
 import java.util.UUID;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -84,7 +86,7 @@ public class ExecutorImpl implements Executor {
             public void run() {
                 System.out.println(System.currentTimeMillis()+" >>> Waking Up!!!");
                 EntityManager em = emf.createEntityManager();
-                List<?> resultList = em.createQuery("Select r from RequestInfo as r where r.status ='QUEUED' or r.status = 'RETRYING'").getResultList();
+                List<?> resultList = em.createQuery("Select r from RequestInfo as r where r.status ='QUEUED' or r.status = 'RETRYING' ORDER BY r.time DESC").getResultList();
 
                 System.out.println(" >>> Number of request pending for execution = " + resultList.size());
                 if (resultList.size() > 0) {
@@ -94,6 +96,7 @@ public class ExecutorImpl implements Executor {
                         r = (RequestInfo) resultList.get(0);
                         System.out.println(" >> Processing Request Id: " + r.getId());
                         System.out.println(" >> Request Status =" + r.getStatus());
+                        System.out.println(" >> Command Name to execute = "+r.getCommandName());
                         Command cmd = (Command) Class.forName(r.getCommandName()).newInstance();
                         CommandContext ctx = null;
                         byte[] reqData = r.getRequestData();
@@ -103,12 +106,14 @@ public class ExecutorImpl implements Executor {
                                 ctx = (CommandContext) in.readObject();
                             } catch (IOException e) {
                                 ctx = null;
+                                e.printStackTrace();
                             }
                         }
                         ExecutionResults results = cmd.execute(ctx);
                         if (ctx != null && ctx.getData("callbacks") != null) {
                             System.out.println(" ### Callback: " + ctx.getData("callbacks"));
-                            List<String> callbacks = (List<String>) ctx.getData("callbacks");
+                            String[] callbacksArray = ((String)ctx.getData("callbacks")).split(",");;
+                            List<String> callbacks = (List<String>) Arrays.asList(callbacksArray);
                             for (String callback : callbacks) {
                                 CommandCallback handler = (CommandCallback) Class.forName(callback).newInstance();
                                 handler.onCommandDone(ctx, results);
@@ -129,10 +134,12 @@ public class ExecutorImpl implements Executor {
                         }
                     
                     } catch (Exception e) {
+                        e.printStackTrace();
                         exception = e;
                     }
                     if(exception != null){
                         System.out.println(System.currentTimeMillis()+" >>> Before - Error Found!!!"+exception.getMessage());
+                        
                         em.getTransaction().begin();
                         
                         ErrorInfo errorInfo = new ErrorInfo(exception.getMessage(), ExceptionUtils.getFullStackTrace(exception.fillInStackTrace()));
@@ -202,6 +209,7 @@ public class ExecutorImpl implements Executor {
                 oout.writeObject(ctx);
                 requestInfo.setRequestData(bout.toByteArray());
             } catch (IOException e) {
+                e.printStackTrace();
                 requestInfo.setRequestData(null);
             }
         }
@@ -237,10 +245,13 @@ public class ExecutorImpl implements Executor {
 
     public void destroy() {
         System.out.println(" >>>>> Destroying Executor!!!!");
-        scheduler.shutdownNow();
         if (emf.isOpen()) {
             emf.close();
         }
+        if(scheduler != null){
+            scheduler.shutdownNow();
+        }
+        
 
 
     }
