@@ -15,15 +15,10 @@ import java.util.List;
 
 import com.salaboy.jbpm5.dev.guide.executor.entities.RequestInfo;
 import com.salaboy.jbpm5.dev.guide.executor.entities.STATUS;
-import com.sun.xml.internal.bind.v2.runtime.unmarshaller.XsiNilLoader;
 import java.util.Arrays;
-import java.util.UUID;
-import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.LockModeType;
