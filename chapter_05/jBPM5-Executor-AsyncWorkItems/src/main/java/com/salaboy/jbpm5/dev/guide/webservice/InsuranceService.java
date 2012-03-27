@@ -26,8 +26,10 @@ public interface InsuranceService {
         @WebMethod(operationName = "calculateHospitalRates")
         public BigDecimal calculateHospitalRates(@WebParam(name = "patientId")String patientId, 
                                                  @WebParam(name = "concepts")List<ConceptCode> concepts);
-        
-        public boolean notifyAndChargePatient(Patient patient, BigDecimal amount, List<ConceptCode> concepts);
+        @WebMethod(operationName = "notifyAndChargePatient")
+        public boolean notifyAndChargePatient(@WebParam(name = "patient")Patient patient, 
+                                              @WebParam(name = "amount")BigDecimal amount, 
+                                              @WebParam(name = "concepts")List<ConceptCode> concepts);
         
         public Map<String, Boolean> getInsuredPatients();
         

@@ -21,7 +21,6 @@ public class InsuranceServiceImpl implements InsuranceService {
     private final Map<String, Boolean> insuredPatients = new HashMap<String, Boolean>();
 
     public InsuranceServiceImpl() {
-        System.out.println(" >>> New Service Instance: "+this.toString());
     }
 
     

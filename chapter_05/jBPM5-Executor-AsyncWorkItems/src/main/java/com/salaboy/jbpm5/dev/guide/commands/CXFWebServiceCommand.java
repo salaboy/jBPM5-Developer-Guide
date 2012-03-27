@@ -24,7 +24,7 @@ public class CXFWebServiceCommand implements Command {
 		}
 		
 		JaxWsDynamicClientFactory dcf = JaxWsDynamicClientFactory.newInstance();
-		Client client = dcf.createClient(wsdlUrl);
+		Client client = dcf.createClient(wsdlUrl, CXFWebServiceCommand.class.getClassLoader());
 		ExecutionResults results = new ExecutionResults();
 		try {
 			Object[] result = client.invoke(methodName, arguments);
