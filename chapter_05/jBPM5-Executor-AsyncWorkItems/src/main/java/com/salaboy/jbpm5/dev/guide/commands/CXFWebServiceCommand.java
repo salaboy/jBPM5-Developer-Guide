@@ -37,6 +37,7 @@ public class CXFWebServiceCommand implements Command {
 			}
 		} catch (Exception e) {
 			results.setData(outputName, e);
+                        System.out.println("Exception inside CXFCmd: "+e.getMessage());
 			e.printStackTrace(System.out);
 		}
 		return results;

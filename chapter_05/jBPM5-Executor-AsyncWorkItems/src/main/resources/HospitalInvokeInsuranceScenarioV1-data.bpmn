@@ -18,8 +18,8 @@
 
   <itemDefinition id="_3_InMessageType" structureRef="java.lang.String"/>
   <message id="_3_InMessage" itemRef="_3_InMessageType" />
-  <interface id="_3_InsuranceService" name="com.salaboy.jbpm5.dev.guide.webservice.InsuranceServiceImpl">
-    <operation id="_3_ServiceOperation" name="isValid">
+  <interface id="_3_InsuranceService" name="com.salaboy.jbpm5.dev.guide.webservice.SimpleValidationServiceImpl">
+    <operation id="_3_ServiceOperation" name="validate">
       <inMessageRef>_3_InMessage</inMessageRef>
     </operation>
   </interface>

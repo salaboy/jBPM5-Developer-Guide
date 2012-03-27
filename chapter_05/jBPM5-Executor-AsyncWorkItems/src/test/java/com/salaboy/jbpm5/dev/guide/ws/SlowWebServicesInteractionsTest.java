@@ -62,21 +62,19 @@ public class SlowWebServicesInteractionsTest {
 
     @After
     public void tearDown() {
-        stopExecutionEnvironment();
-        stopWebService();
+        executor.destroy();
         server.stop();
+        this.endpoint.stop();
     }
 
     private void initializeWebService() {
         this.service = new SlowServiceImpl();
         this.endpoint = Endpoint.publish(
-                "http://127.0.0.1:19999/WebServiceExample/slow",
+                "http://127.0.0.1:19999/SlowServiceImpl/slow",
                 service);
     }
 
-    private void stopWebService() {
-        this.endpoint.stop();
-    }
+   
 
     protected void initializeExecutionEnvironment() throws Exception {
         ctx = new ClassPathXmlApplicationContext("applicationContext.xml");
@@ -85,9 +83,7 @@ public class SlowWebServicesInteractionsTest {
         emf = ((EntityManagerFactory)ctx.getBean("entityManagerFactory"));
     }
 
-    protected void stopExecutionEnvironment() {
-        executor.destroy();
-    }
+    
 
     private void initializeSession(String processName) {
         KnowledgeBuilder kbuilder = KnowledgeBuilderFactory.newKnowledgeBuilder();

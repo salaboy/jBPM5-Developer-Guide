@@ -2,14 +2,15 @@ package com.salaboy.jbpm5.dev.guide.webservice;
 
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.jws.WebMethod;
 import javax.jws.WebParam;
 import javax.jws.WebService;
 
 @WebService()
 public class SlowServiceImpl implements SlowService {
 
-    @WebMethod(operationName = "slowCallOne")
+    public SlowServiceImpl() {
+    }
+
     public String slowMethod1(@WebParam(name = "name") String name) {
         int i = 0;
         while (i < 10) {
@@ -24,7 +25,6 @@ public class SlowServiceImpl implements SlowService {
         return "Seccess 1";
     }
 
-    @WebMethod(operationName = "slowCallTwo")
     public String slowMethod2(@WebParam(name = "name") String name) {
         try {
             System.out.println(" >>> Remote System Processing 2 ...");
@@ -36,7 +36,6 @@ public class SlowServiceImpl implements SlowService {
         return "Success 2";
     }
 
-    @WebMethod(operationName = "slowCallThree")
     public String slowMethod3(@WebParam(name = "name") String name) {
         try {
             System.out.println(" >>> Remote System Processing 2 ...");

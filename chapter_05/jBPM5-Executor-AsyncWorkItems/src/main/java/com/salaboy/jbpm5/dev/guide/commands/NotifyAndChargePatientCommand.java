@@ -24,7 +24,6 @@ import javax.xml.ws.Service;
 public class NotifyAndChargePatientCommand implements Command {
 
     public ExecutionResults execute(CommandContext ctx) {
-        System.out.println(" >>> &*(&*(&*(&*(& *)(*)(* Patient here = "+ctx.getData("invoice_patient"));
         Patient patient = (Patient) ctx.getData("invoice_patient");
         BigDecimal finalAmount = (BigDecimal) ctx.getData("invoice_finalAmount");
         List<ConceptCode> concepts = (List<ConceptCode>) ctx.getData("invoice_concepts");

@@ -17,8 +17,7 @@ public class PrintResultsCallback implements CommandCallback{
     public void onCommandDone(CommandContext ctx, ExecutionResults results) {
         String methodName = (String) ctx.getData("methodName");
         String outputName = (String) ctx.getData("outputName");
-        String output = (String) results.getData(outputName);
-        System.out.println(">>> invoked " + methodName + ". Result: " + output);
+        System.out.println(">>> invoked " + methodName + ". Result: " + results.getData(outputName));
     }
     
 }

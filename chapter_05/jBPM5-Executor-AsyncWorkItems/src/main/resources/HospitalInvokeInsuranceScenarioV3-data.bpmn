@@ -55,7 +55,7 @@
       <dataInputAssociation>
         <targetRef>_3_MethodNameInput</targetRef>
         <assignment>
-          <from xsi:type="tFormalExpression">isValid</from>
+          <from xsi:type="tFormalExpression">validate</from>
           <to xsi:type="tFormalExpression">_3_MethodNameInput</to>
         </assignment>
       </dataInputAssociation>
