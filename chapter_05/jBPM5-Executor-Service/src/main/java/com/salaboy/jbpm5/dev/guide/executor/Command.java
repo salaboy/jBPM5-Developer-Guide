@@ -9,5 +9,5 @@ package com.salaboy.jbpm5.dev.guide.executor;
  * @author salaboy
  */
 public interface Command {
-    public ExecutionResults execute(CommandContext ctx);
+    public ExecutionResults execute(CommandContext ctx) throws Exception;
 }

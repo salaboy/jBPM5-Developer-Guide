@@ -33,14 +33,12 @@ public class InvoiceServiceWorkItemHandler implements WorkItemHandler {
         BigDecimal finalAmount = (BigDecimal) wi.getParameter("invoice_finalAmount");
         List<ConceptCode> concepts = (List<ConceptCode>) wi.getParameter("invoice_concepts");
         boolean patientNotified = false;
-        try {
-            InsuranceService client = getClient();
-            patientNotified = client.notifyAndChargePatient(patient, finalAmount,concepts);
 
-        } catch (MalformedURLException ex) {
-            Logger.getLogger(PatientDataServiceWorkItemHandler.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        System.out.println(" >>> Patient Notified = "+patientNotified);
+        InsuranceService client = getClient();
+        patientNotified = client.notifyAndChargePatient(patient, finalAmount, concepts);
+
+
+        System.out.println(" >>> Patient Notified = " + patientNotified);
         Map<String, Object> result = new HashMap<String, Object>();
         result.put("invoice_patientNotified", patientNotified);
         wim.completeWorkItem(wi.getId(), result);
@@ -50,14 +48,19 @@ public class InvoiceServiceWorkItemHandler implements WorkItemHandler {
         throw new UnsupportedOperationException("Not supported yet.");
     }
 
-    private InsuranceService getClient() throws MalformedURLException {
-        URL wsdlURL = new URL(
+     private InsuranceService getClient() {
+        InsuranceService client = null;
+        try {
+            URL wsdlURL = new URL(
                 "http://127.0.0.1:19999/InsuranceServiceImpl/insurance?WSDL");
-        QName SERVICE_QNAME = new QName(
+            QName SERVICE_QNAME = new QName(
                 "http://webservice.guide.dev.jbpm5.salaboy.com/",
                 "InsuranceServiceImplService");
-        Service service = Service.create(wsdlURL, SERVICE_QNAME);
-        InsuranceService client = service.getPort(InsuranceService.class);
+            Service service = Service.create(wsdlURL, SERVICE_QNAME);
+            client = service.getPort(InsuranceService.class);
+        } catch (MalformedURLException ex) {
+            Logger.getLogger(CompanyGatewayWorkItemHandler.class.getName()).log(Level.SEVERE, null, ex);
+        }
         return client;
     }
 }

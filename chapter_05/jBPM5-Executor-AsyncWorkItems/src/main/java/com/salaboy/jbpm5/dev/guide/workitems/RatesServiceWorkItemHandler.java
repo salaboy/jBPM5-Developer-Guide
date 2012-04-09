@@ -34,14 +34,10 @@ public class RatesServiceWorkItemHandler implements WorkItemHandler {
         List<ConceptCode> concepts = new ArrayList<ConceptCode>(2);
         concepts.add(new ConceptCode("CO-123", new BigDecimal(125), "Dialy Hospital Bed Rate", 4));
         concepts.add(new ConceptCode("CO-123", new BigDecimal(100), "Nurse Service", 1));
-        try {
-            InsuranceService client = getClient();
-            //Fixed rate for insured patients
-            finalAmount = client.calculateHospitalRates(patientId, concepts);
+        InsuranceService client = getClient();
+        //Fixed rate for insured patients
+        finalAmount = client.calculateHospitalRates(patientId, concepts);
 
-        } catch (MalformedURLException ex) {
-            Logger.getLogger(PatientDataServiceWorkItemHandler.class.getName()).log(Level.SEVERE, null, ex);
-        }
         Map<String, Object> result = new HashMap<String, Object>();
         result.put("rates_finalAmount", finalAmount);
         result.put("rates_concepts", concepts);
@@ -52,14 +48,19 @@ public class RatesServiceWorkItemHandler implements WorkItemHandler {
         throw new UnsupportedOperationException("Not supported yet.");
     }
 
-    private InsuranceService getClient() throws MalformedURLException {
-        URL wsdlURL = new URL(
+    private InsuranceService getClient() {
+        InsuranceService client = null;
+        try {
+            URL wsdlURL = new URL(
                 "http://127.0.0.1:19999/InsuranceServiceImpl/insurance?WSDL");
-        QName SERVICE_QNAME = new QName(
+            QName SERVICE_QNAME = new QName(
                 "http://webservice.guide.dev.jbpm5.salaboy.com/",
                 "InsuranceServiceImplService");
-        Service service = Service.create(wsdlURL, SERVICE_QNAME);
-        InsuranceService client = service.getPort(InsuranceService.class);
+            Service service = Service.create(wsdlURL, SERVICE_QNAME);
+            client = service.getPort(InsuranceService.class);
+        } catch (MalformedURLException ex) {
+            Logger.getLogger(CompanyGatewayWorkItemHandler.class.getName()).log(Level.SEVERE, null, ex);
+        }
         return client;
     }
 }

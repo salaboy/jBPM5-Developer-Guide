@@ -3,7 +3,7 @@ package com.salaboy.jbpm5.dev.guide.ws;
 
 import com.salaboy.jbpm5.dev.guide.SessionStoreUtil;
 import com.salaboy.jbpm5.dev.guide.executor.Executor;
-import com.salaboy.jbpm5.dev.guide.executor.wih.GenericAsyncWorkItemHandler;
+import com.salaboy.jbpm5.dev.guide.executor.wih.AsyncGenericWorkItemHandler;
 import com.salaboy.jbpm5.dev.guide.webservice.SlowService;
 import com.salaboy.jbpm5.dev.guide.webservice.SlowServiceImpl;
 import java.sql.SQLException;
@@ -152,7 +152,7 @@ public class SlowWebServicesInteractionsTest {
         input.put("bedrequest_patientname", patientName);
        
         
-        GenericAsyncWorkItemHandler webServiceHandler = new GenericAsyncWorkItemHandler(executor,session.getId());
+        AsyncGenericWorkItemHandler webServiceHandler = new AsyncGenericWorkItemHandler(executor,session.getId());
         session.getWorkItemManager().registerWorkItemHandler("Slow Web Service", webServiceHandler);
 
         WorkflowProcessInstance pI = (WorkflowProcessInstance) session.startProcess("Three Systems Interactions", input);
@@ -178,7 +178,7 @@ public class SlowWebServicesInteractionsTest {
         input.put("bedrequest_patientname", patientName);
         
         
-        GenericAsyncWorkItemHandler webServiceHandler = new GenericAsyncWorkItemHandler(executor,session.getId());
+        AsyncGenericWorkItemHandler webServiceHandler = new AsyncGenericWorkItemHandler(executor,session.getId());
         session.getWorkItemManager().registerWorkItemHandler("Slow Web Service", webServiceHandler);
 
         WorkflowProcessInstance pI = (WorkflowProcessInstance) session.startProcess("Three Systems Interactions", input);

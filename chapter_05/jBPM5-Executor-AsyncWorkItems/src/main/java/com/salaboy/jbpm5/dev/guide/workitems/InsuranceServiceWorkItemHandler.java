@@ -23,30 +23,32 @@ public class InsuranceServiceWorkItemHandler implements WorkItemHandler {
 
         String patientId = (String) wi.getParameter("insured_patientName");
         boolean isPatientInsured = false;
-        try {
-            InsuranceService client = getClient();
-            isPatientInsured = client.isPatientInsured(patientId);
-        } catch (MalformedURLException ex) {
-            Logger.getLogger(PatientDataServiceWorkItemHandler.class.getName()).log(Level.SEVERE, null, ex);
-        }
+
+        InsuranceService client = getClient();
+        isPatientInsured = client.isPatientInsured(patientId);
+
         Map<String, Object> result = new HashMap<String, Object>();
         result.put("insured_isPatientInsured", isPatientInsured);
         wim.completeWorkItem(wi.getId(), result);
-        
-        
+
+
     }
 
-    private InsuranceService getClient() throws MalformedURLException {
-        URL wsdlURL = new URL(
-                        "http://127.0.0.1:19999/InsuranceServiceImpl/insurance?WSDL");
-        QName SERVICE_QNAME = new QName(
-                        "http://webservice.guide.dev.jbpm5.salaboy.com/", 
-                        "InsuranceServiceImplService");
-        Service service = Service.create(wsdlURL, SERVICE_QNAME);
-        InsuranceService client = service.getPort(InsuranceService.class);
+   private InsuranceService getClient() {
+        InsuranceService client = null;
+        try {
+            URL wsdlURL = new URL(
+                "http://127.0.0.1:19999/InsuranceServiceImpl/insurance?WSDL");
+            QName SERVICE_QNAME = new QName(
+                "http://webservice.guide.dev.jbpm5.salaboy.com/",
+                "InsuranceServiceImplService");
+            Service service = Service.create(wsdlURL, SERVICE_QNAME);
+            client = service.getPort(InsuranceService.class);
+        } catch (MalformedURLException ex) {
+            Logger.getLogger(CompanyGatewayWorkItemHandler.class.getName()).log(Level.SEVERE, null, ex);
+        }
         return client;
     }
-
     public void abortWorkItem(WorkItem workItem, WorkItemManager manager) {
         //Do nothing, cannot be aborted
     }

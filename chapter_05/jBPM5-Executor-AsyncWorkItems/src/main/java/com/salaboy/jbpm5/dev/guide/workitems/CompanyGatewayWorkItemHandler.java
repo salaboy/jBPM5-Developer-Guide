@@ -4,7 +4,6 @@
  */
 package com.salaboy.jbpm5.dev.guide.workitems;
 
-
 import com.salaboy.jbpm5.dev.guide.model.ConceptCode;
 import com.salaboy.jbpm5.dev.guide.webservice.InsuranceService;
 import java.math.BigDecimal;
@@ -31,14 +30,10 @@ public class CompanyGatewayWorkItemHandler implements WorkItemHandler {
     public void executeWorkItem(WorkItem wi, WorkItemManager wim) {
         String patientId = (String) wi.getParameter("company_patientName");
         BigDecimal finalAmount = BigDecimal.ZERO;
-        try {
-            InsuranceService client = getClient();
-            //Fixed rate for insured patients
-            finalAmount = client.notifyInsuranceCompany("Company 1", patientId, new BigDecimal(100));
-            
-        } catch (MalformedURLException ex) {
-            Logger.getLogger(PatientDataServiceWorkItemHandler.class.getName()).log(Level.SEVERE, null, ex);
-        }
+        InsuranceService client = getClient();
+        //Fixed rate for insured patients
+        finalAmount = client.notifyInsuranceCompany("Company 1", patientId, new BigDecimal(100));
+
         Map<String, Object> result = new HashMap<String, Object>();
         result.put("company_finalAmount", finalAmount);
         List<ConceptCode> concepts = new ArrayList<ConceptCode>(1);
@@ -50,18 +45,20 @@ public class CompanyGatewayWorkItemHandler implements WorkItemHandler {
     public void abortWorkItem(WorkItem wi, WorkItemManager wim) {
         throw new UnsupportedOperationException("Not supported yet.");
     }
-    
-    
-    private InsuranceService getClient() throws MalformedURLException {
-        URL wsdlURL = new URL(
-                        "http://127.0.0.1:19999/InsuranceServiceImpl/insurance?WSDL");
-        QName SERVICE_QNAME = new QName(
-                        "http://webservice.guide.dev.jbpm5.salaboy.com/", 
-                        "InsuranceServiceImplService");
-        Service service = Service.create(wsdlURL, SERVICE_QNAME);
-        InsuranceService client = service.getPort(InsuranceService.class);
+
+    private InsuranceService getClient() {
+        InsuranceService client = null;
+        try {
+            URL wsdlURL = new URL(
+                "http://127.0.0.1:19999/InsuranceServiceImpl/insurance?WSDL");
+            QName SERVICE_QNAME = new QName(
+                "http://webservice.guide.dev.jbpm5.salaboy.com/",
+                "InsuranceServiceImplService");
+            Service service = Service.create(wsdlURL, SERVICE_QNAME);
+            client = service.getPort(InsuranceService.class);
+        } catch (MalformedURLException ex) {
+            Logger.getLogger(CompanyGatewayWorkItemHandler.class.getName()).log(Level.SEVERE, null, ex);
+        }
         return client;
     }
-
-    
 }

@@ -2,7 +2,7 @@ package com.salaboy.jbpm5.dev.guide.ws;
 
 import com.salaboy.jbpm5.dev.guide.SessionStoreUtil;
 import com.salaboy.jbpm5.dev.guide.executor.Executor;
-import com.salaboy.jbpm5.dev.guide.executor.wih.GenericAsyncWorkItemHandler;
+import com.salaboy.jbpm5.dev.guide.executor.wih.AsyncGenericWorkItemHandler;
 import com.salaboy.jbpm5.dev.guide.model.Patient;
 import static org.junit.Assert.assertEquals;
 
@@ -91,7 +91,7 @@ public class HospitalInsuranceProcessExecutorTest {
         Patient salaboy = testPatients.get("salaboy");
         input.put("patientName", salaboy.getId());
         SessionStoreUtil.sessionCache.put("sessionId="+session.getId(), session);
-        GenericAsyncWorkItemHandler genericHandler = new GenericAsyncWorkItemHandler(executor,session.getId());
+        AsyncGenericWorkItemHandler genericHandler = new AsyncGenericWorkItemHandler(executor,session.getId());
 
         session.getWorkItemManager().registerWorkItemHandler("Gather Patient Data", genericHandler);
         session.getWorkItemManager().registerWorkItemHandler("Insurance Service", genericHandler);
@@ -115,7 +115,7 @@ public class HospitalInsuranceProcessExecutorTest {
         Patient brotha = testPatients.get("brotha");
         input.put("patientName", brotha.getId());
         SessionStoreUtil.sessionCache.put("sessionId="+session.getId(), session);
-        GenericAsyncWorkItemHandler genericHandler = new GenericAsyncWorkItemHandler(executor,session.getId());
+        AsyncGenericWorkItemHandler genericHandler = new AsyncGenericWorkItemHandler(executor,session.getId());
        
         session.getWorkItemManager().registerWorkItemHandler("Gather Patient Data", genericHandler);
        

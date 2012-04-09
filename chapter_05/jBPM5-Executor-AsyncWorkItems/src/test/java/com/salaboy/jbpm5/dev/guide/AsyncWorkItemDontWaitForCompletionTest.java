@@ -32,7 +32,7 @@ import com.salaboy.jbpm5.dev.guide.commands.CheckInCommand;
 import com.salaboy.jbpm5.dev.guide.executor.Executor;
 
 import com.salaboy.jbpm5.dev.guide.executor.ExecutorImpl;
-import com.salaboy.jbpm5.dev.guide.executor.wih.GenericAsyncWorkItemHandler;
+import com.salaboy.jbpm5.dev.guide.executor.wih.AsyncGenericWorkItemHandler;
 import java.sql.SQLException;
 import org.h2.tools.DeleteDbFiles;
 import org.h2.tools.Server;
@@ -149,7 +149,7 @@ public class AsyncWorkItemDontWaitForCompletionTest {
         String patientName = "John Doe";
         input.put("bedrequest_patientname", patientName);
 
-        GenericAsyncWorkItemHandler asyncHandler = new GenericAsyncWorkItemHandler(executor, session.getId());
+        AsyncGenericWorkItemHandler asyncHandler = new AsyncGenericWorkItemHandler(executor, session.getId());
         session.getWorkItemManager().registerWorkItemHandler("Async Work", asyncHandler);
 
         WorkflowProcessInstance pI = (WorkflowProcessInstance) session.startProcess("PatientCheckIn", input);
@@ -170,7 +170,7 @@ public class AsyncWorkItemDontWaitForCompletionTest {
         String patientName = "John Doe";
         input.put("bedrequest_patientname", patientName);
 
-        GenericAsyncWorkItemHandler asyncHandler = new GenericAsyncWorkItemHandler(executor, session.getId());
+        AsyncGenericWorkItemHandler asyncHandler = new AsyncGenericWorkItemHandler(executor, session.getId());
         session.getWorkItemManager().registerWorkItemHandler("Async Work", asyncHandler);
 
         WorkflowProcessInstance pI = (WorkflowProcessInstance) session.startProcess("PatientCheckIn", input);
