@@ -11,10 +11,15 @@ import java.util.Iterator;
 import java.util.Map;
 import org.drools.KnowledgeBase;
 import org.drools.KnowledgeBaseFactory;
+import org.drools.WorkingMemory;
 import org.drools.builder.KnowledgeBuilder;
 import org.drools.builder.KnowledgeBuilderError;
 import org.drools.builder.KnowledgeBuilderFactory;
 import org.drools.builder.ResourceType;
+import org.drools.event.*;
+import org.drools.event.process.DefaultProcessEventListener;
+import org.drools.event.process.ProcessStartedEvent;
+import org.drools.impl.StatefulKnowledgeSessionImpl;
 import org.drools.io.impl.ClassPathResource;
 import org.drools.logger.KnowledgeRuntimeLoggerFactory;
 import org.drools.process.instance.WorkItemHandler;
@@ -83,12 +88,35 @@ public class AdvancedProcessAndRulesIntegrationTest {
 
         final StatefulKnowledgeSession ksession = kbase.newStatefulKnowledgeSession();
         KnowledgeRuntimeLoggerFactory.newConsoleLogger(ksession);
-        new Thread(new Runnable() {
 
-            public void run() {
-                ksession.fireUntilHalt();
+        ((StatefulKnowledgeSessionImpl) ksession).getInternalWorkingMemory().addEventListener(
+                new DefaultAgendaEventListener() {
+
+                    @Override
+                    public void activationCreated(org.drools.event.ActivationCreatedEvent event, WorkingMemory workingMemory) {
+                        System.out.println("Firing All the Rules! " + event);
+                        workingMemory.fireAllRules();
+                    }
+
+                    @Override
+                    public void afterRuleFlowGroupActivated(RuleFlowGroupActivatedEvent event, WorkingMemory workingMemory) {
+                        System.out.println("Firing All the Rules! " + event);
+                        workingMemory.fireAllRules();
+                    }
+                });
+
+        ((StatefulKnowledgeSessionImpl) ksession).addEventListener(new DefaultProcessEventListener() {
+            @Override
+            public void beforeProcessStarted(ProcessStartedEvent event) {
+                ((StatefulKnowledgeSession) event.getKnowledgeRuntime()).fireAllRules();
             }
-        }).start();
+            @Override
+            public void afterProcessStarted(ProcessStartedEvent event) {
+                ((StatefulKnowledgeSession) event.getKnowledgeRuntime()).fireAllRules();
+            }
+        });
+
+
         Person person = new Person("Salaboy", 28);
         RatesToday ratesToday = new RatesToday(1, 100);
         Map<String, Object> params = new HashMap<String, Object>();
@@ -108,7 +136,7 @@ public class AdvancedProcessAndRulesIntegrationTest {
 
         QueryResultsRow ratesRow = iterator.next();
         assertEquals(ratesToday, ((ProcessVariable) ratesRow.get("$pv")).getValue());
-        
+
         QueryResultsRow personRow = iterator.next();
         assertEquals(person, ((ProcessVariable) personRow.get("$pv")).getValue());
 
@@ -116,8 +144,7 @@ public class AdvancedProcessAndRulesIntegrationTest {
 
 
     }
-    
-    
+
     @Test
     public void processEventsTest() throws InterruptedException {
         KnowledgeBuilder kbuilder = KnowledgeBuilderFactory.newKnowledgeBuilder();
@@ -141,7 +168,7 @@ public class AdvancedProcessAndRulesIntegrationTest {
         ksession.getWorkItemManager().registerWorkItemHandler("Human Task", new WorkItemHandler() {
 
             public void executeWorkItem(WorkItem wi, WorkItemManager wim) {
-                System.out.println(" >>> Completing Task! -> "+wi.getName() + " - id: "+wi.getId());
+                System.out.println(" >>> Completing Task! -> " + wi.getName() + " - id: " + wi.getId());
                 wim.completeWorkItem(wi.getId(), null);
             }
 
@@ -149,13 +176,34 @@ public class AdvancedProcessAndRulesIntegrationTest {
                 throw new UnsupportedOperationException("Not supported yet.");
             }
         });
-        KnowledgeRuntimeLoggerFactory.newConsoleLogger(ksession);
-        new Thread(new Runnable() {
-
-            public void run() {
-                ksession.fireUntilHalt();
+        ((StatefulKnowledgeSessionImpl) ksession).addEventListener(new DefaultProcessEventListener() {
+            @Override
+            public void beforeProcessStarted(ProcessStartedEvent event) {
+                ((StatefulKnowledgeSession) event.getKnowledgeRuntime()).fireAllRules();
             }
-        }).start();
+            @Override
+            public void afterProcessStarted(ProcessStartedEvent event) {
+                ((StatefulKnowledgeSession) event.getKnowledgeRuntime()).fireAllRules();
+            }
+        });
+        KnowledgeRuntimeLoggerFactory.newConsoleLogger(ksession);
+
+
+        ((StatefulKnowledgeSessionImpl) ksession).getInternalWorkingMemory().addEventListener(
+                new DefaultAgendaEventListener() {
+
+                    @Override
+                    public void activationCreated(org.drools.event.ActivationCreatedEvent event, WorkingMemory workingMemory) {
+                        workingMemory.fireAllRules();
+                    }
+
+                    @Override
+                    public void afterRuleFlowGroupActivated(RuleFlowGroupActivatedEvent event, WorkingMemory workingMemory) {
+                        workingMemory.fireAllRules();
+                    }
+                });
+
+
         Person person = new Person("Salaboy", 28);
         RatesToday ratesToday = new RatesToday(1, 100);
         Map<String, Object> params = new HashMap<String, Object>();
@@ -170,14 +218,14 @@ public class AdvancedProcessAndRulesIntegrationTest {
         ksession.startProcessInstance(processInstance.getId());
 
         Thread.sleep(1000);
-        
+
         assertEquals(processInstance.getState(), ProcessInstance.STATE_COMPLETED);
         QueryResults queryResults = ksession.getQueryResults("allProcessVariables", new Object[]{});
         Iterator<QueryResultsRow> iterator = queryResults.iterator();
 
         QueryResultsRow ratesRow = iterator.next();
         assertEquals(ratesToday, ((ProcessVariable) ratesRow.get("$pv")).getValue());
-        
+
         QueryResultsRow personRow = iterator.next();
         assertEquals(person, ((ProcessVariable) personRow.get("$pv")).getValue());
 

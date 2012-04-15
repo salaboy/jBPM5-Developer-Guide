@@ -43,6 +43,7 @@ rule "init"
     when
         WorkflowProcessInstanceImpl($id: id, $vars: variables)
     then
+        System.out.println(" I'm going to insert "+$vars.keySet().size() +"process variables");
         for(int i = 0; i < $vars.keySet().size(); i++){
             insertLogical(new ProcessVariable($id, (String)$vars.keySet().toArray()[i],$vars.values().toArray()[i]));
         }
