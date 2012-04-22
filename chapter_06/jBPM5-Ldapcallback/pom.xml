@@ -11,7 +11,7 @@
     <artifactId>jBPM5-Ldapcallback</artifactId>
     <version>1.0-SNAPSHOT</version>
     <name>jBPM5 :: Human Task Ldap Callback Test</name>
-    <url>http://maven.apache.org</url>
+    <url>http://salaboy.com</url>
     <properties>
         <jbpm.version>5.2.0.Final</jbpm.version>
         <spring.security.version>3.0.5.RELEASE</spring.security.version>

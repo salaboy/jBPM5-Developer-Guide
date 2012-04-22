@@ -44,18 +44,18 @@
     <userTask id="_9" name="User Task 1" >
         <extensionElements>
         <tns:onEntry-script scriptFormat="http://www.java.com/java">
-          <script>System.out.println("On-entry1");
-          kcontext.getKnowledgeRuntime().insert(new OnEntryNodeEvent());</script>
+          <tns:script>System.out.println("On-entry1");
+          kcontext.getKnowledgeRuntime().insert(new OnEntryNodeEvent());</tns:script>
         </tns:onEntry-script>
         <tns:onEntry-script scriptFormat="http://www.java.com/java">
-          <script>System.out.println("On-entry2");</script>
+          <tns:script>System.out.println("On-entry2");</tns:script>
         </tns:onEntry-script >
         <tns:onExit-script scriptFormat="http://www.java.com/java">
-          <script>System.out.println("On-exit1");
-          kcontext.getKnowledgeRuntime().insert(new OnExitNodeEvent());  </script>
+          <tns:script>System.out.println("On-exit1");
+          kcontext.getKnowledgeRuntime().insert(new OnExitNodeEvent());  </tns:script>
         </tns:onExit-script>
         <tns:onExit-script scriptFormat="http://www.java.com/java">
-          <script>System.out.println("On-exit2");</script>
+          <tns:script>System.out.println("On-exit2");</tns:script>
         </tns:onExit-script>
       </extensionElements>
       <ioSpecification>
@@ -68,20 +68,20 @@
     <userTask id="_10" name="User Task 2" >
         <extensionElements>
         <tns:onEntry-script scriptFormat="http://www.java.com/java">
-          <script>System.out.println("On-entry1");
+          <tns:script>System.out.println("On-entry1");
                   kcontext.getKnowledgeRuntime().insert(new OnEntryNodeEvent());
-          </script>
+          </tns:script>
         </tns:onEntry-script>
         <tns:onEntry-script scriptFormat="http://www.java.com/java">
-          <script>System.out.println("On-entry2");</script>
+          <tns:script>System.out.println("On-entry2");</tns:script>
         </tns:onEntry-script>
         <tns:onExit-script scriptFormat="http://www.java.com/java">
-          <script>System.out.println("On-exit1");
+          <tns:script>System.out.println("On-exit1");
                   kcontext.getKnowledgeRuntime().insert(new OnExitNodeEvent());  
-            </script>
+            </tns:script>
         </tns:onExit-script>
         <tns:onExit-script scriptFormat="http://www.java.com/java">
-          <script>System.out.println("On-exit2");</script>
+          <tns:script>System.out.println("On-exit2");</tns:script>
         </tns:onExit-script>
       </extensionElements>
       <ioSpecification>
@@ -94,16 +94,16 @@
     <userTask id="_11" name="User Task 3" >
         <extensionElements>
         <tns:onEntry-script scriptFormat="http://www.java.com/java">
-          <script>System.out.println("On-entry1");</script>
+          <tns:script>System.out.println("On-entry1");</tns:script>
         </tns:onEntry-script>
         <tns:onEntry-script scriptFormat="http://www.java.com/java">
-          <script>System.out.println("On-entry2");</script>
+          <tns:script>System.out.println("On-entry2");</tns:script>
         </tns:onEntry-script>
         <tns:onExit-script scriptFormat="http://www.java.com/java">
-          <script>System.out.println("On-exit1");</script>
+          <tns:script>System.out.println("On-exit1");</tns:script>
         </tns:onExit-script>
         <tns:onExit-script scriptFormat="http://www.java.com/java">
-          <script>System.out.println("On-exit2");</script>
+          <tns:script>System.out.println("On-exit2");</tns:script>
         </tns:onExit-script>
       </extensionElements>
       <ioSpecification>
@@ -116,16 +116,16 @@
     <userTask id="_12" name="User Task 4" >
         <extensionElements>
         <tns:onEntry-script scriptFormat="http://www.java.com/java">
-          <script>System.out.println("On-entry1");</script>
+          <tns:script>System.out.println("On-entry1");</tns:script>
         </tns:onEntry-script>
         <tns:onEntry-script scriptFormat="http://www.java.com/java">
-          <script>System.out.println("On-entry2");</script>
+          <tns:script>System.out.println("On-entry2");</tns:script>
         </tns:onEntry-script>
         <tns:onExit-script scriptFormat="http://www.java.com/java">
-          <script>System.out.println("On-exit1");</script>
+          <tns:script>System.out.println("On-exit1");</tns:script>
         </tns:onExit-script>
         <tns:onExit-script scriptFormat="http://www.java.com/java">
-          <script>System.out.println("On-exit2");</script>
+          <tns:script>System.out.println("On-exit2");</tns:script>
         </tns:onExit-script>
       </extensionElements>
       <ioSpecification>
