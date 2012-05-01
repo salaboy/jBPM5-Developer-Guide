@@ -9,10 +9,16 @@ import static org.junit.Assert.fail;
 
 import org.drools.KnowledgeBase;
 import org.drools.KnowledgeBaseFactory;
+import org.drools.WorkingMemory;
 import org.drools.builder.KnowledgeBuilder;
 import org.drools.builder.KnowledgeBuilderError;
 import org.drools.builder.KnowledgeBuilderFactory;
 import org.drools.builder.ResourceType;
+import org.drools.event.DefaultAgendaEventListener;
+import org.drools.event.RuleFlowGroupActivatedEvent;
+import org.drools.event.process.DefaultProcessEventListener;
+import org.drools.event.process.ProcessStartedEvent;
+import org.drools.impl.StatefulKnowledgeSessionImpl;
 import org.drools.io.impl.ClassPathResource;
 import org.drools.runtime.StatefulKnowledgeSession;
 import org.drools.runtime.process.ProcessInstance;
@@ -26,7 +32,7 @@ public class JBPM5ProcessAndRulesIntegrationPatternsTest {
 
         KnowledgeBuilder kbuilder = KnowledgeBuilderFactory.newKnowledgeBuilder();
 
-        kbuilder.add(new ClassPathResource("process-decision.bpmn"), ResourceType.BPMN2);
+        kbuilder.add(new ClassPathResource("process-drl-decision.bpmn"), ResourceType.BPMN2);
         if (kbuilder.hasErrors()) {
             for (KnowledgeBuilderError error : kbuilder.getErrors()) {
                 System.out.println(">>> Error:" + error.getMessage());
@@ -65,7 +71,7 @@ public class JBPM5ProcessAndRulesIntegrationPatternsTest {
 
         KnowledgeBuilder kbuilder = KnowledgeBuilderFactory.newKnowledgeBuilder();
         kbuilder.add(new ClassPathResource("scoring.drl"), ResourceType.DRL);
-        kbuilder.add(new ClassPathResource("process-decision.bpmn"), ResourceType.BPMN2);
+        kbuilder.add(new ClassPathResource("process-drl-decision.bpmn"), ResourceType.BPMN2);
 
         if (kbuilder.hasErrors()) {
             for (KnowledgeBuilderError error : kbuilder.getErrors()) {
@@ -110,7 +116,7 @@ public class JBPM5ProcessAndRulesIntegrationPatternsTest {
 
         KnowledgeBuilder kbuilder = KnowledgeBuilderFactory.newKnowledgeBuilder();
         kbuilder.add(new ClassPathResource("scoring.drl"), ResourceType.DRL);
-        kbuilder.add(new ClassPathResource("process-decision.bpmn"), ResourceType.BPMN2);
+        kbuilder.add(new ClassPathResource("process-drl-decision.bpmn"), ResourceType.BPMN2);
 
         if (kbuilder.hasErrors()) {
             for (KnowledgeBuilderError error : kbuilder.getErrors()) {
@@ -151,6 +157,69 @@ public class JBPM5ProcessAndRulesIntegrationPatternsTest {
         ksession.fireAllRules();
         
         Thread.sleep(1000); // We need to wait a little because we are in reactive mode
+        
+        assertEquals(84, person.getScore());
+        assertEquals(processInstance.getState(), ProcessInstance.STATE_COMPLETED);
+    }
+    
+    @Test
+    public void testSimpleDecisionWithReactiveRulesUsingListener()  {
+
+        KnowledgeBuilder kbuilder = KnowledgeBuilderFactory.newKnowledgeBuilder();
+        kbuilder.add(new ClassPathResource("scoring.drl"), ResourceType.DRL);
+        kbuilder.add(new ClassPathResource("process-drl-decision.bpmn"), ResourceType.BPMN2);
+
+        if (kbuilder.hasErrors()) {
+            for (KnowledgeBuilderError error : kbuilder.getErrors()) {
+                System.out.println(">>> Error:" + error.getMessage());
+
+            }
+            fail(">>> Knowledge couldn't be parsed! ");
+        }
+
+        KnowledgeBase kbase = KnowledgeBaseFactory.newKnowledgeBase();
+
+        kbase.addKnowledgePackages(kbuilder.getKnowledgePackages());
+
+        final StatefulKnowledgeSession ksession = kbase.newStatefulKnowledgeSession();
+        // Uncomment to see all the logs
+        // KnowledgeRuntimeLoggerFactory.newConsoleLogger(ksession);
+        ((StatefulKnowledgeSessionImpl) ksession).getInternalWorkingMemory().addEventListener(
+                new DefaultAgendaEventListener() {
+
+                    @Override
+                    public void activationCreated(org.drools.event.ActivationCreatedEvent event, WorkingMemory workingMemory) {
+                        System.out.println(">>> Firing All the Rules after activation created! " + event);
+                        workingMemory.fireAllRules();
+                    }
+
+                });
+        ((StatefulKnowledgeSessionImpl) ksession).addEventListener(new DefaultProcessEventListener() {
+            @Override
+            public void afterProcessStarted(ProcessStartedEvent event) {
+                System.out.println(">>> Firing All the Rules after process started! " + event);
+                ((StatefulKnowledgeSession) event.getKnowledgeRuntime()).fireAllRules();
+            }
+        });
+        
+        
+        Person person = new Person("Salaboy", 28);
+
+        Map<String, Object> params = new HashMap<String, Object>();
+        params.put("person", person);
+
+        ProcessInstance processInstance = ksession.createProcessInstance("com.salaboy.process.SimpleDecision", params);
+
+        ksession.insert(processInstance);
+        ksession.insert(person);
+        ksession.insert(new RatesToday(3, 5));
+
+        assertEquals(processInstance.getState(), ProcessInstance.STATE_PENDING);
+
+        ksession.startProcessInstance(processInstance.getId());
+        
+        
+        
         
         assertEquals(84, person.getScore());
         assertEquals(processInstance.getState(), ProcessInstance.STATE_COMPLETED);
