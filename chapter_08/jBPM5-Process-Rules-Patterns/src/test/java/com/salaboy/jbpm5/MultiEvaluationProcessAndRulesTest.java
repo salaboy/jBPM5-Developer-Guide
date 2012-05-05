@@ -1,5 +1,6 @@
 package com.salaboy.jbpm5;
 
+import com.salaboy.model.Customer;
 import com.salaboy.model.Resources;
 import java.util.HashMap;
 import java.util.Map;
@@ -12,9 +13,20 @@ import org.drools.builder.KnowledgeBuilder;
 import org.drools.builder.KnowledgeBuilderError;
 import org.drools.builder.KnowledgeBuilderFactory;
 import org.drools.builder.ResourceType;
+
+import org.drools.event.process.DefaultProcessEventListener;
+import org.drools.event.process.ProcessNodeLeftEvent;
+import org.drools.event.process.ProcessNodeTriggeredEvent;
+import org.drools.event.process.ProcessStartedEvent;
+import org.drools.event.rule.*;
+import org.drools.impl.StatefulKnowledgeSessionImpl;
 import org.drools.io.impl.ClassPathResource;
+import org.drools.logger.KnowledgeRuntimeLoggerFactory;
 import org.drools.runtime.StatefulKnowledgeSession;
 import org.drools.runtime.process.ProcessInstance;
+import org.drools.runtime.rule.ConsequenceException;
+import org.drools.runtime.rule.QueryResults;
+
 import org.junit.Test;
 
 public class MultiEvaluationProcessAndRulesTest {
@@ -39,14 +51,32 @@ public class MultiEvaluationProcessAndRulesTest {
 
         final StatefulKnowledgeSession ksession = kbase.newStatefulKnowledgeSession();
         // Uncomment to see all the logs
-        // KnowledgeRuntimeLoggerFactory.newConsoleLogger(ksession);
-        try {
-            new Thread(new Runnable() {
+        KnowledgeRuntimeLoggerFactory.newConsoleLogger(ksession);
 
-                public void run() {
-                    ksession.fireUntilHalt();
+        try {
+
+            ((StatefulKnowledgeSessionImpl) ksession).addEventListener(new DefaultAgendaEventListener() {
+
+                @Override
+                public void activationCreated(ActivationCreatedEvent event) {
+                    System.out.println(">>> Firing All the Rules on Activation Created " + event);
+                    ((StatefulKnowledgeSession) event.getKnowledgeRuntime()).fireAllRules();
                 }
-            }).start();
+            });
+            ((StatefulKnowledgeSessionImpl) ksession).addEventListener(new DefaultProcessEventListener() {
+
+                @Override
+                public void beforeNodeTriggered(ProcessNodeTriggeredEvent event) {
+                    System.out.println(">>> Firing All the Rules before node triggered! " + event);
+                    ((StatefulKnowledgeSession) event.getKnowledgeRuntime()).fireAllRules();
+                }
+                @Override
+                public void beforeNodeLeft(ProcessNodeLeftEvent event) {
+                    System.out.println(">>> Firing All the Rules before node triggered! " + event);
+                    ((StatefulKnowledgeSession) event.getKnowledgeRuntime()).fireAllRules();
+                }
+            });
+
 
             Map<String, Object> params = new HashMap<String, Object>();
 
@@ -70,8 +100,98 @@ public class MultiEvaluationProcessAndRulesTest {
                 System.out.println(" ----- Process Number : " + i + " Completed ----");
                 System.out.println(" ----------------- ##### -----------------");
             }
-        } catch (IllegalStateException e) {
-            assertEquals(true, e.getMessage().contains("No More Resources Available = "));
+        } catch (ConsequenceException e) {
+            assertEquals(true, e.getCause().getMessage().contains("No More Resources Available = "));
         }
+    }
+
+    @Test
+    public void testProcessCreationDelegation() {
+
+        KnowledgeBuilder kbuilder = KnowledgeBuilderFactory.newKnowledgeBuilder();
+        kbuilder.add(new ClassPathResource("resources.drl"), ResourceType.DRL);
+        kbuilder.add(new ClassPathResource("simple-process-trigger.drl"), ResourceType.DRL);
+        kbuilder.add(new ClassPathResource("multi-process-decision-customer.bpmn"), ResourceType.BPMN2);
+        if (kbuilder.hasErrors()) {
+            for (KnowledgeBuilderError error : kbuilder.getErrors()) {
+                System.out.println(">>> Error:" + error.getMessage());
+
+            }
+            fail(">>> Knowledge couldn't be parsed! ");
+        }
+
+        KnowledgeBase kbase = KnowledgeBaseFactory.newKnowledgeBase();
+
+        kbase.addKnowledgePackages(kbuilder.getKnowledgePackages());
+
+        final StatefulKnowledgeSession ksession = kbase.newStatefulKnowledgeSession();
+        // Uncomment to see all the logs
+        //KnowledgeRuntimeLoggerFactory.newConsoleLogger(ksession);
+
+        ((StatefulKnowledgeSessionImpl) ksession).addEventListener(new DefaultAgendaEventListener() {
+
+            @Override
+            public void activationCreated(ActivationCreatedEvent event) {
+                
+                
+                ((StatefulKnowledgeSession) event.getKnowledgeRuntime()).fireAllRules();
+            }
+        });
+
+        ((StatefulKnowledgeSessionImpl) ksession).addEventListener(new DefaultWorkingMemoryEventListener() {
+
+           @Override
+            public void objectInserted(ObjectInsertedEvent event) {
+                
+                ((StatefulKnowledgeSession) event.getKnowledgeRuntime()).fireAllRules();
+            }
+
+            @Override
+            public void objectUpdated(ObjectUpdatedEvent event) {
+                
+                ((StatefulKnowledgeSession) event.getKnowledgeRuntime()).fireAllRules();
+            }
+        });
+
+        ((StatefulKnowledgeSessionImpl) ksession).addEventListener(new DefaultProcessEventListener() {
+
+            
+
+            @Override
+            public void afterNodeLeft(ProcessNodeLeftEvent event) {
+                //System.out.println(">>> Firing All the Rules on afterNodeLeft! " + event);
+                ((StatefulKnowledgeSession) event.getKnowledgeRuntime()).fireAllRules();
+            }
+
+          
+        });
+        QueryResults queryResults = null;
+        try {
+            ksession.insert(new Resources(10));
+
+            ksession.insert(new Customer("salaboy", Customer.CustomerType.GOLD));
+
+            queryResults = ksession.getQueryResults("getResources", (Object[]) null);
+
+            assertEquals(7, ((Resources) queryResults.iterator().next().get("$r")).getAvailable());
+
+            ksession.insert(new Customer("platinum-customer", Customer.CustomerType.PLATINUM));
+
+            queryResults = ksession.getQueryResults("getResources", (Object[]) null);
+
+            assertEquals(2, ((Resources) queryResults.iterator().next().get("$r")).getAvailable());
+
+            ksession.insert(new Customer("starter", Customer.CustomerType.STARTER));
+
+        } catch (ConsequenceException e) {
+            assertEquals(true, e.getCause().getMessage().contains("No More Resources Available = "));
+            queryResults = ksession.getQueryResults("getResources", (Object[]) null);
+            // In this case, because the rules are starting the process, the Global Rule that checks
+            // the Resources Object will kick in just after the process ends.
+            // This is usually not a problem due to we will usually have long-running processes
+            // which will include a lot of wait states where the queued activations can kick in.
+            assertEquals(-1, ((Resources) queryResults.iterator().next().get("$r")).getAvailable());
+        }
+
     }
 }

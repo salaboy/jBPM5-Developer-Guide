@@ -7,7 +7,6 @@
         <groupId>com.salaboy</groupId>
         <version>1.0-SNAPSHOT</version>
     </parent>
-    <groupId>com.salaboy</groupId>
     <artifactId>jBPM5-Process-Rules-Patterns</artifactId>
     <version>1.0-SNAPSHOT</version>
     <name>jBPM5 :: Process &amp; Rules Patterns</name>

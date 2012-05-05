@@ -8,7 +8,7 @@ end
 
 rule "Out of resources"
     when
-        $r: Resources( available == 0 )
+        $r: Resources( available < 1 )
     then
         throw new IllegalStateException("No More Resources Available = "+$r);
 end

@@ -9,20 +9,18 @@ import static org.junit.Assert.fail;
 
 import org.drools.KnowledgeBase;
 import org.drools.KnowledgeBaseFactory;
-import org.drools.WorkingMemory;
 import org.drools.builder.KnowledgeBuilder;
 import org.drools.builder.KnowledgeBuilderError;
 import org.drools.builder.KnowledgeBuilderFactory;
 import org.drools.builder.ResourceType;
-import org.drools.event.DefaultAgendaEventListener;
-import org.drools.event.RuleFlowGroupActivatedEvent;
+import org.drools.event.rule.DefaultAgendaEventListener;
+import org.drools.event.rule.*;
 import org.drools.event.process.DefaultProcessEventListener;
 import org.drools.event.process.ProcessStartedEvent;
 import org.drools.impl.StatefulKnowledgeSessionImpl;
 import org.drools.io.impl.ClassPathResource;
 import org.drools.runtime.StatefulKnowledgeSession;
 import org.drools.runtime.process.ProcessInstance;
-import org.jbpm.workflow.instance.impl.WorkflowProcessInstanceImpl;
 import org.junit.Test;
 
 public class JBPM5ProcessAndRulesIntegrationPatternsTest {
@@ -184,14 +182,15 @@ public class JBPM5ProcessAndRulesIntegrationPatternsTest {
         final StatefulKnowledgeSession ksession = kbase.newStatefulKnowledgeSession();
         // Uncomment to see all the logs
         // KnowledgeRuntimeLoggerFactory.newConsoleLogger(ksession);
-        ((StatefulKnowledgeSessionImpl) ksession).getInternalWorkingMemory().addEventListener(
+        ((StatefulKnowledgeSessionImpl) ksession).addEventListener(
                 new DefaultAgendaEventListener() {
-
                     @Override
-                    public void activationCreated(org.drools.event.ActivationCreatedEvent event, WorkingMemory workingMemory) {
+                    public void activationCreated(ActivationCreatedEvent event) {
                         System.out.println(">>> Firing All the Rules after activation created! " + event);
-                        workingMemory.fireAllRules();
+                        ((StatefulKnowledgeSession) event.getKnowledgeRuntime()).fireAllRules();
                     }
+                    
+                    
 
                 });
         ((StatefulKnowledgeSessionImpl) ksession).addEventListener(new DefaultProcessEventListener() {
@@ -224,5 +223,6 @@ public class JBPM5ProcessAndRulesIntegrationPatternsTest {
         assertEquals(84, person.getScore());
         assertEquals(processInstance.getState(), ProcessInstance.STATE_COMPLETED);
     }
+    
     
 }

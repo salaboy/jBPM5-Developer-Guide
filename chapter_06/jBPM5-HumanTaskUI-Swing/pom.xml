@@ -7,10 +7,10 @@
         <artifactId>chapter06</artifactId>
         <version>1.0-SNAPSHOT</version>
     </parent>
-    <groupId>com.salaboy.jbpm5.dev.guide</groupId>
+   
     <artifactId>jBPM5-HumanTaskUI-Swing</artifactId>
     <version>1.0-SNAPSHOT</version>
-    <name>jBPM5-HumanTaskUI-Swing</name>
+    <name>jBPM5 :: Human Tasks Simple UI - Swing Example</name>
     <url>http://salaboy.com</url>
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -45,7 +45,7 @@
         <!-- jBPM5 Human Task Dependencies --> 
         <dependency>
             <groupId>org.jbpm</groupId>
-            <artifactId>jbpm-human-task</artifactId>
+            <artifactId>jbpm-human-task-core</artifactId>
             <version>${jbpm.version}</version>
             <type>jar</type>
         </dependency>

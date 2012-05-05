@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<bpmn2:definitions xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://www.omg.org/bpmn20" xmlns:bpmn2="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" xmlns:drools="http://www.jboss.org/drools" id="_D99KQJQoEeGQVa3wSErkKA" xsi:schemaLocation="http://www.omg.org/spec/BPMN/20100524/MODEL BPMN20.xsd" expressionLanguage="http://www.mvel.org/2.0" targetNamespace="http://www.omg.org/bpmn20" typeLanguage="http://www.java.com/javaTypes">
+  <bpmn2:itemDefinition id="_customerItem" structureRef="com.salaboy.model.Customer"/>
+  <bpmn2:process id="com.salaboy.process.RegularCustomerProcess" drools:packageName="defaultPackage" name="Regular Customer Process" isExecutable="true">
+    <bpmn2:extensionElements>
+      <drools:import name="com.salaboy.model.Customer"/>
+      <drools:import name="com.salaboy.model.Customer.CustomerType"/>
+      <drools:import name="com.salaboy.model.Resources"/>
+      <drools:import name="org.jbpm.workflow.instance.impl.WorkflowProcessInstanceImpl"/>
+      <drools:import name="org.drools.runtime.rule.QueryResults"/>
+      <drools:import name="org.drools.runtime.rule.QueryResultsRow"/>
+      <drools:import name="org.drools.runtime.rule.FactHandle"/>
+    </bpmn2:extensionElements>
+    <bpmn2:property id="customer" itemSubjectRef="_customerItem"/>
+    <bpmn2:startEvent id="_F5D8C21E-81E4-458D-8CBD-CB531E324284" drools:bgcolor="#ffffff" name="StartProcess">
+      <bpmn2:outgoing>_F24A6514-6BCB-434C-93A9-854FFB53481A</bpmn2:outgoing>
+    </bpmn2:startEvent>
+    <bpmn2:scriptTask id="_723B50D5-E588-415E-97B9-5F5C829B52C9" name="Script 0" scriptFormat="http://www.java.com/java">
+      <bpmn2:incoming>_F24A6514-6BCB-434C-93A9-854FFB53481A</bpmn2:incoming>
+      <bpmn2:outgoing>_BB0708E8-A4F1-4551-BCEB-8213DBDD223F</bpmn2:outgoing>
+      <bpmn2:script><![CDATA[QueryResults queryResults = kcontext.getKnowledgeRuntime().getQueryResults("getResources", new Object[]{});
+              QueryResultsRow row = queryResults.iterator().next();
+              Resources resources = (Resources)row.get("$r");
+              System.out.println(" ### Script 0 (before): "+resources);
+              resources.setAvailable(resources.getAvailable() - 1);
+              System.out.println(" ### Script 0 (after): "+resources);
+              FactHandle handle = kcontext.getKnowledgeRuntime().getFactHandle(resources);
+              kcontext.getKnowledgeRuntime().update(handle, resources);]]></bpmn2:script>
+    </bpmn2:scriptTask>
+    <bpmn2:scriptTask id="_F584F559-FBE5-4679-B6AD-4599362A9800" name="Script 4" scriptFormat="http://www.java.com/java">
+      <bpmn2:incoming>_BB0708E8-A4F1-4551-BCEB-8213DBDD223F</bpmn2:incoming>
+      <bpmn2:outgoing>_DE321514-0275-40CA-8F5A-0BFBDE8773FF</bpmn2:outgoing>
+      <bpmn2:script><![CDATA[
+              QueryResults queryResults = kcontext.getKnowledgeRuntime().getQueryResults("getResources", new Object[]{});
+              QueryResultsRow row = queryResults.iterator().next();
+              Resources resources = (Resources)row.get("$r");
+              System.out.println(" ### Script 4 (before): "+resources);
+              resources.setAvailable(resources.getAvailable() - 1);
+              System.out.println(" ### Script 4 (after): "+resources);
+              FactHandle handle = kcontext.getKnowledgeRuntime().getFactHandle(resources);
+              kcontext.getKnowledgeRuntime().update(handle, resources);
+              
+    ]]></bpmn2:script>
+    </bpmn2:scriptTask>
+    <bpmn2:endEvent id="_5DBB715D-D9D7-4B1A-B121-F4AA01AE7DE0" drools:bgcolor="#ffffff" name="End">
+      <bpmn2:incoming>_47BEF4FD-3ACD-46D1-B4FA-FE9B4AC5030A</bpmn2:incoming>
+      <bpmn2:terminateEventDefinition id="_D99KQZQoEeGQVa3wSErkKA"/>
+    </bpmn2:endEvent>
+    <bpmn2:scriptTask id="_3AE567D8-393C-45F4-8091-E5A582115FDF" name="Script 5" scriptFormat="http://www.java.com/java">
+      <bpmn2:incoming>_DE321514-0275-40CA-8F5A-0BFBDE8773FF</bpmn2:incoming>
+      <bpmn2:outgoing>_47BEF4FD-3ACD-46D1-B4FA-FE9B4AC5030A</bpmn2:outgoing>
+      <bpmn2:script><![CDATA[QueryResults queryResults = kcontext.getKnowledgeRuntime().getQueryResults("getResources", new Object[]{});
+              QueryResultsRow row = queryResults.iterator().next();
+              Resources resources = (Resources)row.get("$r");
+              System.out.println(" ### Script 5 (before): "+resources);
+              resources.setAvailable(resources.getAvailable() - 1);
+              System.out.println(" ### Script 5 (after): "+resources);
+              FactHandle handle = kcontext.getKnowledgeRuntime().getFactHandle(resources);
+              kcontext.getKnowledgeRuntime().update(handle, resources);]]></bpmn2:script>
+    </bpmn2:scriptTask>
+    <bpmn2:sequenceFlow id="_F24A6514-6BCB-434C-93A9-854FFB53481A" sourceRef="_F5D8C21E-81E4-458D-8CBD-CB531E324284" targetRef="_723B50D5-E588-415E-97B9-5F5C829B52C9"/>
+    <bpmn2:sequenceFlow id="_47BEF4FD-3ACD-46D1-B4FA-FE9B4AC5030A" sourceRef="_3AE567D8-393C-45F4-8091-E5A582115FDF" targetRef="_5DBB715D-D9D7-4B1A-B121-F4AA01AE7DE0"/>
+    <bpmn2:sequenceFlow id="_BB0708E8-A4F1-4551-BCEB-8213DBDD223F" sourceRef="_723B50D5-E588-415E-97B9-5F5C829B52C9" targetRef="_F584F559-FBE5-4679-B6AD-4599362A9800"/>
+    <bpmn2:sequenceFlow id="_DE321514-0275-40CA-8F5A-0BFBDE8773FF" sourceRef="_F584F559-FBE5-4679-B6AD-4599362A9800" targetRef="_3AE567D8-393C-45F4-8091-E5A582115FDF"/>
+  </bpmn2:process>
+  <bpmndi:BPMNDiagram id="_D99KQpQoEeGQVa3wSErkKA">
+    <bpmndi:BPMNPlane id="_D99KQ5QoEeGQVa3wSErkKA" bpmnElement="com.salaboy.process.RegularCustomerProcess">
+      <bpmndi:BPMNShape id="_D99KRJQoEeGQVa3wSErkKA" bpmnElement="_F5D8C21E-81E4-458D-8CBD-CB531E324284">
+        <dc:Bounds height="30.0" width="30.0" x="26.0" y="214.0"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="_D99KRZQoEeGQVa3wSErkKA" bpmnElement="_723B50D5-E588-415E-97B9-5F5C829B52C9">
+        <dc:Bounds height="48.0" width="80.0" x="97.0" y="205.0"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="_D99KRpQoEeGQVa3wSErkKA" bpmnElement="_F584F559-FBE5-4679-B6AD-4599362A9800">
+        <dc:Bounds height="48.0" width="80.0" x="225.0" y="205.0"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="_D99KR5QoEeGQVa3wSErkKA" bpmnElement="_5DBB715D-D9D7-4B1A-B121-F4AA01AE7DE0">
+        <dc:Bounds height="28.0" width="28.0" x="464.0" y="214.0"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="_D99xUJQoEeGQVa3wSErkKA" bpmnElement="_3AE567D8-393C-45F4-8091-E5A582115FDF">
+        <dc:Bounds height="48.0" width="80.0" x="345.0" y="205.0"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="_D99xUZQoEeGQVa3wSErkKA" bpmnElement="_F24A6514-6BCB-434C-93A9-854FFB53481A">
+        <di:waypoint xsi:type="dc:Point" x="41.0" y="229.0"/>
+        <di:waypoint xsi:type="dc:Point" x="137.0" y="229.0"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="_D99xUpQoEeGQVa3wSErkKA" bpmnElement="_47BEF4FD-3ACD-46D1-B4FA-FE9B4AC5030A">
+        <di:waypoint xsi:type="dc:Point" x="385.0" y="229.0"/>
+        <di:waypoint xsi:type="dc:Point" x="478.0" y="228.0"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="_D99xU5QoEeGQVa3wSErkKA" bpmnElement="_BB0708E8-A4F1-4551-BCEB-8213DBDD223F">
+        <di:waypoint xsi:type="dc:Point" x="137.0" y="229.0"/>
+        <di:waypoint xsi:type="dc:Point" x="265.0" y="229.0"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="_D99xVJQoEeGQVa3wSErkKA" bpmnElement="_DE321514-0275-40CA-8F5A-0BFBDE8773FF">
+        <di:waypoint xsi:type="dc:Point" x="265.0" y="229.0"/>
+        <di:waypoint xsi:type="dc:Point" x="385.0" y="229.0"/>
+      </bpmndi:BPMNEdge>
+    </bpmndi:BPMNPlane>
+  </bpmndi:BPMNDiagram>
+</bpmn2:definitions>

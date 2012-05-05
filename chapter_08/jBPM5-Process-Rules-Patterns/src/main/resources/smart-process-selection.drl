@@ -1,0 +1,83 @@
+package com.salaboy.process;
+
+import com.salaboy.model.Customer;
+import com.salaboy.model.Resources;
+import com.salaboy.model.Customer.CustomerType;
+import java.util.Map;
+import java.util.HashMap;
+import org.drools.runtime.process.ProcessInstance;
+import org.jbpm.workflow.instance.impl.WorkflowProcessInstanceImpl;
+
+
+query getResources()
+    $r: Resources()
+end
+
+query getProcessByCustomer(Customer $c)
+    $w: WorkflowProcessInstanceImpl( $customer: variables["customer"]) and
+    Customer( this == $c ) from $customer
+end
+
+rule "Warn resources Low"
+    when
+        $r: Resources( available < 3 )
+    then
+        System.out.println(" >>> There are not enough resources available to complete a Customer Process!");
+end
+
+rule "Out of resources"
+    when
+        $r: Resources( available < 1 )
+    then
+        throw new IllegalStateException("No More Resources Available = "+$r);
+end
+
+rule "Platinum Customer Process - available resources"
+    when
+        Resources(available > 5)
+        $c: Customer(type == CustomerType.PLATINUM)
+        not(WorkflowProcessInstanceImpl( $customer: variables["customer"]) and
+            Customer( this == $c ) from $customer
+        )
+    then
+        System.out.println(" >>> The Platinum Customer Process was selected and it will be started!");
+        Map params = new HashMap();
+        params.put("customer", $c);
+        
+        ProcessInstance pi = kcontext.getKnowledgeRuntime().createProcessInstance("com.salaboy.process.PlatinumCustomerProcess", params);
+        insert(pi);
+        kcontext.getKnowledgeRuntime().startProcessInstance(pi.getId());
+end
+
+rule "Regular Customer Process"
+    when
+        Resources(available > 3)
+        $c: Customer(type == CustomerType.STARTER || type == CustomerType.GOLD)
+        not(WorkflowProcessInstanceImpl( $customer: variables["customer"]) and
+            Customer( this == $c ) from $customer
+        )
+    then
+        System.out.println(" >>> The Regular Customer Process was selected and it will be started!");
+        Map params = new HashMap();
+        params.put("customer", $c);
+        ProcessInstance pi = kcontext.getKnowledgeRuntime().createProcessInstance("com.salaboy.process.RegularCustomerProcess", params);
+        insert(pi);
+        kcontext.getKnowledgeRuntime().startProcessInstance(pi.getId());
+end
+
+rule "Platinun Customer Process - not enough resources available"
+    when
+        Resources(available > 3 && available <= 5)
+        $c: Customer(type == CustomerType.PLATINUM) 
+        not(WorkflowProcessInstanceImpl( $customer: variables["customer"]) and
+            Customer( this == $c ) from $customer
+        )
+    then
+        System.out.println(" >>> The Regular Customer Process was selected due lack of resources!");
+        Map params = new HashMap();
+        params.put("customer", $c);
+        ProcessInstance pi = kcontext.getKnowledgeRuntime().createProcessInstance("com.salaboy.process.RegularCustomerProcess", params);
+        insert(pi);
+        kcontext.getKnowledgeRuntime().startProcessInstance(pi.getId());
+end
+

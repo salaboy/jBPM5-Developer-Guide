@@ -7,9 +7,7 @@
         <groupId>com.salaboy</groupId>
         <version>1.0-SNAPSHOT</version>
     </parent>
-    <groupId>com.salaboy.jbpm5.dev.guide</groupId>
     <artifactId>jBPM5-HumanTasksSimple</artifactId>
-    <version>1.0-SNAPSHOT</version>
     <name>jBPM5 :: Human Tasks Simple Example</name>
     <url>http://salaboy.com</url>
     <properties>
@@ -27,14 +25,16 @@
         </dependency>
         <dependency>
             <groupId>org.jbpm</groupId>
-            <artifactId>jbpm-human-task</artifactId>
+            <artifactId>jbpm-human-task-mina</artifactId>
             <version>${jbpm.version}</version>
+            
         </dependency>
         <dependency>
             <groupId>org.hibernate</groupId>
             <artifactId>hibernate-entitymanager</artifactId>
             <version>${hibernate.version}</version>
             <scope>test</scope>
+           
         </dependency>
         <dependency>
             <groupId>org.hibernate</groupId>
@@ -48,6 +48,17 @@
             <version>1.3.161</version>
             <scope>test</scope>
         </dependency>
-        
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-api</artifactId>
+            <version>1.6.4</version>
+        </dependency>
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-log4j12</artifactId>
+            <version>1.6.4</version>
+            <scope>test</scope>
+        </dependency>
+    
     </dependencies>
 </project>

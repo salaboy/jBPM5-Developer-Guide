@@ -18,7 +18,6 @@ package com.salaboy.jbpm5.dev.guide;
 
 import java.util.ArrayList;
 import java.util.List;
-import org.drools.SystemEventListenerFactory;
 import org.jbpm.task.*;
 import org.jbpm.task.TaskService;
 import org.jbpm.task.query.TaskSummary;
@@ -26,8 +25,7 @@ import org.jbpm.task.service.*;
 
 import org.jbpm.task.service.local.LocalTaskService;
 
-import org.jbpm.task.service.mina.MinaTaskClientConnector;
-import org.jbpm.task.service.mina.MinaTaskClientHandler;
+import org.jbpm.task.service.mina.AsyncMinaTaskClient;
 import org.jbpm.task.service.mina.MinaTaskServer;
 import org.junit.After;
 import org.junit.Before;
@@ -49,8 +47,7 @@ public class TaskServiceMinaSyncTest extends BaseTest {
         	System.out.print(".");
         	Thread.sleep( 50 );
         }
-        client = new AsyncTaskServiceWrapper(new TaskClient(new MinaTaskClientConnector("client 1",
-                                new MinaTaskClientHandler(SystemEventListenerFactory.getSystemEventListener()))));
+        client = new SyncTaskServiceWrapper(new AsyncMinaTaskClient());
         client.connect("127.0.0.1", 9123);
     }
     @After

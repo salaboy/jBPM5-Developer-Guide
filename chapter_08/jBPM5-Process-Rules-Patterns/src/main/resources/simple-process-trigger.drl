@@ -1,0 +1,18 @@
+package com.salaboy.process;
+
+import com.salaboy.model.Customer;
+import java.util.Map;
+import java.util.HashMap;
+import org.drools.runtime.process.ProcessInstance;
+
+rule "Customer Basic Process"
+    when
+        $c: Customer() 
+    then
+        Map params = new HashMap();
+        params.put("customer", $c);
+        System.out.println(" >>> Starting Customer Basic Process");
+        ProcessInstance pi = kcontext.getKnowledgeRuntime().createProcessInstance("com.salaboy.process.CustomerBasicProcess", params);
+        insert(pi);
+        kcontext.getKnowledgeRuntime().startProcessInstance(pi.getId());
+end
