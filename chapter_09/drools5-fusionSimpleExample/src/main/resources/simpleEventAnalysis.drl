@@ -1,0 +1,39 @@
+package com.salaboy;
+
+import com.salaboy.model.*;
+
+declare KeyA
+    @role( event )
+end
+
+declare KeyS
+    @role( event )
+end
+
+declare KeyD
+    @role( event )
+end
+
+declare KeyW
+    @role( event )
+end
+
+rule "more than 3 key A in the last 10s"
+    when
+        Number($value: doubleValue > 3) from accumulate( $a: KeyA() over window:time(10s), count($a))
+    then
+        System.out.println(" >>> KeyA Pressed - count: "+$value);
+end
+
+rule "key A + key S + key D pattern"
+    when
+        $a: KeyA()
+        $s: KeyS( this after[1ms, 100ms] $a)
+        $d: KeyD( this after[1ms, 100ms] $s)
+    then
+        System.out.println(" >>> KeyA +Key S + KeyD pattern detected");
+end
+
+
+
+
