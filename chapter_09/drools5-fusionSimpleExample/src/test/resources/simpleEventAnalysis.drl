@@ -1,0 +1,12 @@
+package com.salaboy;
+
+import com.salaboy.model.*;
+
+
+rule "key A - print out"
+    when
+        KeyA()
+    then
+        System.out.println(" KeyA Pressed");
+end
+

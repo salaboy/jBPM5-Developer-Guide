@@ -3,12 +3,12 @@
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
     <modelVersion>4.0.0</modelVersion>
     <parent>
-        <artifactId>chapter08</artifactId>
+        <artifactId>chapter09</artifactId>
         <groupId>com.salaboy</groupId>
         <version>1.0-SNAPSHOT</version>
     </parent>
-    <artifactId>drools5-SimpleExample</artifactId>
-    <name>jBPM5 :: Drools5 Simple Example</name>
+    <artifactId>drools5-fusionSimpleExample</artifactId>
+    <name>jBPM5 :: Drools5 Fusion Simple Example</name>
     <url>http://salaboy.com</url>
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>

@@ -1,0 +1,49 @@
+package com.salaboy.jbpm5;
+
+import org.drools.event.process.*;
+import com.salaboy.model.*;
+
+declare ProcessNodeLeftEvent
+    @role( event )
+end
+
+declare ProcessCompletedEvent
+    @role( event )
+end
+
+declare ProcessStartedEvent
+    @role( event )
+end 
+
+declare TaskSpeedCorrected
+    @role ( event )
+    @expires (10s)
+end  
+
+global TaskSpeed taskSpeed;
+
+rule "too much work - slow down"
+    when
+        
+        Number( doubleValue > 10 ) from accumulate($e: ProcessNodeLeftEvent(nodeInstance.nodeName contains "User Task") over window:time(10s), count($e))
+        not( TaskSpeedCorrected())
+    then
+        taskSpeed.setAmount(taskSpeed.getAmount()*2); 
+        System.out.println(" XXX Slowing down! Current task speed: "+taskSpeed.getAmount());
+        insert(new TaskSpeedCorrected());
+end
+
+ 
+
+rule "A Process Completion cannot take more than 10 secs - more power needed"
+    when
+        
+        $e: ProcessStartedEvent($id: processInstance.id )
+        not ( ProcessCompletedEvent( processInstance.id == $id, this after [1s, 10s] $e))
+        not( TaskSpeedCorrected())
+        
+    then
+        taskSpeed.setAmount(taskSpeed.getAmount()/2); 
+        System.out.println(" XXX Hurry Up! Current task speed: "+taskSpeed.getAmount());
+        insert(new TaskSpeedCorrected());
+end
