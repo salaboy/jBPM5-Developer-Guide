@@ -11,9 +11,7 @@
     <name>jBPM5 :: Human Tasks Simple Example</name>
     <url>http://salaboy.com</url>
     <properties>
-        <jbpm.version>5.3.0-SNAPSHOT</jbpm.version>
-        <hibernate.version>3.4.0.GA</hibernate.version>
-        <hibernate.core.version>3.3.2.GA</hibernate.core.version>
+        
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
     <dependencies>

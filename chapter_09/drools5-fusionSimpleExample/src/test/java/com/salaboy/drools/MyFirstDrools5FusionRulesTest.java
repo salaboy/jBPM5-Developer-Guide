@@ -57,7 +57,7 @@ public class MyFirstDrools5FusionRulesTest {
         clock.advanceTime(2, TimeUnit.SECONDS);
         assertEquals(1, fired);
         
-        // t3 -> 8s
+        // t4 -> 8s
         ksession.insert(new KeyA());
         fired = ksession.fireAllRules();
         assertEquals(1, fired);
@@ -105,8 +105,6 @@ public class MyFirstDrools5FusionRulesTest {
 
         KnowledgeBaseConfiguration config = KnowledgeBaseFactory.newKnowledgeBaseConfiguration();
         config.setOption(EventProcessingOption.STREAM);
-        
-        
         KnowledgeBase kbase = KnowledgeBaseFactory.newKnowledgeBase(config);
 
         kbase.addKnowledgePackages(kbuilder.getKnowledgePackages());

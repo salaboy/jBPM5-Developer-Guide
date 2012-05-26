@@ -90,7 +90,7 @@ public class ProcessAndEventIntegrationTest {
                 // do nothing
             }
         });
-        ((StatefulKnowledgeSessionImpl) processKsession).addEventListener(new DefaultProcessEventListener() {
+        processKsession.addEventListener(new DefaultProcessEventListener() {
 
             @Override
             public void beforeProcessStarted(ProcessStartedEvent event) {

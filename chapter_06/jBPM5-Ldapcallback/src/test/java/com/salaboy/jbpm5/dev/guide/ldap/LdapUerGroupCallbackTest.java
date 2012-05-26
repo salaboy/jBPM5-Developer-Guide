@@ -16,11 +16,12 @@ import org.drools.builder.KnowledgeBuilderFactory;
 import org.drools.builder.ResourceType;
 import org.drools.io.impl.ClassPathResource;
 import org.drools.runtime.StatefulKnowledgeSession;
+import org.jbpm.process.workitem.wsht.GenericHTWorkItemHandler;
+import org.jbpm.process.workitem.wsht.LocalHTWorkItemHandler;
 import org.jbpm.process.workitem.wsht.SyncWSHumanTaskHandler;
+import org.jbpm.task.identity.UserGroupCallbackManager;
 import org.jbpm.task.query.TaskSummary;
 import org.jbpm.task.service.TaskService;
-import org.jbpm.task.service.TaskServiceSession;
-import org.jbpm.task.service.UserGroupCallbackManager;
 import org.jbpm.task.service.local.LocalTaskService;
 import org.junit.After;
 import org.junit.Before;
@@ -67,7 +68,7 @@ public class LdapUerGroupCallbackTest {
         System.out.println("Hi!");
 
         StatefulKnowledgeSession ksession = this.initializeSession();
-        SyncWSHumanTaskHandler htHandler = this.createTaskHandler();
+        GenericHTWorkItemHandler htHandler = this.createTaskHandler(ksession);
         ksession.getWorkItemManager().registerWorkItemHandler("Human Task",
                 htHandler);
 
@@ -131,14 +132,13 @@ public class LdapUerGroupCallbackTest {
     }
 
     //Creates a local task service and attaches it to a human task handler
-    private SyncWSHumanTaskHandler createTaskHandler() {
+    private GenericHTWorkItemHandler createTaskHandler(StatefulKnowledgeSession ksession) {
         TaskService ts = new TaskService(
                 Persistence.createEntityManagerFactory("org.jbpm.task"),
                 SystemEventListenerFactory.getSystemEventListener());
-        TaskServiceSession taskSession = ts.createSession();
-        LocalTaskService taskService = new LocalTaskService(taskSession);
-        SyncWSHumanTaskHandler taskHandler = new SyncWSHumanTaskHandler(
-                taskService);
+        LocalTaskService taskService = new LocalTaskService(ts);
+        LocalHTWorkItemHandler taskHandler = new LocalHTWorkItemHandler(
+                taskService, ksession);
         taskHandler.connect();
         this.service = taskService;
         return taskHandler;

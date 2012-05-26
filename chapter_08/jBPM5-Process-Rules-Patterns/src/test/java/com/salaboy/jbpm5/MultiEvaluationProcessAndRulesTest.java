@@ -26,6 +26,7 @@ import org.drools.runtime.StatefulKnowledgeSession;
 import org.drools.runtime.process.ProcessInstance;
 import org.drools.runtime.rule.ConsequenceException;
 import org.drools.runtime.rule.QueryResults;
+import org.jbpm.workflow.instance.WorkflowRuntimeException;
 
 import org.junit.Test;
 
@@ -100,7 +101,7 @@ public class MultiEvaluationProcessAndRulesTest {
                 System.out.println(" ----- Process Number : " + i + " Completed ----");
                 System.out.println(" ----------------- ##### -----------------");
             }
-        } catch (ConsequenceException e) {
+        } catch (WorkflowRuntimeException e) {
             assertEquals(true, e.getCause().getMessage().contains("No More Resources Available = "));
         }
     }

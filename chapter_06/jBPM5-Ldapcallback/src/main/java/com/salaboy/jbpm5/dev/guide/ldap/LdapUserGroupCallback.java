@@ -1,8 +1,8 @@
 package com.salaboy.jbpm5.dev.guide.ldap;
 
 import java.util.List;
+import org.jbpm.task.identity.UserGroupCallback;
 
-import org.jbpm.task.service.UserGroupCallback;
 
 /**
  * Implementation of {@link UserGroupCallback}, which interacts with ldap to get
@@ -29,13 +29,13 @@ public class LdapUserGroupCallback implements UserGroupCallback {
 		return query.existsUser(user);
 	}
 
-	@Override
+	
 	public List<String> getGroupsForUser(String user) {
 		return query.groupsForUser(user);
 
 	}
 
-	@Override
+	
 	public List<String> getGroupsForUser(String arg0, List<String> arg1) {
 		return query.groupsForUser(arg0);
 	}

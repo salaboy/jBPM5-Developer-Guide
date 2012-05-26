@@ -23,17 +23,17 @@
         <dependency>
             <groupId>org.drools</groupId>
             <artifactId>knowledge-api</artifactId>
-            <version>5.4.0-SNAPSHOT</version>
+            <version>${drools.version}</version>
         </dependency>
         <dependency>
             <groupId>org.drools</groupId>
             <artifactId>drools-core</artifactId>
-            <version>5.4.0-SNAPSHOT</version>
+            <version>${drools.version}</version>
         </dependency>
         <dependency>
             <groupId>org.drools</groupId>
             <artifactId>drools-compiler</artifactId>
-            <version>5.4.0-SNAPSHOT</version>
+            <version>${drools.version}</version>
         </dependency>
         <dependency>
             <groupId>org.swinglabs</groupId>
@@ -41,16 +41,17 @@
             <version>1.0.3</version>
         </dependency>
     </dependencies>
-    <repositories>
-        <repository>
-            <id>jboss</id>
-            <url>http://repository.jboss.org/nexus/content/groups/public/</url>
-        </repository>
-        <repository>
-            <url>http://repo1.maven.org/maven2/</url>
-            <id>swing-layout</id>
-            <layout>default</layout>
-            <name>Repository for library Library[swing-layout]</name>
-        </repository>
-    </repositories>
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>exec-maven-plugin</artifactId>
+                <version>1.2.1</version>
+                <configuration>
+                    <mainClass>com.salaboy.jbpm5.events.EventsTesterJFrame</mainClass>
+                </configuration>
+            </plugin>
+        </plugins>
+        
+    </build>
 </project>

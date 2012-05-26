@@ -16,7 +16,6 @@
 
 package com.salaboy.jbpm5.dev.guide;
 
-import java.io.InputStreamReader;
 import java.io.Reader;
 import java.util.Date;
 import java.util.HashMap;
@@ -26,16 +25,16 @@ import java.util.Properties;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
 
-import junit.framework.TestCase;
 
 import org.drools.SystemEventListenerFactory;
 import org.jbpm.task.Group;
 import org.jbpm.task.User;
+import org.jbpm.task.identity.UserGroupCallbackManager;
 
 import org.jbpm.task.service.SendIcal;
 import org.jbpm.task.service.TaskService;
 import org.jbpm.task.service.TaskServiceSession;
-import org.jbpm.task.service.UserGroupCallbackManager;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

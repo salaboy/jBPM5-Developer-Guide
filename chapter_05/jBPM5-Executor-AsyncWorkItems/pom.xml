@@ -24,17 +24,17 @@
     <dependency>
       <groupId>org.jbpm</groupId>
       <artifactId>jbpm-flow</artifactId>
-      <version>5.2.0.Final</version>
+      <version>${jbpm.version}</version>
     </dependency>
     <dependency>
       <groupId>org.jbpm</groupId>
       <artifactId>jbpm-flow-builder</artifactId>
-      <version>5.2.0.Final</version>
+      <version>${jbpm.version}</version>
     </dependency>
     <dependency>
       <groupId>org.jbpm</groupId>
       <artifactId>jbpm-bpmn2</artifactId>
-      <version>5.2.0.Final</version>
+      <version>${jbpm.version}</version>
     </dependency>
     <dependency>
       <groupId>com.salaboy.jbpm5.dev.guide</groupId>
