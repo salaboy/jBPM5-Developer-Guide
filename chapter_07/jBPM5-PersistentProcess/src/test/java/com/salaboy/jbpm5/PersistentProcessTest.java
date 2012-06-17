@@ -69,20 +69,20 @@ public class PersistentProcessTest {
         
         
         //NON XA CONFIGS
-//        ds.setClassName("org.h2.jdbcx.JdbcDataSource");
-//        ds.setMaxPoolSize(3);
-//        ds.setAllowLocalTransactions(true);
-//        ds.getDriverProperties().put("user", "sa");
-//        ds.getDriverProperties().put("password", "sasa");
-//        ds.getDriverProperties().put("URL", "jdbc:h2:mem:mydb");
-        //XA CONFIGS
-        ds.setClassName("bitronix.tm.resource.jdbc.lrc.LrcXADataSource");
+        ds.setClassName("org.h2.jdbcx.JdbcDataSource");
         ds.setMaxPoolSize(3);
         ds.setAllowLocalTransactions(true);
         ds.getDriverProperties().put("user", "sa");
         ds.getDriverProperties().put("password", "sasa");
-        ds.getDriverProperties().put("Url", "jdbc:h2:mem:mydb");
-        ds.getDriverProperties().put("driverClassName", "org.h2.Driver");
+        ds.getDriverProperties().put("URL", "jdbc:h2:mem:mydb");
+        //XA CONFIGS
+//        ds.setClassName("bitronix.tm.resource.jdbc.lrc.LrcXADataSource");
+//        ds.setMaxPoolSize(3);
+//        ds.setAllowLocalTransactions(true);
+//        ds.getDriverProperties().put("user", "sa");
+//        ds.getDriverProperties().put("password", "sasa");
+//        ds.getDriverProperties().put("Url", "jdbc:h2:mem:mydb");
+//        ds.getDriverProperties().put("driverClassName", "org.h2.Driver");
         
         ds.init();
     }
@@ -391,7 +391,6 @@ public class PersistentProcessTest {
         // We need to register the WorkItems and Listeners that the session will use
         TaskService client = createTaskService(emf);
         LocalHTWorkItemHandler localHTWorkItemHandler = new LocalHTWorkItemHandler(client, ksession);
-
         MockExternalServiceWorkItemHandler mockExternalServiceWorkItemHandler = new MockExternalServiceWorkItemHandler();
         ksession.getWorkItemManager().registerWorkItemHandler("Human Task", localHTWorkItemHandler);
         ksession.getWorkItemManager().registerWorkItemHandler("External Service Call", mockExternalServiceWorkItemHandler);
@@ -412,14 +411,18 @@ public class PersistentProcessTest {
         System.out.println(" >>> Looking for Salaboy's Tasks");
         List<TaskSummary> salaboysTasks = client.getTasksAssignedAsPotentialOwner("salaboy", "en-UK");
         assertTrue(salaboysTasks.size() == 1);
+        
         TaskSummary salaboyTask = salaboysTasks.get(0);
         System.out.println(" >>> Starting Salaboy's Task");
         client.start(salaboyTask.getId(), "salaboy");
+        
+        
+        
         System.out.println(" >>> Completing Salaboy's Task");
         client.complete(salaboyTask.getId(), "salaboy", null);
 
 
-        Thread.sleep(2000);
+     
 
 
         // We need to dispose the session, because the reference to this ksession object will no longer be valid
@@ -462,7 +465,6 @@ public class PersistentProcessTest {
         // We need to register the WorkItems and Listeners that the session will use
         TaskService client = createTaskService(emf);
         LocalHTWorkItemHandler localHTWorkItemHandler = new LocalHTWorkItemHandler(client, ksession);
-
         MockFaultWorkItemHandler mockFaultWorkItemHandler = new MockFaultWorkItemHandler();
         ksession.getWorkItemManager().registerWorkItemHandler("Human Task", localHTWorkItemHandler);
         ksession.getWorkItemManager().registerWorkItemHandler("External Service Call", mockFaultWorkItemHandler);
@@ -495,17 +497,21 @@ public class PersistentProcessTest {
 
         
         ut.begin();
-        client.complete(salaboyTask.getId(), "salaboy", null);
-        ut.commit();
+        try{
+            client.complete(salaboyTask.getId(), "salaboy", null);
+            ut.commit();
+        } catch(WorkflowRuntimeException e){
+            System.out.println("Rolling back transaction" + e);
+            ut.rollback();
+        }
 
-        Thread.sleep(5000);
 
         System.out.println(" >>> Looking for Salaboy's Tasks");
         Task salaboysTask = client.getTask(salaboyTask.getId());
         assertNotNull(salaboysTask);
 
-        assertEquals("Completed", salaboysTask.getTaskData().getStatus().name());
-        //fail("This should be rolled back and not completed");
+        assertEquals("InProgress", salaboysTask.getTaskData().getStatus().name());
+        
         // We need to dispose the session, because the reference to this ksession object will no longer be valid
         //  because another thread could load the same session and execute a different command.
         System.out.println(" >>> Disposing Session");

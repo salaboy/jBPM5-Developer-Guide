@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+To change this template, choose Tools | Templates
+and open the template in the editor.
+-->
+
+
+<bean id="dataSource" class="org.springframework.jdbc.datasource.DriverManagerDataSource">
+<property name="driverClassName" value="org.h2.Driver"/>
+<property name="url" value="jdbc:h2:tcp://localhost/~/jbpm-db"/>
+<property name="username" value="sa"/>
+<property name="password" value=""/>
+</bean>
+
+<bean id="jbpmEMF" class="org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean">
+<property name="dataSource" ref="dataSource"/>
+<property name="persistenceUnitName" value="org.jbpm.persistence.jpa.mylocal"/>
+</bean>
+
+<bean id="jbpmTxManager" class="org.springframework.orm.jpa.JpaTransactionManager">
+<property name="entityManagerFactory" ref="jbpmEMF"/>
+<property name="nestedTransactionAllowed" value="false"/>
+</bean>
+
+<bean id="taskService" class="org.jbpm.task.service.TaskService">
+<constructor-arg index="0" ref="jbpmEMF"/>
+<constructor-arg index="1">
+<bean factory-method="getSystemEventListener" class="org.drools.SystemEventListenerFactory"/>
+</constructor-arg>
+</bean>
+
+<bean id="springTaskSessionFactory" class="org.jbpm.task.service.persistence.TaskSessionSpringFactoryImpl" init-method="initialize">
+<property name="entityManagerFactory" ref="jbpmEMF"/>
+<property name="transactionManager" ref="htTxManager"/>
+<property name="useJTA" value="true"/>
+<property name="taskService" ref="taskService"/>
+</bean>
+
+<bean id="humanTaskHandler" class="org.jbpm.process.workitem.wsht.SyncWSHumanTaskHandler">
+<property name="session" ref="ksession"/>
+<property name="client" ref="localTaskServer"/>
+<property name="local" value="true"/>
+</bean>
+
+<bean id="localTaskServer" class="org.jbpm.task.service.local.LocalTaskService" init-method="connect" destroy-method="dispose">
+<constructor-arg ref="taskService"/>
+</bean>
+
+<bean id="htTxManager" class="org.drools.container.spring.beans.persistence.HumanTaskSpringTransactionManager">
+<constructor-arg ref="jbpmTxManager"/>
+</bean>
+
+<jbpm:kbase id="kbase">
+<jbpm:resources>
+<jbpm:resource type="BPMN2" source="classpath:sample.bpmn"/>
+</jbpm:resources>
+</jbpm:kbase>
+
+<jbpm:ksession id="ksession" type="stateful" kbase="kbase">
+<jbpm:configuration>
+<jbpm:work-item-handlers>
+<jbpm:work-item-handler name="Human Task" ref="humanTaskHandler"/>
+</jbpm:work-item-handlers>
+<jbpm:jpa-persistence>
+<jbpm:transaction-manager ref="jbpmTxManager"/>
+<jbpm:entity-manager-factory ref="jbpmEMF"/>
+</jbpm:jpa-persistence>
+</jbpm:configuration>
+</jbpm:ksession>
