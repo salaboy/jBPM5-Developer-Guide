@@ -1,0 +1,24 @@
+package com.salaboy.jbpm.dev.guide;
+
+import com.salaboy.model.Person;
+import java.util.HashMap;
+import java.util.Map;
+import org.drools.runtime.process.ProcessInstance;
+
+declare ProcessForPerson
+    person : Person
+    process : ProcessInstance
+end
+
+rule "Start Process for Every Inserted Person"
+    no-loop true
+    when
+        $person: Person()
+        not(ProcessForPerson(person == $person))
+    then
+        Map params = new HashMap();
+        params.put("person", $person);
+        ProcessInstance pi = kcontext.getKnowledgeRuntime().startProcess("com.salaboy.process.AsyncInteractions", params);
+        insertLogical(pi);
+        insertLogical(new ProcessForPerson($person, pi));
+end
