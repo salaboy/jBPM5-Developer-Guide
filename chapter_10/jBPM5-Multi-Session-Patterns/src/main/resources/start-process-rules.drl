@@ -1,4 +1,4 @@
-package com.salaboy.jbpm.dev.guide;
+package com.salaboy.jbpm5.dev.guide;
 
 import com.salaboy.model.Person;
 import java.util.HashMap;

@@ -1,0 +1,40 @@
+package com.salaboy.jbpm5.dev.guide;
+
+import com.salaboy.model.*;
+import com.salaboy.sessions.patterns.BusinessEntity;
+import java.util.HashMap;
+import java.util.Map;
+import org.drools.runtime.process.ProcessInstance;
+import javax.persistence.EntityManagerFactory;
+import javax.persistence.EntityManager;
+import org.drools.persistence.jpa.*;
+import org.drools.runtime.*;
+import com.salaboy.patterns.MultiSessionsPatternsTest;
+
+global EntityManagerFactory emf;
+
+rule "Log"
+    when
+      $be:  BusinessEntity()
+    then
+        System.out.println(" ### Log: "+$be);
+end
+
+rule "Complete Interaction When We Receive Data"
+    when
+        $be: BusinessEntity()
+        $data: Data()
+    then
+        StatefulKnowledgeSession ksession = JPAKnowledgeService.loadStatefulKnowledgeSession($be.getSessionId(), MultiSessionsPatternsTest.kbases.get($be.getBusinessKey()), null, MultiSessionsPatternsTest.env);
+        MultiSessionsPatternsTest.registerWorkItemHandlers(ksession, $be.getBusinessKey());
+        System.out.println(">>> Completing an External Interaction");
+        ksession.getWorkItemManager().completeWorkItem($be.getWorkItemId(), null);
+        EntityManager em = emf.createEntityManager();
+        $be.setActive(false);
+        em.merge($be);
+        em.close();
+        
+        //ksession.dispose();
+
+
+end

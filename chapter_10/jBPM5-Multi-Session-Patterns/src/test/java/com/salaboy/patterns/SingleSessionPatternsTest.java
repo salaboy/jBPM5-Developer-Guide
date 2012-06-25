@@ -10,6 +10,7 @@ import com.salaboy.model.Person;
 import com.salaboy.sessions.patterns.BusinessEntity;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.UUID;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
@@ -88,12 +89,9 @@ public class SingleSessionPatternsTest {
         params.put("person", person);
         
         StatefulKnowledgeSession ksession = createProcessOneKnowledgeSession(person.getId());
-        
-        
-        
-        registerWorkItemHandlers(ksession,person.getId());
+
+        registerWorkItemHandlers(ksession, person.getId());
          // Let's create a Process Instance
-        
         
         ksession.startProcess("com.salaboy.process.AsyncInteractions", params);
         
@@ -167,7 +165,7 @@ public class SingleSessionPatternsTest {
         
         StatefulKnowledgeSession ksession = createProcessOneKnowledgeSession("myProcessDefinitionSession");
         
-        registerWorkItemHandlers(ksession,"myProcessDefinitionSession");
+        registerWorkItemHandlers(ksession,null);
          // Let's create a Process Instance
         
         
@@ -176,9 +174,9 @@ public class SingleSessionPatternsTest {
         ksession.dispose();
         
         EntityManager em = emf.createEntityManager();
-        BusinessEntity businessEntity = (BusinessEntity)em.createQuery("select be from BusinessEntity be where be.businessKey = :key "
-                                                                            + "and be.active = true")
-                .setParameter("key", "myProcessDefinitionSession")
+        BusinessEntity businessEntity = (BusinessEntity)em.createQuery("select be from BusinessEntity be "
+                                                                            + "where be.active = true")
+                
                 .getSingleResult();
         
         em.close();
@@ -189,7 +187,7 @@ public class SingleSessionPatternsTest {
         params2.put("person", person2);
         
         ksession = JPAKnowledgeService.loadStatefulKnowledgeSession(businessEntity.getSessionId(), kbases.get("myProcessDefinitionSession"), null, env);
-        registerWorkItemHandlers(ksession, "myProcessDefinitionSession");
+        registerWorkItemHandlers(ksession, null);
         assertNotNull(ksession);
         
         ksession.startProcess("com.salaboy.process.AsyncInteractions", params2);
@@ -198,20 +196,20 @@ public class SingleSessionPatternsTest {
         
         
         // Getting the correct work item to finish
-        
         //      If we don't know which workItem do we want to complete we can create a query to see which are pending work items
         //          for a process or for a more complex business key
+        // If the thread that wants to notify the engine about the completion of the external interaction is the 
+        //   one which create the token inside the WorkItemHandler it can use that unique value to get the related workItemId
         em = emf.createEntityManager();
-        businessEntity = (BusinessEntity)em.createQuery("select be from BusinessEntity be where be.businessKey = :key "
-                                                            + "and be.workItemId = :workItemId and be.active = true")
-                .setParameter("key", "myProcessDefinitionSession")
+        businessEntity = (BusinessEntity)em.createQuery("select be from BusinessEntity be where "
+                                                            + " be.workItemId = :workItemId and be.active = true")
                 .setParameter("workItemId", 1L)
                 .getSingleResult();
         
         em.close();
         
         ksession = JPAKnowledgeService.loadStatefulKnowledgeSession(businessEntity.getSessionId(), kbases.get("myProcessDefinitionSession"), null, env);
-        registerWorkItemHandlers(ksession, "myProcessDefinitionSession");
+        registerWorkItemHandlers(ksession, null);
         assertNotNull(ksession);
         
         ksession.getWorkItemManager().completeWorkItem(businessEntity.getWorkItemId(), null);
@@ -226,10 +224,10 @@ public class SingleSessionPatternsTest {
         // We can create queries to find out the pending workItems for a process instance or to find a process
         //      instance related to a business scenario using this approach
         em = emf.createEntityManager();
-        businessEntity = (BusinessEntity)em.createQuery("select be from BusinessEntity be where be.businessKey = :key "
-                                                            + " and be.processId = :processId"
+        businessEntity = (BusinessEntity)em.createQuery("select be from BusinessEntity be where "
+                                                            + " be.processId = :processId"
                                                             + " and be.active = true")
-                .setParameter("key", "myProcessDefinitionSession")
+                
                 .setParameter("processId", 2L)        
                 .getSingleResult();
         
@@ -420,8 +418,6 @@ public class SingleSessionPatternsTest {
         ksession.getWorkItemManager().registerWorkItemHandler("External Service Call", mockExternalServiceWorkItemHandler);
     }
     
-   
-
     private class MockAsyncHTWorkItemHandler implements WorkItemHandler {
 
         private int sessionId;
@@ -431,13 +427,19 @@ public class SingleSessionPatternsTest {
             this.sessionId = sessionId;
             this.businessKey = businessKey;
         }
-        
+
         
         public void executeWorkItem(WorkItem wi, WorkItemManager wim) {
             System.out.println(">>> Working on a Human Interaction");
             long workItemId = wi.getId();
             long processInstanceId = wi.getProcessInstanceId();
             EntityManager em = emf.createEntityManager();
+            if(businessKey == null || businessKey.equals("")){
+                //If we don't want to set the business key, the external system can 
+                // give us an interaction reference that can be used later to 
+                // complete this work item
+                businessKey = UUID.randomUUID().toString();
+            }
             BusinessEntity businessEntity = new BusinessEntity(sessionId, processInstanceId, workItemId, businessKey);
             System.out.println(" ### : Persisting: "+businessEntity.toString());
             em.persist(businessEntity);
@@ -461,13 +463,19 @@ public class SingleSessionPatternsTest {
             this.sessionId = sessionId;
             this.businessKey = businessKey;
         }
-        
-        
+
+       
         public void executeWorkItem(WorkItem wi, WorkItemManager wim) {
             System.out.println(">>> Working in an External Interaction");
             long workItemId = wi.getId();
             long processInstanceId = wi.getProcessInstanceId();
             EntityManager em = emf.createEntityManager();
+            if(businessKey == null || businessKey.equals("")){
+                //If we don't want to set the business key, the external system can 
+                // give us an interaction reference that can be used later to 
+                // complete this work item
+                businessKey = UUID.randomUUID().toString();
+            }
             BusinessEntity businessEntity = new BusinessEntity(sessionId, processInstanceId, workItemId, businessKey);
             System.out.println(" ### : Persisting: "+businessEntity.toString());
             em.persist(businessEntity);

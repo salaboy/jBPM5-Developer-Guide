@@ -1,5 +1,6 @@
 package com.salaboy.sessions.patterns;
 
+import java.io.Serializable;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
@@ -13,7 +14,7 @@ import javax.persistence.Id;
  * @author salaboy
  */
 @Entity
-public class BusinessEntity {
+public class BusinessEntity implements Serializable {
 
     @Id
     @GeneratedValue
