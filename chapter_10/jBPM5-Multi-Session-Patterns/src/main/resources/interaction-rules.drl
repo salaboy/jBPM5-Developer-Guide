@@ -21,20 +21,22 @@ rule "Log"
 end
 
 rule "Complete Interaction When We Receive Data"
-    when
-        $be: BusinessEntity()
-        $data: Data()
-    then
-        StatefulKnowledgeSession ksession = JPAKnowledgeService.loadStatefulKnowledgeSession($be.getSessionId(), MultiSessionsPatternsTest.kbases.get($be.getBusinessKey()), null, MultiSessionsPatternsTest.env);
-        MultiSessionsPatternsTest.registerWorkItemHandlers(ksession, $be.getBusinessKey());
-        System.out.println(">>> Completing an External Interaction");
-        ksession.getWorkItemManager().completeWorkItem($be.getWorkItemId(), null);
-        EntityManager em = emf.createEntityManager();
-        $be.setActive(false);
-        em.merge($be);
-        em.close();
-        
-        //ksession.dispose();
-
-
+  when
+    $be: BusinessEntity()
+    $data: Data()
+  then
+    StatefulKnowledgeSession ksession = 
+        JPAKnowledgeService
+          .loadStatefulKnowledgeSession($be.getSessionId(), 
+            MultiSessionsPatternsTest.kbases.get($be.getBusinessKey()), 
+            null, MultiSessionsPatternsTest.env);
+    MultiSessionsPatternsTest
+             .registerWorkItemHandlers(ksession, $be.getBusinessKey());
+    System.out.println(">>> Completing an External Interaction");
+    ksession.getWorkItemManager()
+                .completeWorkItem($be.getWorkItemId(), null);
+    EntityManager em = emf.createEntityManager();
+    $be.setActive(false);
+    em.merge($be);
+    em.close();
 end
