@@ -7,16 +7,14 @@
         <version>1.0-SNAPSHOT</version>
     </parent>
     
-    <artifactId>chapter05</artifactId>
-    <name>jBPM5 Developer Guide - Chapter 05</name>
+    <artifactId>chapter11</artifactId>
+    <name>jBPM5 Developer Guide - Chapter 11</name>
     <packaging>pom</packaging>
     <url>http://salaboy.com</url>
     <modules>
-        <module>jBPM5-Executor-Service</module>
-        <module>jBPM5-Executor-AsyncWorkItems</module>
-        <!--module>jBPM5-WebServiceTasksSimple</module>
-        <module>jBPM5-ServiceTasksSimple</module-->
-    </modules>
+    <module>jBPM5-Multi-Session-Patterns</module>
+	
+  </modules>
     
    
 </project>

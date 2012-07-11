@@ -7,14 +7,13 @@
         <version>1.0-SNAPSHOT</version>
     </parent>
     
-    <artifactId>chapter07</artifactId>
-    <name>jBPM5 Developer Guide - Chapter 07</name>
+    <artifactId>appendixB</artifactId>
+    <name>jBPM5 Developer Guide - Appendix B</name>
     <packaging>pom</packaging>
     <url>http://salaboy.com</url>
     <modules>
-    <module>jBPM5-Ldapcallback</module>
-    <module>jBPM5-HumanTasksSimple</module>
-    <module>jBPM5-HumanTaskUI-Swing</module>
+        <module>jBPM5-First-Project</module>
+        
   </modules>
     
    

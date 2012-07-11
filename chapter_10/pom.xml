@@ -12,7 +12,8 @@
     <packaging>pom</packaging>
     <url>http://salaboy.com</url>
     <modules>
-    <module>jBPM5-Multi-Session-Patterns</module>
+    <module>drools5-fusionSimpleExample</module>
+    <module>jBPM5-Process-Events-Patterns</module>
 	
   </modules>
     

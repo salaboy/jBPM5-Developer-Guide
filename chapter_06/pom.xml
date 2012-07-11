@@ -12,10 +12,11 @@
     <packaging>pom</packaging>
     <url>http://salaboy.com</url>
     <modules>
-    <module>jBPM5-Ldapcallback</module>
-    <module>jBPM5-HumanTasksSimple</module>
-    <module>jBPM5-HumanTaskUI-Swing</module>
-  </modules>
+        <module>jBPM5-Executor-Service</module>
+        <module>jBPM5-Executor-AsyncWorkItems</module>
+        <!--module>jBPM5-WebServiceTasksSimple</module>
+        <module>jBPM5-ServiceTasksSimple</module-->
+    </modules>
     
    
 </project>

@@ -1,20 +1,30 @@
-<?xml version="1.0"?>
-<project xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd" xmlns="http://maven.apache.org/POM/4.0.0"
-         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <parent>
-        <artifactId>chapter08</artifactId>
         <groupId>com.salaboy</groupId>
+        <artifactId>appendixB</artifactId>
         <version>1.0-SNAPSHOT</version>
     </parent>
-    <artifactId>jBPM5-Process-Rules-Patterns</artifactId>
-    <version>1.0-SNAPSHOT</version>
-    <name>jBPM5 :: Process &amp; Rules Patterns</name>
-    <url>http://salaboy.com</url>
+    
+    <artifactId>jBPM5-First-Project</artifactId>
+    <packaging>jar</packaging>
+
+    <name>jBPM5 :: First Project</name>
+    <url>http://maven.apache.org</url>
+
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
+
     <dependencies>
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <version>4.8.1</version>
+            <scope>test</scope>
+        </dependency>
         <dependency>
             <groupId>org.jbpm</groupId>
             <artifactId>jbpm-flow</artifactId>
@@ -29,12 +39,6 @@
             <groupId>org.jbpm</groupId>
             <artifactId>jbpm-bpmn2</artifactId>
             <version>${jbpm.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>junit</groupId>
-            <artifactId>junit</artifactId>
-            <version>4.8.1</version>
-            <scope>test</scope>
         </dependency>
     </dependencies>
 </project>

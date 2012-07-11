@@ -14,7 +14,6 @@
     <modules>
         <module>jBPM5-GOP-NodeInstance</module>
         <module>jBPM3-GOP-Token</module>
-    	<module>jBPM5-First-Project</module>
   </modules>
     
    

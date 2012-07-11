@@ -12,8 +12,7 @@
     <packaging>pom</packaging>
     <url>http://salaboy.com</url>
     <modules>
-    <module>drools5-SimpleExample</module>
-    <module>jBPM5-Process-Rules-Patterns</module>
+    <module>jBPM5-PersistentProcess</module>
   </modules>
     
    
