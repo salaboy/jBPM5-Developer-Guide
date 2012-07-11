@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8"?> 
+<definitions id="Definition"
+             targetNamespace="http://www.omg.org/bpmn20"
+             typeLanguage="http://www.java.com/javaTypes"
+             expressionLanguage="http://www.mvel.org/2.0"
+             xmlns="http://www.omg.org/spec/BPMN/20100524/MODEL"
+             xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+             xsi:schemaLocation="http://www.omg.org/spec/BPMN/20100524/MODEL BPMN20.xsd"
+             xmlns:g="http://www.jboss.org/drools/flow/gpd"
+             xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI"
+             xmlns:dc="http://www.omg.org/spec/DD/20100524/DC"
+             xmlns:di="http://www.omg.org/spec/DD/20100524/DI"
+             xmlns:tns="http://www.jboss.org/drools">
+
+  <itemDefinition id="_bedrequest_patientnameItem" structureRef="String" />
+  <itemDefinition id="_checkinresults_patientInsuredItem" structureRef="Boolean" />
+  <itemDefinition id="_checkinresults_timeItem" structureRef="String" />
+
+  <itemDefinition id="_3_InMessageType" structureRef="java.lang.String"/>
+  <message id="_3_InMessage" itemRef="_3_InMessageType" />
+  <interface id="_3_InsuranceService" name="com.salaboy.jbpm5.dev.guide.webservice.SimpleValidationServiceImpl">
+    <operation id="_3_ServiceOperation" name="validate">
+      <inMessageRef>_3_InMessage</inMessageRef>
+    </operation>
+  </interface>
+
+  <process processType="Private" isExecutable="true" id="NewPatientInsuranceCheck" name="Patient Insurance Check" tns:packageName="defaultPackage" >
+
+    <!-- process variables -->
+    <property id="bedrequest_patientname" itemSubjectRef="_bedrequest_patientnameItem"/>
+    <property id="checkinresults_patientInsured" itemSubjectRef="_checkinresults_patientInsuredItem"/>
+    <property id="checkinresults_time" itemSubjectRef="_checkinresults_timeItem"/>
+
+    <!-- nodes -->
+    <startEvent id="_1" name="" />
+    <endEvent id="_2" name="" />
+    <serviceTask id="_3" name="Invoke Insurance Service" operationRef="_3_ServiceOperation" implementation="Other">
+      <ioSpecification>      
+        <dataInput id="_3_ParameterInput" name="Parameter" />
+        <dataOutput id="_3_ResultOutput" name="Result" />
+        <inputSet>
+          <dataInputRefs>_3_ParameterInput</dataInputRefs>
+        </inputSet>
+        <outputSet>
+          <dataOutputRefs>_3_ResultOutput</dataOutputRefs>
+        </outputSet>
+      </ioSpecification>
+      <dataInputAssociation>
+        <sourceRef>bedrequest_patientname</sourceRef>
+        <targetRef>_3_ParameterInput</targetRef>
+      </dataInputAssociation>
+      <dataOutputAssociation>
+        <sourceRef>_3_ResultOutput</sourceRef>
+        <targetRef>checkinresults_patientInsured</targetRef>
+      </dataOutputAssociation>
+    </serviceTask>
+
+    <!-- connections -->
+    <sequenceFlow id="_3-_2" sourceRef="_3" targetRef="_2" />
+    <sequenceFlow id="_1-_3" sourceRef="_1" targetRef="_3" />
+
+  </process>
+
+  <bpmndi:BPMNDiagram>
+    <bpmndi:BPMNPlane bpmnElement="NewPatientInsuranceCheck" >
+      <bpmndi:BPMNShape bpmnElement="_1" >
+        <dc:Bounds x="16" y="16" width="48" height="48" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="_2" >
+        <dc:Bounds x="357" y="15" width="48" height="48" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="_3" >
+        <dc:Bounds x="107" y="16" width="207" height="48" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge bpmnElement="_3-_2" >
+        <di:waypoint x="210" y="40" />
+        <di:waypoint x="381" y="39" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="_1-_3" >
+        <di:waypoint x="40" y="40" />
+        <di:waypoint x="210" y="40" />
+      </bpmndi:BPMNEdge>
+    </bpmndi:BPMNPlane>
+  </bpmndi:BPMNDiagram>
+
+</definitions>

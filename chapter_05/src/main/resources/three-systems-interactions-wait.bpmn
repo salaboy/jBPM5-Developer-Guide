@@ -1,0 +1,327 @@
+<?xml version="1.0" encoding="UTF-8"?> 
+<definitions id="Definition"
+             targetNamespace="http://www.omg.org/bpmn20"
+             typeLanguage="http://www.java.com/javaTypes"
+             expressionLanguage="http://www.mvel.org/2.0"
+             xmlns="http://www.omg.org/spec/BPMN/20100524/MODEL"
+             xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+             xsi:schemaLocation="http://www.omg.org/spec/BPMN/20100524/MODEL BPMN20.xsd"
+             xmlns:g="http://www.jboss.org/drools/flow/gpd"
+             xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI"
+             xmlns:dc="http://www.omg.org/spec/DD/20100524/DC"
+             xmlns:di="http://www.omg.org/spec/DD/20100524/DI"
+             xmlns:tns="http://www.jboss.org/drools">
+
+  <itemDefinition id="_bedrequest_patientnameItem" structureRef="String" />
+  <itemDefinition id="_slowservice_resultOneItem" />
+  <itemDefinition id="_slowservice_resultTwoItem" />
+  <itemDefinition id="_slowservice_resultThreeItem" />
+  <itemDefinition id="_checkinresults_timeItem" structureRef="String" />
+
+  <process processType="Private" isExecutable="true" id="Three Systems Interactions" name="Three Systems Interaction" tns:packageName="defaultPackage" >
+
+    <!-- process variables -->
+    <property id="bedrequest_patientname" itemSubjectRef="_bedrequest_patientnameItem"/>
+    <property id="slowservice_resultOne" itemSubjectRef="_slowservice_resultOneItem"/>
+    <property id="slowservice_resultTwo" itemSubjectRef="_slowservice_resultTwoItem"/>
+    <property id="slowservice_resultThree" itemSubjectRef="_slowservice_resultThreeItem"/>
+    <property id="checkinresults_time" itemSubjectRef="_checkinresults_timeItem"/>
+
+    <!-- nodes -->
+    <startEvent id="_1" name="" />
+    <endEvent id="_2" name="" />
+    <task id="_3" name="First System Interaction" tns:taskName="Slow Web Service" >
+      <ioSpecification>
+        <dataInput id="_3_bedrequest_patientnameInput" name="bedrequest_patientname" />
+        <dataInput id="_3_outputNameInput" name="outputName" />
+        <dataInput id="_3_webServiceParametersInput" name="webServiceParameters" />
+        <dataInput id="_3_wsdlUrlInput" name="wsdlUrl" />
+        <dataInput id="_3_methodNameInput" name="methodName" />
+        <dataInput id="_3_commandClassInput" name="commandClass" />
+        <dataInput id="_3_callbacksInput" name="callbacks" />
+        <dataInput id="_3_waitTillCompleteInput" name="waitTillComplete" />
+        <dataOutput id="_3_slowservice_resultOneOutput" name="slowservice_resultOne" />
+        <inputSet>
+          <dataInputRefs>_3_bedrequest_patientnameInput</dataInputRefs>
+          <dataInputRefs>_3_outputNameInput</dataInputRefs>
+          <dataInputRefs>_3_webServiceParametersInput</dataInputRefs>
+          <dataInputRefs>_3_wsdlUrlInput</dataInputRefs>
+          <dataInputRefs>_3_methodNameInput</dataInputRefs>
+          <dataInputRefs>_3_commandClassInput</dataInputRefs>
+          <dataInputRefs>_3_callbacksInput</dataInputRefs>
+          <dataInputRefs>_3_waitTillCompleteInput</dataInputRefs>
+        </inputSet>
+        <outputSet>
+          <dataOutputRefs>_3_slowservice_resultOneOutput</dataOutputRefs>
+        </outputSet>
+      </ioSpecification>
+      <dataInputAssociation>
+        <targetRef>_3_commandClassInput</targetRef>
+        <assignment>
+          <from xsi:type="tFormalExpression">com.salaboy.jbpm5.dev.guide.commands.CXFWebServiceCommand</from>
+          <to xsi:type="tFormalExpression">_3_commandClassInput</to>
+        </assignment>
+      </dataInputAssociation>
+      <dataInputAssociation>
+        <targetRef>_3_callbacksInput</targetRef>
+        <assignment>
+          <from xsi:type="tFormalExpression">com.salaboy.jbpm5.dev.guide.callbacks.CompleteWorkItemCallback,com.salaboy.jbpm5.dev.guide.callbacks.PrintResultsCallback</from>
+          <to xsi:type="tFormalExpression">_3_callbacksInput</to>
+        </assignment>
+      </dataInputAssociation>
+      <dataInputAssociation>
+        <targetRef>_3_waitTillCompleteInput</targetRef>
+        <assignment>
+          <from xsi:type="tFormalExpression">true</from>
+          <to xsi:type="tFormalExpression">_3_waitTillCompleteInput</to>
+        </assignment>
+      </dataInputAssociation>
+      <dataInputAssociation>
+        <sourceRef>bedrequest_patientname</sourceRef>
+        <targetRef>_3_bedrequest_patientnameInput</targetRef>
+      </dataInputAssociation>
+      <dataInputAssociation>
+        <targetRef>_3_outputNameInput</targetRef>
+        <assignment>
+          <from xsi:type="tFormalExpression">slowservice_resultOne</from>
+          <to xsi:type="tFormalExpression">_3_outputNameInput</to>
+        </assignment>
+      </dataInputAssociation>
+      <dataInputAssociation>
+        <targetRef>_3_webServiceParametersInput</targetRef>
+        <assignment>
+          <from xsi:type="tFormalExpression">bedrequest_patientname</from>
+          <to xsi:type="tFormalExpression">_3_webServiceParametersInput</to>
+        </assignment>
+      </dataInputAssociation>
+      <dataInputAssociation>
+        <targetRef>_3_wsdlUrlInput</targetRef>
+        <assignment>
+          <from xsi:type="tFormalExpression">http://127.0.0.1:19999/SlowServiceImpl/slow?WSDL</from>
+          <to xsi:type="tFormalExpression">_3_wsdlUrlInput</to>
+        </assignment>
+      </dataInputAssociation>
+      <dataInputAssociation>
+        <targetRef>_3_methodNameInput</targetRef>
+        <assignment>
+          <from xsi:type="tFormalExpression">slowMethod1</from>
+          <to xsi:type="tFormalExpression">_3_methodNameInput</to>
+        </assignment>
+      </dataInputAssociation>
+      <dataOutputAssociation>
+        <sourceRef>_3_slowservice_resultOneOutput</sourceRef>
+        <targetRef>slowservice_resultOne</targetRef>
+      </dataOutputAssociation>
+    </task>
+    <task id="_4" name="Second System Interaction" tns:taskName="Slow Web Service" >
+      <ioSpecification>
+        <dataInput id="_4_bedrequest_patientnameInput" name="bedrequest_patientname" />
+        <dataInput id="_4_outputNameInput" name="outputName" />
+        <dataInput id="_4_webServiceParametersInput" name="webServiceParameters" />
+        <dataInput id="_4_wsdlUrlInput" name="wsdlUrl" />
+        <dataInput id="_4_methodNameInput" name="methodName" />
+        <dataInput id="_4_commandClassInput" name="commandClass" />
+        <dataInput id="_4_callbacksInput" name="callbacks" />
+        <dataInput id="_4_waitTillCompleteInput" name="waitTillComplete" />
+        <dataOutput id="_4_slowservice_resultTwoOutput" name="slowservice_resultTwo" />
+        <inputSet>
+          <dataInputRefs>_4_bedrequest_patientnameInput</dataInputRefs>
+          <dataInputRefs>_4_outputNameInput</dataInputRefs>
+          <dataInputRefs>_4_webServiceParametersInput</dataInputRefs>
+          <dataInputRefs>_4_wsdlUrlInput</dataInputRefs>
+          <dataInputRefs>_4_methodNameInput</dataInputRefs>
+          <dataInputRefs>_4_commandClassInput</dataInputRefs>
+          <dataInputRefs>_4_callbacksInput</dataInputRefs>
+          <dataInputRefs>_4_waitTillCompleteInput</dataInputRefs>
+        </inputSet>
+        <outputSet>
+          <dataOutputRefs>_4_slowservice_resultTwoOutput</dataOutputRefs>
+        </outputSet>
+      </ioSpecification>
+      <dataInputAssociation>
+        <targetRef>_4_commandClassInput</targetRef>
+        <assignment>
+          <from xsi:type="tFormalExpression">com.salaboy.jbpm5.dev.guide.commands.CXFWebServiceCommand</from>
+          <to xsi:type="tFormalExpression">_4_commandClassInput</to>
+        </assignment>
+      </dataInputAssociation>
+      <dataInputAssociation>
+        <targetRef>_4_callbacksInput</targetRef>
+        <assignment>
+          <from xsi:type="tFormalExpression">com.salaboy.jbpm5.dev.guide.callbacks.CompleteWorkItemCallback,com.salaboy.jbpm5.dev.guide.callbacks.PrintResultsCallback</from>
+          <to xsi:type="tFormalExpression">_4_callbacksInput</to>
+        </assignment>
+      </dataInputAssociation>
+      <dataInputAssociation>
+        <targetRef>_4_waitTillCompleteInput</targetRef>
+        <assignment>
+          <from xsi:type="tFormalExpression">true</from>
+          <to xsi:type="tFormalExpression">_4_waitTillCompleteInput</to>
+        </assignment>
+      </dataInputAssociation>
+      <dataInputAssociation>
+        <sourceRef>bedrequest_patientname</sourceRef>
+        <targetRef>_4_bedrequest_patientnameInput</targetRef>
+      </dataInputAssociation>
+      <dataInputAssociation>
+        <targetRef>_4_outputNameInput</targetRef>
+        <assignment>
+          <from xsi:type="tFormalExpression">slowservice_resultTwo</from>
+          <to xsi:type="tFormalExpression">_4_outputNameInput</to>
+        </assignment>
+      </dataInputAssociation>
+      <dataInputAssociation>
+        <targetRef>_4_webServiceParametersInput</targetRef>
+        <assignment>
+          <from xsi:type="tFormalExpression">bedrequest_patientname</from>
+          <to xsi:type="tFormalExpression">_4_webServiceParametersInput</to>
+        </assignment>
+      </dataInputAssociation>
+      <dataInputAssociation>
+        <targetRef>_4_wsdlUrlInput</targetRef>
+        <assignment>
+          <from xsi:type="tFormalExpression">http://127.0.0.1:19999/SlowServiceImpl/slow?WSDL</from>
+          <to xsi:type="tFormalExpression">_4_wsdlUrlInput</to>
+        </assignment>
+      </dataInputAssociation>
+      <dataInputAssociation>
+        <targetRef>_4_methodNameInput</targetRef>
+        <assignment>
+          <from xsi:type="tFormalExpression">slowMethod2</from>
+          <to xsi:type="tFormalExpression">_4_methodNameInput</to>
+        </assignment>
+      </dataInputAssociation>
+      <dataOutputAssociation>
+        <sourceRef>_4_slowservice_resultTwoOutput</sourceRef>
+        <targetRef>slowservice_resultTwo</targetRef>
+      </dataOutputAssociation>
+    </task>
+    <task id="_5" name="Third System Interaction" tns:taskName="Slow Web Service" >
+      <ioSpecification>
+        <dataInput id="_5_bedrequest_patientnameInput" name="bedrequest_patientname" />
+        <dataInput id="_5_outputNameInput" name="outputName" />
+        <dataInput id="_5_webServiceParametersInput" name="webServiceParameters" />
+        <dataInput id="_5_wsdlUrlInput" name="wsdlUrl" />
+        <dataInput id="_5_methodNameInput" name="methodName" />
+        <dataInput id="_5_commandClassInput" name="commandClass" />
+        <dataInput id="_5_callbacksInput" name="callbacks" />
+        <dataInput id="_5_waitTillCompleteInput" name="waitTillComplete" />
+        <dataOutput id="_5_slowservice_resultThreeOutput" name="slowservice_resultThree" />
+        <inputSet>
+          <dataInputRefs>_5_bedrequest_patientnameInput</dataInputRefs>
+          <dataInputRefs>_5_outputNameInput</dataInputRefs>
+          <dataInputRefs>_5_webServiceParametersInput</dataInputRefs>
+          <dataInputRefs>_5_wsdlUrlInput</dataInputRefs>
+          <dataInputRefs>_5_methodNameInput</dataInputRefs>
+          <dataInputRefs>_5_commandClassInput</dataInputRefs>
+          <dataInputRefs>_5_callbacksInput</dataInputRefs>
+          <dataInputRefs>_5_waitTillCompleteInput</dataInputRefs>
+        </inputSet>
+        <outputSet>
+          <dataOutputRefs>_5_slowservice_resultThreeOutput</dataOutputRefs>
+        </outputSet>
+      </ioSpecification>
+      <dataInputAssociation>
+        <targetRef>_5_commandClassInput</targetRef>
+        <assignment>
+          <from xsi:type="tFormalExpression">com.salaboy.jbpm5.dev.guide.commands.CXFWebServiceCommand</from>
+          <to xsi:type="tFormalExpression">_5_commandClassInput</to>
+        </assignment>
+      </dataInputAssociation>
+      <dataInputAssociation>
+        <targetRef>_5_callbacksInput</targetRef>
+        <assignment>
+          <from xsi:type="tFormalExpression">com.salaboy.jbpm5.dev.guide.callbacks.CompleteWorkItemCallback,com.salaboy.jbpm5.dev.guide.callbacks.PrintResultsCallback</from>
+          <to xsi:type="tFormalExpression">_5_callbacksInput</to>
+        </assignment>
+      </dataInputAssociation>
+      <dataInputAssociation>
+        <targetRef>_5_waitTillCompleteInput</targetRef>
+        <assignment>
+          <from xsi:type="tFormalExpression">true</from>
+          <to xsi:type="tFormalExpression">_5_waitTillCompleteInput</to>
+        </assignment>
+      </dataInputAssociation>
+      <dataInputAssociation>
+        <sourceRef>bedrequest_patientname</sourceRef>
+        <targetRef>_5_bedrequest_patientnameInput</targetRef>
+      </dataInputAssociation>
+      <dataInputAssociation>
+        <targetRef>_5_outputNameInput</targetRef>
+        <assignment>
+          <from xsi:type="tFormalExpression">slowservice_resultThree</from>
+          <to xsi:type="tFormalExpression">_5_outputNameInput</to>
+        </assignment>
+      </dataInputAssociation>
+      <dataInputAssociation>
+        <targetRef>_5_webServiceParametersInput</targetRef>
+        <assignment>
+          <from xsi:type="tFormalExpression">bedrequest_patientname</from>
+          <to xsi:type="tFormalExpression">_5_webServiceParametersInput</to>
+        </assignment>
+      </dataInputAssociation>
+      <dataInputAssociation>
+        <targetRef>_5_wsdlUrlInput</targetRef>
+        <assignment>
+          <from xsi:type="tFormalExpression">http://127.0.0.1:19999/SlowServiceImpl/slow?WSDL</from>
+          <to xsi:type="tFormalExpression">_5_wsdlUrlInput</to>
+        </assignment>
+      </dataInputAssociation>
+      <dataInputAssociation>
+        <targetRef>_5_methodNameInput</targetRef>
+        <assignment>
+          <from xsi:type="tFormalExpression">slowMethod3</from>
+          <to xsi:type="tFormalExpression">_5_methodNameInput</to>
+        </assignment>
+      </dataInputAssociation>
+      <dataOutputAssociation>
+        <sourceRef>_5_slowservice_resultThreeOutput</sourceRef>
+        <targetRef>slowservice_resultOne</targetRef>
+      </dataOutputAssociation>
+    </task>
+
+    <!-- connections -->
+    <sequenceFlow id="_5-_2" sourceRef="_5" targetRef="_2" />
+    <sequenceFlow id="_1-_3" sourceRef="_1" targetRef="_3" />
+    <sequenceFlow id="_3-_4" sourceRef="_3" targetRef="_4" />
+    <sequenceFlow id="_4-_5" sourceRef="_4" targetRef="_5" />
+
+  </process>
+
+  <bpmndi:BPMNDiagram>
+    <bpmndi:BPMNPlane bpmnElement="DefferedWebService" >
+      <bpmndi:BPMNShape bpmnElement="_1" >
+        <dc:Bounds x="16" y="16" width="48" height="48" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="_2" >
+        <dc:Bounds x="640" y="16" width="48" height="48" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="_3" >
+        <dc:Bounds x="96" y="16" width="137" height="48" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="_4" >
+        <dc:Bounds x="265" y="16" width="146" height="48" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="_5" >
+        <dc:Bounds x="443" y="16" width="165" height="48" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge bpmnElement="_5-_2" >
+        <di:waypoint x="525" y="40" />
+        <di:waypoint x="664" y="40" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="_1-_3" >
+        <di:waypoint x="40" y="40" />
+        <di:waypoint x="164" y="40" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="_3-_4" >
+        <di:waypoint x="164" y="40" />
+        <di:waypoint x="338" y="40" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="_4-_5" >
+        <di:waypoint x="338" y="40" />
+        <di:waypoint x="525" y="40" />
+      </bpmndi:BPMNEdge>
+    </bpmndi:BPMNPlane>
+  </bpmndi:BPMNDiagram>
+
+</definitions>

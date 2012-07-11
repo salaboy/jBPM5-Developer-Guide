@@ -18,6 +18,7 @@
     <modules>
         <module>chapter_02</module>
 	<module>chapter_03</module>
+	<module>chapter_05</module>
         <module>chapter_06</module>
         <module>chapter_07</module>
         <module>chapter_08</module>
@@ -26,6 +27,20 @@
         <module>chapter_11</module>
 	<module>appendix_B</module>
     </modules>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <configuration>
+                    <source>1.5</source>
+                    <target>1.5</target>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
+
     <repositories>
         
         <repository>

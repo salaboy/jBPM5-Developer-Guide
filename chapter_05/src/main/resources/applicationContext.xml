@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="
+http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+   
+   <bean id="executorService" class="com.salaboy.jbpm5.dev.guide.executor.ExecutorImpl" destroy-method="destroy">
+      <property name="waitTime" value="5000"/>
+      <property name="nroOfThreads" value="5"/>
+      <property name="defaultNroOfRetries" value="3"/>
+      <property name="emf" ref="entityManagerFactory"/>
+      
+   </bean>
+   <bean id="entityManagerFactory" class="org.springframework.orm.jpa.LocalEntityManagerFactoryBean">
+      <property name="persistenceUnitName" value="org.jbpm.executor"/>
+   </bean>
+
+</beans>
