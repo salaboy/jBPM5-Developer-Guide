@@ -1,0 +1,301 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<bpmn2:definitions xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://www.omg.org/bpmn20" xmlns:bpmn2="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" xmlns:drools="http://www.jboss.org/drools" id="_bP8I0HZ1EeGE3Yfy3fPHUw" xsi:schemaLocation="http://www.omg.org/spec/BPMN/20100524/MODEL BPMN20.xsd" expressionLanguage="http://www.mvel.org/2.0" targetNamespace="http://www.omg.org/bpmn20" typeLanguage="http://www.java.com/javaTypes">
+  <bpmn2:itemDefinition id="_patientNameItem" structureRef="String"/>
+  <bpmn2:itemDefinition id="_isPatientInsuredItem" structureRef="Boolean"/>
+  <bpmn2:itemDefinition id="_finalAmountItem" structureRef="java.math.BigDecimal"/>
+  <bpmn2:itemDefinition id="_patientItem" structureRef="com.salaboy.jbpm5.dev.guide.model.Patient"/>
+  <bpmn2:itemDefinition id="_conceptsItem" structureRef="java.util.List"/>
+  <bpmn2:itemDefinition id="_patientNotifiedItem" structureRef="Boolean"/>
+  <bpmn2:itemDefinition id="__1A553ABC-28A7-41FE-8F11-196525BFFD74_insured_patientNameInputItem" structureRef="String"/>
+  <bpmn2:itemDefinition id="__1A553ABC-28A7-41FE-8F11-196525BFFD74_insured_isPatientInsuredOutputItem" structureRef="Boolean"/>
+  <bpmn2:itemDefinition id="__F008EF12-CD59-430A-8609-E3A347449A81_gatherdata_patientNameInputItem" structureRef="String"/>
+  <bpmn2:itemDefinition id="__F008EF12-CD59-430A-8609-E3A347449A81_gatherdata_patientOutputItem" structureRef="com.salaboy.jbpm5.dev.guide.model.Patient"/>
+  <bpmn2:itemDefinition id="__7D9BF71A-96C0-427C-8A00-777061696FEA_company_patientNameInputItem" structureRef="String"/>
+  <bpmn2:itemDefinition id="__7D9BF71A-96C0-427C-8A00-777061696FEA_company_finalAmountOutputItem" structureRef="java.math.BigDecimal"/>
+  <bpmn2:itemDefinition id="__7D9BF71A-96C0-427C-8A00-777061696FEA_company_conceptsOutputItem" structureRef="java.util.List"/>
+  <bpmn2:itemDefinition id="__70A87EFB-6041-46CC-84E1-FD3B7F535EA5_rates_finalAmountOutputItem" structureRef="java.math.BigDecimal"/>
+  <bpmn2:itemDefinition id="__70A87EFB-6041-46CC-84E1-FD3B7F535EA5_rates_conceptsOutputItem" structureRef="java.util.List"/>
+  <bpmn2:itemDefinition id="__F68DE594-BFF2-49C0-AD9D-7A725B2B6E07_invoice_finalAmountInputItem" structureRef="java.math.BigDecimal"/>
+  <bpmn2:itemDefinition id="__F68DE594-BFF2-49C0-AD9D-7A725B2B6E07_invoice_patientInputItem" structureRef="com.salaboy.jbpm5.dev.guide.model.Patient"/>
+  <bpmn2:itemDefinition id="__F68DE594-BFF2-49C0-AD9D-7A725B2B6E07_invoice_conceptsInputItem" structureRef="java.util.List"/>
+  <bpmn2:itemDefinition id="__F68DE594-BFF2-49C0-AD9D-7A725B2B6E07_invoice_patientNotifiedOutputItem" structureRef="Boolean"/>
+  <bpmn2:process id="NewPatientInsuranceCheck" drools:packageName="jbpmExamples.evaluation" name="test" isExecutable="true">
+    <bpmn2:property id="patientName" itemSubjectRef="_patientNameItem"/>
+    <bpmn2:property id="isPatientInsured" itemSubjectRef="_isPatientInsuredItem"/>
+    <bpmn2:property id="finalAmount" itemSubjectRef="_finalAmountItem"/>
+    <bpmn2:property id="patient" itemSubjectRef="_patientItem"/>
+    <bpmn2:property id="concepts" itemSubjectRef="_conceptsItem"/>
+    <bpmn2:property id="patientNotified" itemSubjectRef="_patientNotifiedItem"/>
+    <bpmn2:startEvent id="_AC2634B1-B198-4109-B692-9152029E7332" drools:bgcolor="#ffffff" name="">
+      <bpmn2:outgoing>_1C11AE7D-64E0-4DD3-81FF-5A1D2A625C29</bpmn2:outgoing>
+    </bpmn2:startEvent>
+    <bpmn2:task id="_1A553ABC-28A7-41FE-8F11-196525BFFD74" drools:taskName="Insurance Service" name="Is Patient Insured?">
+      <bpmn2:incoming>_CE2CD811-37A9-4841-B095-9313A2215F9F</bpmn2:incoming>
+      <bpmn2:outgoing>_981196CD-B5B2-4CE6-A377-130CA77F48D3</bpmn2:outgoing>
+      <bpmn2:ioSpecification id="_bP8I0XZ1EeGE3Yfy3fPHUw">
+        <bpmn2:dataInput id="_1A553ABC-28A7-41FE-8F11-196525BFFD74_TaskNameInput" name="TaskName"/>
+        <bpmn2:dataInput id="_1A553ABC-28A7-41FE-8F11-196525BFFD74_insured_patientNameInput" drools:dtype="String" itemSubjectRef="__1A553ABC-28A7-41FE-8F11-196525BFFD74_insured_patientNameInputItem" name="insured_patientName"/>
+        <bpmn2:dataOutput id="_1A553ABC-28A7-41FE-8F11-196525BFFD74_insured_isPatientInsuredOutput" drools:dtype="Boolean" itemSubjectRef="__1A553ABC-28A7-41FE-8F11-196525BFFD74_insured_isPatientInsuredOutputItem" name="insured_isPatientInsured"/>
+        <bpmn2:inputSet id="_bP8I0nZ1EeGE3Yfy3fPHUw">
+          <bpmn2:dataInputRefs>_1A553ABC-28A7-41FE-8F11-196525BFFD74_insured_patientNameInput</bpmn2:dataInputRefs>
+          <bpmn2:dataInputRefs>_1A553ABC-28A7-41FE-8F11-196525BFFD74_TaskNameInput</bpmn2:dataInputRefs>
+        </bpmn2:inputSet>
+        <bpmn2:outputSet id="_bP8I03Z1EeGE3Yfy3fPHUw">
+          <bpmn2:dataOutputRefs>_1A553ABC-28A7-41FE-8F11-196525BFFD74_insured_isPatientInsuredOutput</bpmn2:dataOutputRefs>
+        </bpmn2:outputSet>
+      </bpmn2:ioSpecification>
+      <bpmn2:dataInputAssociation id="_bP8I1HZ1EeGE3Yfy3fPHUw">
+        <bpmn2:targetRef>_1A553ABC-28A7-41FE-8F11-196525BFFD74_TaskNameInput</bpmn2:targetRef>
+        <bpmn2:assignment id="_bP8I1XZ1EeGE3Yfy3fPHUw">
+          <bpmn2:from xsi:type="bpmn2:tFormalExpression" id="_bP8I1nZ1EeGE3Yfy3fPHUw">Insurance Service</bpmn2:from>
+          <bpmn2:to xsi:type="bpmn2:tFormalExpression" id="_bP8I13Z1EeGE3Yfy3fPHUw">_1A553ABC-28A7-41FE-8F11-196525BFFD74_TaskNameInput</bpmn2:to>
+        </bpmn2:assignment>
+      </bpmn2:dataInputAssociation>
+      <bpmn2:dataInputAssociation id="_bP8I2HZ1EeGE3Yfy3fPHUw">
+        <bpmn2:sourceRef>patientName</bpmn2:sourceRef>
+        <bpmn2:targetRef>_1A553ABC-28A7-41FE-8F11-196525BFFD74_insured_patientNameInput</bpmn2:targetRef>
+      </bpmn2:dataInputAssociation>
+      <bpmn2:dataOutputAssociation id="_bP8I2XZ1EeGE3Yfy3fPHUw">
+        <bpmn2:sourceRef>_1A553ABC-28A7-41FE-8F11-196525BFFD74_insured_isPatientInsuredOutput</bpmn2:sourceRef>
+        <bpmn2:targetRef>isPatientInsured</bpmn2:targetRef>
+      </bpmn2:dataOutputAssociation>
+    </bpmn2:task>
+    <bpmn2:task id="_F008EF12-CD59-430A-8609-E3A347449A81" drools:taskName="Gather Patient Data" name="Gather Patient Data">
+      <bpmn2:incoming>_1C11AE7D-64E0-4DD3-81FF-5A1D2A625C29</bpmn2:incoming>
+      <bpmn2:outgoing>_CE2CD811-37A9-4841-B095-9313A2215F9F</bpmn2:outgoing>
+      <bpmn2:ioSpecification id="_bP8I2nZ1EeGE3Yfy3fPHUw">
+        <bpmn2:dataInput id="_F008EF12-CD59-430A-8609-E3A347449A81_TaskNameInput" name="TaskName"/>
+        <bpmn2:dataInput id="_F008EF12-CD59-430A-8609-E3A347449A81_gatherdata_patientNameInput" drools:dtype="String" itemSubjectRef="__F008EF12-CD59-430A-8609-E3A347449A81_gatherdata_patientNameInputItem" name="gatherdata_patientName"/>
+        <bpmn2:dataOutput id="_F008EF12-CD59-430A-8609-E3A347449A81_gatherdata_patientOutput" drools:dtype="com.salaboy.jbpm5.dev.guide.model.Patient" itemSubjectRef="__F008EF12-CD59-430A-8609-E3A347449A81_gatherdata_patientOutputItem" name="gatherdata_patient"/>
+        <bpmn2:inputSet id="_bP8I23Z1EeGE3Yfy3fPHUw">
+          <bpmn2:dataInputRefs>_F008EF12-CD59-430A-8609-E3A347449A81_gatherdata_patientNameInput</bpmn2:dataInputRefs>
+          <bpmn2:dataInputRefs>_F008EF12-CD59-430A-8609-E3A347449A81_TaskNameInput</bpmn2:dataInputRefs>
+        </bpmn2:inputSet>
+        <bpmn2:outputSet id="_bP8I3HZ1EeGE3Yfy3fPHUw">
+          <bpmn2:dataOutputRefs>_F008EF12-CD59-430A-8609-E3A347449A81_gatherdata_patientOutput</bpmn2:dataOutputRefs>
+        </bpmn2:outputSet>
+      </bpmn2:ioSpecification>
+      <bpmn2:dataInputAssociation id="_bP8I3XZ1EeGE3Yfy3fPHUw">
+        <bpmn2:targetRef>_F008EF12-CD59-430A-8609-E3A347449A81_TaskNameInput</bpmn2:targetRef>
+        <bpmn2:assignment id="_bP8I3nZ1EeGE3Yfy3fPHUw">
+          <bpmn2:from xsi:type="bpmn2:tFormalExpression" id="_bP8I33Z1EeGE3Yfy3fPHUw">Gather Patient Data</bpmn2:from>
+          <bpmn2:to xsi:type="bpmn2:tFormalExpression" id="_bP8I4HZ1EeGE3Yfy3fPHUw">_F008EF12-CD59-430A-8609-E3A347449A81_TaskNameInput</bpmn2:to>
+        </bpmn2:assignment>
+      </bpmn2:dataInputAssociation>
+      <bpmn2:dataInputAssociation id="_bP8I4XZ1EeGE3Yfy3fPHUw">
+        <bpmn2:sourceRef>patientName</bpmn2:sourceRef>
+        <bpmn2:targetRef>_F008EF12-CD59-430A-8609-E3A347449A81_gatherdata_patientNameInput</bpmn2:targetRef>
+      </bpmn2:dataInputAssociation>
+      <bpmn2:dataOutputAssociation id="_bP8I4nZ1EeGE3Yfy3fPHUw">
+        <bpmn2:sourceRef>_F008EF12-CD59-430A-8609-E3A347449A81_gatherdata_patientOutput</bpmn2:sourceRef>
+        <bpmn2:targetRef>patient</bpmn2:targetRef>
+      </bpmn2:dataOutputAssociation>
+    </bpmn2:task>
+    <bpmn2:sequenceFlow id="_1C11AE7D-64E0-4DD3-81FF-5A1D2A625C29" sourceRef="_AC2634B1-B198-4109-B692-9152029E7332" targetRef="_F008EF12-CD59-430A-8609-E3A347449A81"/>
+    <bpmn2:sequenceFlow id="_CE2CD811-37A9-4841-B095-9313A2215F9F" sourceRef="_F008EF12-CD59-430A-8609-E3A347449A81" targetRef="_1A553ABC-28A7-41FE-8F11-196525BFFD74"/>
+    <bpmn2:task id="_7D9BF71A-96C0-427C-8A00-777061696FEA" drools:taskName="External Insurance Company Service" name="Notify Insurance Company">
+      <bpmn2:incoming>_ADB16AF2-10B2-452F-8E36-295BD07C7C9C</bpmn2:incoming>
+      <bpmn2:outgoing>_F84C395E-D03A-409F-8CA7-C2E67D274358</bpmn2:outgoing>
+      <bpmn2:ioSpecification id="_bP8I43Z1EeGE3Yfy3fPHUw">
+        <bpmn2:dataInput id="_7D9BF71A-96C0-427C-8A00-777061696FEA_TaskNameInput" name="TaskName"/>
+        <bpmn2:dataInput id="_7D9BF71A-96C0-427C-8A00-777061696FEA_company_patientNameInput" drools:dtype="String" itemSubjectRef="__7D9BF71A-96C0-427C-8A00-777061696FEA_company_patientNameInputItem" name="company_patientName"/>
+        <bpmn2:dataOutput id="_7D9BF71A-96C0-427C-8A00-777061696FEA_company_finalAmountOutput" drools:dtype="java.math.BigDecimal" itemSubjectRef="__7D9BF71A-96C0-427C-8A00-777061696FEA_company_finalAmountOutputItem" name="company_finalAmount"/>
+        <bpmn2:dataOutput id="_7D9BF71A-96C0-427C-8A00-777061696FEA_company_conceptsOutput" drools:dtype="java.util.List" itemSubjectRef="__7D9BF71A-96C0-427C-8A00-777061696FEA_company_conceptsOutputItem" name="company_concepts"/>
+        <bpmn2:inputSet id="_bP8v4HZ1EeGE3Yfy3fPHUw">
+          <bpmn2:dataInputRefs>_7D9BF71A-96C0-427C-8A00-777061696FEA_company_patientNameInput</bpmn2:dataInputRefs>
+          <bpmn2:dataInputRefs>_7D9BF71A-96C0-427C-8A00-777061696FEA_TaskNameInput</bpmn2:dataInputRefs>
+        </bpmn2:inputSet>
+        <bpmn2:outputSet id="_bP8v4XZ1EeGE3Yfy3fPHUw">
+          <bpmn2:dataOutputRefs>_7D9BF71A-96C0-427C-8A00-777061696FEA_company_finalAmountOutput</bpmn2:dataOutputRefs>
+          <bpmn2:dataOutputRefs>_7D9BF71A-96C0-427C-8A00-777061696FEA_company_conceptsOutput</bpmn2:dataOutputRefs>
+        </bpmn2:outputSet>
+      </bpmn2:ioSpecification>
+      <bpmn2:dataInputAssociation id="_bP8v4nZ1EeGE3Yfy3fPHUw">
+        <bpmn2:targetRef>_7D9BF71A-96C0-427C-8A00-777061696FEA_TaskNameInput</bpmn2:targetRef>
+        <bpmn2:assignment id="_bP8v43Z1EeGE3Yfy3fPHUw">
+          <bpmn2:from xsi:type="bpmn2:tFormalExpression" id="_bP8v5HZ1EeGE3Yfy3fPHUw">External Insurance Company Service</bpmn2:from>
+          <bpmn2:to xsi:type="bpmn2:tFormalExpression" id="_bP8v5XZ1EeGE3Yfy3fPHUw">_7D9BF71A-96C0-427C-8A00-777061696FEA_TaskNameInput</bpmn2:to>
+        </bpmn2:assignment>
+      </bpmn2:dataInputAssociation>
+      <bpmn2:dataInputAssociation id="_bP8v5nZ1EeGE3Yfy3fPHUw">
+        <bpmn2:sourceRef>patientName</bpmn2:sourceRef>
+        <bpmn2:targetRef>_7D9BF71A-96C0-427C-8A00-777061696FEA_company_patientNameInput</bpmn2:targetRef>
+      </bpmn2:dataInputAssociation>
+      <bpmn2:dataOutputAssociation id="_bP8v53Z1EeGE3Yfy3fPHUw">
+        <bpmn2:sourceRef>_7D9BF71A-96C0-427C-8A00-777061696FEA_company_finalAmountOutput</bpmn2:sourceRef>
+        <bpmn2:targetRef>finalAmount</bpmn2:targetRef>
+      </bpmn2:dataOutputAssociation>
+      <bpmn2:dataOutputAssociation id="_bP8v6HZ1EeGE3Yfy3fPHUw">
+        <bpmn2:sourceRef>_7D9BF71A-96C0-427C-8A00-777061696FEA_company_conceptsOutput</bpmn2:sourceRef>
+        <bpmn2:targetRef>concepts</bpmn2:targetRef>
+      </bpmn2:dataOutputAssociation>
+    </bpmn2:task>
+    <bpmn2:exclusiveGateway id="_3FF2E56B-2DAD-44E4-84E5-2EC018C4B165" drools:bgcolor="#ffffff" drools:dg="" name="" gatewayDirection="Diverging">
+      <bpmn2:incoming>_981196CD-B5B2-4CE6-A377-130CA77F48D3</bpmn2:incoming>
+      <bpmn2:outgoing>_ADB16AF2-10B2-452F-8E36-295BD07C7C9C</bpmn2:outgoing>
+      <bpmn2:outgoing>_D1C718B8-A1CA-411E-B746-807EA1F38A84</bpmn2:outgoing>
+    </bpmn2:exclusiveGateway>
+    <bpmn2:sequenceFlow id="_981196CD-B5B2-4CE6-A377-130CA77F48D3" sourceRef="_1A553ABC-28A7-41FE-8F11-196525BFFD74" targetRef="_3FF2E56B-2DAD-44E4-84E5-2EC018C4B165"/>
+    <bpmn2:sequenceFlow id="_ADB16AF2-10B2-452F-8E36-295BD07C7C9C" sourceRef="_3FF2E56B-2DAD-44E4-84E5-2EC018C4B165" targetRef="_7D9BF71A-96C0-427C-8A00-777061696FEA">
+      <bpmn2:conditionExpression xsi:type="bpmn2:tFormalExpression" id="_bP8v6XZ1EeGE3Yfy3fPHUw" language="http://www.java.com/java"><![CDATA[return isPatientInsured;]]></bpmn2:conditionExpression>
+    </bpmn2:sequenceFlow>
+    <bpmn2:task id="_70A87EFB-6041-46CC-84E1-FD3B7F535EA5" drools:taskName="Rates Service" name="Calculate Hospital Rates">
+      <bpmn2:incoming>_D1C718B8-A1CA-411E-B746-807EA1F38A84</bpmn2:incoming>
+      <bpmn2:outgoing>_FC84D5E0-1364-4399-9E4E-7E3BF0E70D7C</bpmn2:outgoing>
+      <bpmn2:ioSpecification id="_bP8v6nZ1EeGE3Yfy3fPHUw">
+        <bpmn2:dataInput id="_70A87EFB-6041-46CC-84E1-FD3B7F535EA5_TaskNameInput" name="TaskName"/>
+        <bpmn2:dataOutput id="_70A87EFB-6041-46CC-84E1-FD3B7F535EA5_rates_finalAmountOutput" drools:dtype="java.math.BigDecimal" itemSubjectRef="__70A87EFB-6041-46CC-84E1-FD3B7F535EA5_rates_finalAmountOutputItem" name="rates_finalAmount"/>
+        <bpmn2:dataOutput id="_70A87EFB-6041-46CC-84E1-FD3B7F535EA5_rates_conceptsOutput" drools:dtype="java.util.List" itemSubjectRef="__70A87EFB-6041-46CC-84E1-FD3B7F535EA5_rates_conceptsOutputItem" name="rates_concepts"/>
+        <bpmn2:inputSet id="_bP8v7HZ1EeGE3Yfy3fPHUw"/>
+        <bpmn2:outputSet id="_bP8v63Z1EeGE3Yfy3fPHUw">
+          <bpmn2:dataOutputRefs>_70A87EFB-6041-46CC-84E1-FD3B7F535EA5_rates_finalAmountOutput</bpmn2:dataOutputRefs>
+          <bpmn2:dataOutputRefs>_70A87EFB-6041-46CC-84E1-FD3B7F535EA5_rates_conceptsOutput</bpmn2:dataOutputRefs>
+        </bpmn2:outputSet>
+      </bpmn2:ioSpecification>
+      <bpmn2:dataInputAssociation id="_bP8v7XZ1EeGE3Yfy3fPHUw">
+        <bpmn2:targetRef>_70A87EFB-6041-46CC-84E1-FD3B7F535EA5_TaskNameInput</bpmn2:targetRef>
+        <bpmn2:assignment id="_bP8v7nZ1EeGE3Yfy3fPHUw">
+          <bpmn2:from xsi:type="bpmn2:tFormalExpression" id="_bP8v73Z1EeGE3Yfy3fPHUw">Rates Service</bpmn2:from>
+          <bpmn2:to xsi:type="bpmn2:tFormalExpression" id="_bP8v8HZ1EeGE3Yfy3fPHUw">_70A87EFB-6041-46CC-84E1-FD3B7F535EA5_TaskNameInput</bpmn2:to>
+        </bpmn2:assignment>
+      </bpmn2:dataInputAssociation>
+      <bpmn2:dataOutputAssociation id="_bP8v8XZ1EeGE3Yfy3fPHUw">
+        <bpmn2:sourceRef>_70A87EFB-6041-46CC-84E1-FD3B7F535EA5_rates_finalAmountOutput</bpmn2:sourceRef>
+        <bpmn2:targetRef>finalAmount</bpmn2:targetRef>
+      </bpmn2:dataOutputAssociation>
+      <bpmn2:dataOutputAssociation id="_bP8v8nZ1EeGE3Yfy3fPHUw">
+        <bpmn2:sourceRef>_70A87EFB-6041-46CC-84E1-FD3B7F535EA5_rates_conceptsOutput</bpmn2:sourceRef>
+        <bpmn2:targetRef>concepts</bpmn2:targetRef>
+      </bpmn2:dataOutputAssociation>
+    </bpmn2:task>
+    <bpmn2:sequenceFlow id="_D1C718B8-A1CA-411E-B746-807EA1F38A84" sourceRef="_3FF2E56B-2DAD-44E4-84E5-2EC018C4B165" targetRef="_70A87EFB-6041-46CC-84E1-FD3B7F535EA5">
+      <bpmn2:conditionExpression xsi:type="bpmn2:tFormalExpression" id="_bP8v83Z1EeGE3Yfy3fPHUw" language="http://www.java.com/java"><![CDATA[return !isPatientInsured;]]></bpmn2:conditionExpression>
+    </bpmn2:sequenceFlow>
+    <bpmn2:exclusiveGateway id="_A6A53F18-3FC9-4B64-9B68-33BDEEEF5683" drools:bgcolor="#ffffff" drools:dg="" name="" gatewayDirection="Converging">
+      <bpmn2:incoming>_FC84D5E0-1364-4399-9E4E-7E3BF0E70D7C</bpmn2:incoming>
+      <bpmn2:incoming>_F84C395E-D03A-409F-8CA7-C2E67D274358</bpmn2:incoming>
+      <bpmn2:outgoing>_349BAAB7-BB47-4683-9724-708E5A5BCCD2</bpmn2:outgoing>
+    </bpmn2:exclusiveGateway>
+    <bpmn2:sequenceFlow id="_F84C395E-D03A-409F-8CA7-C2E67D274358" sourceRef="_7D9BF71A-96C0-427C-8A00-777061696FEA" targetRef="_A6A53F18-3FC9-4B64-9B68-33BDEEEF5683"/>
+    <bpmn2:sequenceFlow id="_FC84D5E0-1364-4399-9E4E-7E3BF0E70D7C" sourceRef="_70A87EFB-6041-46CC-84E1-FD3B7F535EA5" targetRef="_A6A53F18-3FC9-4B64-9B68-33BDEEEF5683"/>
+    <bpmn2:task id="_F68DE594-BFF2-49C0-AD9D-7A725B2B6E07" drools:taskName="Invoice Service" name="Final Invoice">
+      <bpmn2:incoming>_349BAAB7-BB47-4683-9724-708E5A5BCCD2</bpmn2:incoming>
+      <bpmn2:outgoing>_4D16E0C9-C768-44D8-B4AD-9C03B08B262C</bpmn2:outgoing>
+      <bpmn2:ioSpecification id="_bP8v9HZ1EeGE3Yfy3fPHUw">
+        <bpmn2:dataInput id="_F68DE594-BFF2-49C0-AD9D-7A725B2B6E07_TaskNameInput" name="TaskName"/>
+        <bpmn2:dataInput id="_F68DE594-BFF2-49C0-AD9D-7A725B2B6E07_invoice_finalAmountInput" drools:dtype="java.math.BigDecimal" itemSubjectRef="__F68DE594-BFF2-49C0-AD9D-7A725B2B6E07_invoice_finalAmountInputItem" name="invoice_finalAmount"/>
+        <bpmn2:dataInput id="_F68DE594-BFF2-49C0-AD9D-7A725B2B6E07_invoice_patientInput" drools:dtype="com.salaboy.jbpm5.dev.guide.model.Patient" itemSubjectRef="__F68DE594-BFF2-49C0-AD9D-7A725B2B6E07_invoice_patientInputItem" name="invoice_patient"/>
+        <bpmn2:dataInput id="_F68DE594-BFF2-49C0-AD9D-7A725B2B6E07_invoice_conceptsInput" drools:dtype="java.util.List" itemSubjectRef="__F68DE594-BFF2-49C0-AD9D-7A725B2B6E07_invoice_conceptsInputItem" name="invoice_concepts"/>
+        <bpmn2:dataOutput id="_F68DE594-BFF2-49C0-AD9D-7A725B2B6E07_invoice_patientNotifiedOutput" drools:dtype="Boolean" itemSubjectRef="__F68DE594-BFF2-49C0-AD9D-7A725B2B6E07_invoice_patientNotifiedOutputItem" name="invoice_patientNotified"/>
+        <bpmn2:inputSet id="_bP8v9XZ1EeGE3Yfy3fPHUw">
+          <bpmn2:dataInputRefs>_F68DE594-BFF2-49C0-AD9D-7A725B2B6E07_invoice_finalAmountInput</bpmn2:dataInputRefs>
+          <bpmn2:dataInputRefs>_F68DE594-BFF2-49C0-AD9D-7A725B2B6E07_invoice_patientInput</bpmn2:dataInputRefs>
+          <bpmn2:dataInputRefs>_F68DE594-BFF2-49C0-AD9D-7A725B2B6E07_invoice_conceptsInput</bpmn2:dataInputRefs>
+          <bpmn2:dataInputRefs>_F68DE594-BFF2-49C0-AD9D-7A725B2B6E07_TaskNameInput</bpmn2:dataInputRefs>
+        </bpmn2:inputSet>
+        <bpmn2:outputSet id="_bP8v9nZ1EeGE3Yfy3fPHUw">
+          <bpmn2:dataOutputRefs>_F68DE594-BFF2-49C0-AD9D-7A725B2B6E07_invoice_patientNotifiedOutput</bpmn2:dataOutputRefs>
+        </bpmn2:outputSet>
+      </bpmn2:ioSpecification>
+      <bpmn2:dataInputAssociation id="_bP8v93Z1EeGE3Yfy3fPHUw">
+        <bpmn2:targetRef>_F68DE594-BFF2-49C0-AD9D-7A725B2B6E07_TaskNameInput</bpmn2:targetRef>
+        <bpmn2:assignment id="_bP8v-HZ1EeGE3Yfy3fPHUw">
+          <bpmn2:from xsi:type="bpmn2:tFormalExpression" id="_bP8v-XZ1EeGE3Yfy3fPHUw">Invoice Service</bpmn2:from>
+          <bpmn2:to xsi:type="bpmn2:tFormalExpression" id="_bP8v-nZ1EeGE3Yfy3fPHUw">_F68DE594-BFF2-49C0-AD9D-7A725B2B6E07_TaskNameInput</bpmn2:to>
+        </bpmn2:assignment>
+      </bpmn2:dataInputAssociation>
+      <bpmn2:dataInputAssociation id="_bP8v-3Z1EeGE3Yfy3fPHUw">
+        <bpmn2:sourceRef>finalAmount</bpmn2:sourceRef>
+        <bpmn2:targetRef>_F68DE594-BFF2-49C0-AD9D-7A725B2B6E07_invoice_finalAmountInput</bpmn2:targetRef>
+      </bpmn2:dataInputAssociation>
+      <bpmn2:dataInputAssociation id="_bP8v_HZ1EeGE3Yfy3fPHUw">
+        <bpmn2:sourceRef>concepts</bpmn2:sourceRef>
+        <bpmn2:targetRef>_F68DE594-BFF2-49C0-AD9D-7A725B2B6E07_invoice_conceptsInput</bpmn2:targetRef>
+      </bpmn2:dataInputAssociation>
+      <bpmn2:dataInputAssociation id="_bP8v_XZ1EeGE3Yfy3fPHUw">
+        <bpmn2:sourceRef>patient</bpmn2:sourceRef>
+        <bpmn2:targetRef>_F68DE594-BFF2-49C0-AD9D-7A725B2B6E07_invoice_patientInput</bpmn2:targetRef>
+      </bpmn2:dataInputAssociation>
+      <bpmn2:dataOutputAssociation id="_bP8v_nZ1EeGE3Yfy3fPHUw">
+        <bpmn2:sourceRef>_F68DE594-BFF2-49C0-AD9D-7A725B2B6E07_invoice_patientNotifiedOutput</bpmn2:sourceRef>
+        <bpmn2:targetRef>patientNotified</bpmn2:targetRef>
+      </bpmn2:dataOutputAssociation>
+    </bpmn2:task>
+    <bpmn2:sequenceFlow id="_349BAAB7-BB47-4683-9724-708E5A5BCCD2" sourceRef="_A6A53F18-3FC9-4B64-9B68-33BDEEEF5683" targetRef="_F68DE594-BFF2-49C0-AD9D-7A725B2B6E07"/>
+    <bpmn2:sequenceFlow id="_4D16E0C9-C768-44D8-B4AD-9C03B08B262C" sourceRef="_F68DE594-BFF2-49C0-AD9D-7A725B2B6E07" targetRef="_12C608E5-471E-4001-8A95-86BCB83A983B"/>
+    <bpmn2:endEvent id="_12C608E5-471E-4001-8A95-86BCB83A983B" drools:bgcolor="#ffffff" name="">
+      <bpmn2:incoming>_4D16E0C9-C768-44D8-B4AD-9C03B08B262C</bpmn2:incoming>
+      <bpmn2:terminateEventDefinition id="_bP8v_3Z1EeGE3Yfy3fPHUw"/>
+    </bpmn2:endEvent>
+  </bpmn2:process>
+  <bpmndi:BPMNDiagram id="_bP9W8HZ1EeGE3Yfy3fPHUw">
+    <bpmndi:BPMNPlane id="_bP9W8XZ1EeGE3Yfy3fPHUw" bpmnElement="NewPatientInsuranceCheck">
+      <bpmndi:BPMNShape id="_bP9W8nZ1EeGE3Yfy3fPHUw" bpmnElement="_AC2634B1-B198-4109-B692-9152029E7332">
+        <dc:Bounds height="30.0" width="30.0" x="15.0" y="390.0"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="_bP9W83Z1EeGE3Yfy3fPHUw" bpmnElement="_1A553ABC-28A7-41FE-8F11-196525BFFD74">
+        <dc:Bounds height="60.0" width="210.0" x="285.0" y="375.0"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="_bP9W9HZ1EeGE3Yfy3fPHUw" bpmnElement="_F008EF12-CD59-430A-8609-E3A347449A81">
+        <dc:Bounds height="56.0" width="168.0" x="75.0" y="377.0"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="_bP9W9XZ1EeGE3Yfy3fPHUw" bpmnElement="_1C11AE7D-64E0-4DD3-81FF-5A1D2A625C29">
+        <di:waypoint xsi:type="dc:Point" x="30.0" y="405.0"/>
+        <di:waypoint xsi:type="dc:Point" x="159.0" y="405.0"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="_bP9W9nZ1EeGE3Yfy3fPHUw" bpmnElement="_CE2CD811-37A9-4841-B095-9313A2215F9F">
+        <di:waypoint xsi:type="dc:Point" x="159.0" y="405.0"/>
+        <di:waypoint xsi:type="dc:Point" x="390.0" y="405.0"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNShape id="_bP9W93Z1EeGE3Yfy3fPHUw" bpmnElement="_7D9BF71A-96C0-427C-8A00-777061696FEA">
+        <dc:Bounds height="57.0" width="144.0" x="300.0" y="516.0"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="_bP9W-HZ1EeGE3Yfy3fPHUw" bpmnElement="_3FF2E56B-2DAD-44E4-84E5-2EC018C4B165">
+        <dc:Bounds height="40.0" width="40.0" x="540.0" y="525.0"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="_bP9W-XZ1EeGE3Yfy3fPHUw" bpmnElement="_981196CD-B5B2-4CE6-A377-130CA77F48D3">
+        <di:waypoint xsi:type="dc:Point" x="390.0" y="405.0"/>
+        <di:waypoint xsi:type="dc:Point" x="560.0" y="405.0"/>
+        <di:waypoint xsi:type="dc:Point" x="560.0" y="545.0"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="_bP9W-nZ1EeGE3Yfy3fPHUw" bpmnElement="_ADB16AF2-10B2-452F-8E36-295BD07C7C9C">
+        <di:waypoint xsi:type="dc:Point" x="560.0" y="545.0"/>
+        <di:waypoint xsi:type="dc:Point" x="372.0" y="544.5"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNShape id="_bP9W-3Z1EeGE3Yfy3fPHUw" bpmnElement="_70A87EFB-6041-46CC-84E1-FD3B7F535EA5">
+        <dc:Bounds height="80.0" width="100.0" x="315.0" y="615.0"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="_bP9W_HZ1EeGE3Yfy3fPHUw" bpmnElement="_D1C718B8-A1CA-411E-B746-807EA1F38A84">
+        <di:waypoint xsi:type="dc:Point" x="560.0" y="545.0"/>
+        <di:waypoint xsi:type="dc:Point" x="560.0" y="655.0"/>
+        <di:waypoint xsi:type="dc:Point" x="365.0" y="655.0"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNShape id="_bP9W_XZ1EeGE3Yfy3fPHUw" bpmnElement="_A6A53F18-3FC9-4B64-9B68-33BDEEEF5683">
+        <dc:Bounds height="40.0" width="40.0" x="195.0" y="570.0"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="_bP9W_nZ1EeGE3Yfy3fPHUw" bpmnElement="_F84C395E-D03A-409F-8CA7-C2E67D274358">
+        <di:waypoint xsi:type="dc:Point" x="372.0" y="544.5"/>
+        <di:waypoint xsi:type="dc:Point" x="215.0" y="545.0"/>
+        <di:waypoint xsi:type="dc:Point" x="215.0" y="590.0"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="_bP9W_3Z1EeGE3Yfy3fPHUw" bpmnElement="_FC84D5E0-1364-4399-9E4E-7E3BF0E70D7C">
+        <di:waypoint xsi:type="dc:Point" x="365.0" y="655.0"/>
+        <di:waypoint xsi:type="dc:Point" x="215.0" y="590.0"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNShape id="_bP9XAHZ1EeGE3Yfy3fPHUw" bpmnElement="_F68DE594-BFF2-49C0-AD9D-7A725B2B6E07">
+        <dc:Bounds height="80.0" width="100.0" x="75.0" y="550.0"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="_bP9XAXZ1EeGE3Yfy3fPHUw" bpmnElement="_349BAAB7-BB47-4683-9724-708E5A5BCCD2">
+        <di:waypoint xsi:type="dc:Point" x="215.0" y="590.0"/>
+        <di:waypoint xsi:type="dc:Point" x="125.0" y="590.0"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="_bP9XAnZ1EeGE3Yfy3fPHUw" bpmnElement="_4D16E0C9-C768-44D8-B4AD-9C03B08B262C">
+        <di:waypoint xsi:type="dc:Point" x="125.0" y="590.0"/>
+        <di:waypoint xsi:type="dc:Point" x="21.0" y="581.0"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNShape id="_bP9XA3Z1EeGE3Yfy3fPHUw" bpmnElement="_12C608E5-471E-4001-8A95-86BCB83A983B">
+        <dc:Bounds height="28.0" width="28.0" x="7.0" y="567.0"/>
+      </bpmndi:BPMNShape>
+    </bpmndi:BPMNPlane>
+  </bpmndi:BPMNDiagram>
+</bpmn2:definitions>

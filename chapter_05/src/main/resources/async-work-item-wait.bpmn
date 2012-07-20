@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="UTF-8"?> 
+<definitions id="Definition"
+             targetNamespace="http://www.omg.org/bpmn20"
+             typeLanguage="http://www.java.com/javaTypes"
+             expressionLanguage="http://www.mvel.org/2.0"
+             xmlns="http://www.omg.org/spec/BPMN/20100524/MODEL"
+             xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+             xsi:schemaLocation="http://www.omg.org/spec/BPMN/20100524/MODEL BPMN20.xsd"
+             xmlns:g="http://www.jboss.org/drools/flow/gpd"
+             xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI"
+             xmlns:dc="http://www.omg.org/spec/DD/20100524/DC"
+             xmlns:di="http://www.omg.org/spec/DD/20100524/DI"
+             xmlns:tns="http://www.jboss.org/drools">
+
+  <itemDefinition id="_bedrequest_patientnameItem" structureRef="String" />
+  <itemDefinition id="_checkinresults_patientInsuredItem" structureRef="Boolean" />
+  <itemDefinition id="_checkinresults_timeItem" structureRef="String" />
+
+  <process processType="Private" isExecutable="true" id="PatientCheckIn" name="Patient Check In" tns:packageName="defaultPackage" >
+
+    <!-- process variables -->
+    <property id="bedrequest_patientname" itemSubjectRef="_bedrequest_patientnameItem"/>
+    <property id="checkinresults_patientInsured" itemSubjectRef="_checkinresults_patientInsuredItem"/>
+    <property id="checkinresults_time" itemSubjectRef="_checkinresults_timeItem"/>
+
+    <!-- nodes -->
+    <startEvent id="_1" name="" />
+    <endEvent id="_2" name="" />
+    <task id="_3" name="Check-In" tns:taskName="Async Work" >
+      <ioSpecification>
+        <dataInput id="_3_bedrequest_patientnameInput" name="bedrequest_patientname" />
+        <dataInput id="_3_commandClassInput" name="commandClass" />
+        <dataInput id="_3_callbacksInput" name="callbacks" />
+        <dataInput id="_3_waitTillCompleteInput" name="waitTillComplete" />
+        <inputSet>
+          <dataInputRefs>_3_bedrequest_patientnameInput</dataInputRefs>
+          <dataInputRefs>_3_commandClassInput</dataInputRefs>
+          <dataInputRefs>_3_callbacksInput</dataInputRefs>
+          <dataInputRefs>_3_waitTillCompleteInput</dataInputRefs>
+        </inputSet>
+        <outputSet>
+        </outputSet>
+      </ioSpecification>
+      <dataInputAssociation>
+        <sourceRef>bedrequest_patientname</sourceRef>
+        <targetRef>_3_bedrequest_patientnameInput</targetRef>
+      </dataInputAssociation>
+      <dataInputAssociation>
+        <targetRef>_3_commandClassInput</targetRef>
+        <assignment>
+          <from xsi:type="tFormalExpression">com.salaboy.jbpm5.dev.guide.commands.CheckInCommand</from>
+          <to xsi:type="tFormalExpression">_3_commandClassInput</to>
+        </assignment>
+      </dataInputAssociation>
+      <dataInputAssociation>
+        <targetRef>_3_callbacksInput</targetRef>
+        <assignment>
+          <from xsi:type="tFormalExpression">com.salaboy.jbpm5.dev.guide.callbacks.CompleteWorkItemCallback</from>
+          <to xsi:type="tFormalExpression">_3_callbacksInput</to>
+        </assignment>
+      </dataInputAssociation>
+      <dataInputAssociation>
+        <targetRef>_3_waitTillCompleteInput</targetRef>
+        <assignment>
+          <from xsi:type="tFormalExpression">true</from>
+          <to xsi:type="tFormalExpression">_3_waitTillCompleteInput</to>
+        </assignment>
+      </dataInputAssociation>
+    </task>
+
+    <!-- connections -->
+    <sequenceFlow id="_3-_2" sourceRef="_3" targetRef="_2" />
+    <sequenceFlow id="_1-_3" sourceRef="_1" targetRef="_3" />
+
+  </process>
+
+  <bpmndi:BPMNDiagram>
+    <bpmndi:BPMNPlane bpmnElement="PatientDeferredCheckIn" >
+      <bpmndi:BPMNShape bpmnElement="_1" >
+        <dc:Bounds x="16" y="16" width="48" height="48" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="_2" >
+        <dc:Bounds x="306" y="16" width="48" height="48" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="_3" >
+        <dc:Bounds x="96" y="16" width="178" height="48" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge bpmnElement="_3-_2" >
+        <di:waypoint x="185" y="40" />
+        <di:waypoint x="330" y="40" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="_1-_3" >
+        <di:waypoint x="40" y="40" />
+        <di:waypoint x="185" y="40" />
+      </bpmndi:BPMNEdge>
+    </bpmndi:BPMNPlane>
+  </bpmndi:BPMNDiagram>
+
+</definitions>
