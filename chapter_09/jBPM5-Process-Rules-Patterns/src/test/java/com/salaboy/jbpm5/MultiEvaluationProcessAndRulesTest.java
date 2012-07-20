@@ -56,7 +56,7 @@ public class MultiEvaluationProcessAndRulesTest {
 
         try {
 
-            ((StatefulKnowledgeSessionImpl) ksession).addEventListener(new DefaultAgendaEventListener() {
+            ksession.addEventListener(new DefaultAgendaEventListener() {
 
                 @Override
                 public void activationCreated(ActivationCreatedEvent event) {
@@ -64,7 +64,7 @@ public class MultiEvaluationProcessAndRulesTest {
                     ((StatefulKnowledgeSession) event.getKnowledgeRuntime()).fireAllRules();
                 }
             });
-            ((StatefulKnowledgeSessionImpl) ksession).addEventListener(new DefaultProcessEventListener() {
+            ksession.addEventListener(new DefaultProcessEventListener() {
 
                 @Override
                 public void beforeNodeTriggered(ProcessNodeTriggeredEvent event) {
@@ -129,7 +129,7 @@ public class MultiEvaluationProcessAndRulesTest {
         // Uncomment to see all the logs
         //KnowledgeRuntimeLoggerFactory.newConsoleLogger(ksession);
 
-        ((StatefulKnowledgeSessionImpl) ksession).addEventListener(new DefaultAgendaEventListener() {
+        ksession.addEventListener(new DefaultAgendaEventListener() {
 
             @Override
             public void activationCreated(ActivationCreatedEvent event) {
@@ -139,7 +139,7 @@ public class MultiEvaluationProcessAndRulesTest {
             }
         });
 
-        ((StatefulKnowledgeSessionImpl) ksession).addEventListener(new DefaultWorkingMemoryEventListener() {
+        ksession.addEventListener(new DefaultWorkingMemoryEventListener() {
 
            @Override
             public void objectInserted(ObjectInsertedEvent event) {
@@ -154,9 +154,7 @@ public class MultiEvaluationProcessAndRulesTest {
             }
         });
 
-        ((StatefulKnowledgeSessionImpl) ksession).addEventListener(new DefaultProcessEventListener() {
-
-            
+        ksession.addEventListener(new DefaultProcessEventListener() {
 
             @Override
             public void afterNodeLeft(ProcessNodeLeftEvent event) {

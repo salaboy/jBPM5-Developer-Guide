@@ -24,7 +24,6 @@
             <groupId>org.jbpm</groupId>
             <artifactId>jbpm-human-task-mina</artifactId>
             <version>${jbpm.version}</version>
-            
         </dependency>
         <dependency>
             <groupId>org.hibernate</groupId>

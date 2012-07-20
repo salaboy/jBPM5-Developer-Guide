@@ -182,7 +182,7 @@ public class JBPM5ProcessAndRulesIntegrationPatternsTest {
         final StatefulKnowledgeSession ksession = kbase.newStatefulKnowledgeSession();
         // Uncomment to see all the logs
         // KnowledgeRuntimeLoggerFactory.newConsoleLogger(ksession);
-        ((StatefulKnowledgeSessionImpl) ksession).addEventListener(
+        ksession.addEventListener(
                 new DefaultAgendaEventListener() {
                     @Override
                     public void activationCreated(ActivationCreatedEvent event) {
@@ -193,7 +193,7 @@ public class JBPM5ProcessAndRulesIntegrationPatternsTest {
                     
 
                 });
-        ((StatefulKnowledgeSessionImpl) ksession).addEventListener(new DefaultProcessEventListener() {
+        ksession.addEventListener(new DefaultProcessEventListener() {
             @Override
             public void afterProcessStarted(ProcessStartedEvent event) {
                 System.out.println(">>> Firing All the Rules after process started! " + event);
@@ -216,9 +216,6 @@ public class JBPM5ProcessAndRulesIntegrationPatternsTest {
         assertEquals(processInstance.getState(), ProcessInstance.STATE_PENDING);
 
         ksession.startProcessInstance(processInstance.getId());
-        
-        
-        
         
         assertEquals(84, person.getScore());
         assertEquals(processInstance.getState(), ProcessInstance.STATE_COMPLETED);

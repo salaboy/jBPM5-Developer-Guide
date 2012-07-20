@@ -16,9 +16,11 @@ import org.drools.builder.KnowledgeBuilder;
 import org.drools.builder.KnowledgeBuilderError;
 import org.drools.builder.KnowledgeBuilderFactory;
 import org.drools.builder.ResourceType;
-import org.drools.event.*;
 import org.drools.event.process.DefaultProcessEventListener;
 import org.drools.event.process.ProcessStartedEvent;
+import org.drools.event.rule.ActivationCreatedEvent;
+import org.drools.event.rule.DefaultAgendaEventListener;
+import org.drools.event.rule.RuleFlowGroupActivatedEvent;
 import org.drools.impl.StatefulKnowledgeSessionImpl;
 import org.drools.io.impl.ClassPathResource;
 import org.drools.logger.KnowledgeRuntimeLoggerFactory;
@@ -89,23 +91,23 @@ public class AdvancedProcessAndRulesIntegrationTest {
         final StatefulKnowledgeSession ksession = kbase.newStatefulKnowledgeSession();
         KnowledgeRuntimeLoggerFactory.newConsoleLogger(ksession);
 
-        ((StatefulKnowledgeSessionImpl) ksession).getInternalWorkingMemory().addEventListener(
+        ksession.addEventListener(
                 new DefaultAgendaEventListener() {
 
                     @Override
-                    public void activationCreated(org.drools.event.ActivationCreatedEvent event, WorkingMemory workingMemory) {
+                    public void activationCreated(ActivationCreatedEvent event) {
                         System.out.println("Firing All the Rules! " + event);
-                        workingMemory.fireAllRules();
+                        ((StatefulKnowledgeSession) event.getKnowledgeRuntime()).fireAllRules();
                     }
 
                     @Override
-                    public void afterRuleFlowGroupActivated(RuleFlowGroupActivatedEvent event, WorkingMemory workingMemory) {
+                    public void afterRuleFlowGroupActivated(RuleFlowGroupActivatedEvent event) {
                         System.out.println("Firing All the Rules! " + event);
-                        workingMemory.fireAllRules();
+                        ((StatefulKnowledgeSession) event.getKnowledgeRuntime()).fireAllRules();
                     }
                 });
 
-        ((StatefulKnowledgeSessionImpl) ksession).addEventListener(new DefaultProcessEventListener() {
+        ksession.addEventListener(new DefaultProcessEventListener() {
             @Override
             public void beforeProcessStarted(ProcessStartedEvent event) {
                 ((StatefulKnowledgeSession) event.getKnowledgeRuntime()).fireAllRules();
@@ -189,17 +191,17 @@ public class AdvancedProcessAndRulesIntegrationTest {
         KnowledgeRuntimeLoggerFactory.newConsoleLogger(ksession);
 
 
-        ((StatefulKnowledgeSessionImpl) ksession).getInternalWorkingMemory().addEventListener(
+        ksession.addEventListener(
                 new DefaultAgendaEventListener() {
 
                     @Override
-                    public void activationCreated(org.drools.event.ActivationCreatedEvent event, WorkingMemory workingMemory) {
-                        workingMemory.fireAllRules();
+                    public void activationCreated(ActivationCreatedEvent event) {
+                        ((StatefulKnowledgeSession) event.getKnowledgeRuntime()).fireAllRules();
                     }
 
                     @Override
-                    public void afterRuleFlowGroupActivated(RuleFlowGroupActivatedEvent event, WorkingMemory workingMemory) {
-                        workingMemory.fireAllRules();
+                    public void afterRuleFlowGroupActivated(RuleFlowGroupActivatedEvent event) {
+                        ((StatefulKnowledgeSession) event.getKnowledgeRuntime()).fireAllRules();
                     }
                 });
 
