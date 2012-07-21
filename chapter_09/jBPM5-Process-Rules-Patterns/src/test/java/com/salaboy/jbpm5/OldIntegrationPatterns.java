@@ -4,7 +4,9 @@
  */
 package com.salaboy.jbpm5;
 
+import com.salaboy.model.Car;
 import com.salaboy.model.Person;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 import org.drools.KnowledgeBase;
@@ -82,4 +84,44 @@ public class OldIntegrationPatterns {
     
 
     }
+    
+    @Test
+    public void statelessDecorationTest() {
+        KnowledgeBuilder kbuilder = KnowledgeBuilderFactory.newKnowledgeBuilder();
+
+        kbuilder.add(new ClassPathResource("process-stateless-rule-evaluation.bpmn"), ResourceType.BPMN2);
+        if (kbuilder.hasErrors()) {
+            for (KnowledgeBuilderError error : kbuilder.getErrors()) {
+                System.out.println(">>> Error:" + error.getMessage());
+
+            }
+            fail(">>> Knowledge couldn't be parsed! ");
+        }
+
+        KnowledgeBase kbase = KnowledgeBaseFactory.newKnowledgeBase();
+
+        kbase.addKnowledgePackages(kbuilder.getKnowledgePackages());
+
+        StatefulKnowledgeSession ksession = kbase.newStatefulKnowledgeSession();
+        
+        ksession.getWorkItemManager().registerWorkItemHandler("Rank Car", new RankCarWorkItemHandler());
+        
+        ksession.getWorkItemManager().registerWorkItemHandler("Define Car Price", new DefineCarPriceWorkItemHandler());
+        
+        Car car = new Car("AUDI 78", new Date(), 5, "manual", "gas", 285, 15000);
+
+        Map<String, Object> params = new HashMap<String, Object>();
+        params.put("car", car);
+
+        ProcessInstance processInstance = ksession.createProcessInstance("com.salaboy.process.stateless-rules-decoration", params);
+
+        assertEquals(processInstance.getState(), ProcessInstance.STATE_PENDING);
+
+        ksession.startProcessInstance(processInstance.getId());
+        
+        System.out.println("Car : "+car);
+        
+    }
+    
+    
 }

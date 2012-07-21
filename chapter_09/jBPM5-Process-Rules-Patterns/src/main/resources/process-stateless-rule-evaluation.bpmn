@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<bpmn2:definitions xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://www.omg.org/bpmn20" xmlns:bpmn2="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" xmlns:drools="http://www.jboss.org/drools" id="_gKR8ENNgEeGNQYNSauHVNA" xsi:schemaLocation="http://www.omg.org/spec/BPMN/20100524/MODEL BPMN20.xsd" targetNamespace="http://www.omg.org/bpmn20">
+  <bpmn2:itemDefinition id="_carItem" structureRef="com.salaboy.model.Car"/>
+  <bpmn2:itemDefinition id="__BAB5955C-0151-4A4F-9B33-66CB50436518_carInputInputItem" structureRef="com.salaboy.model.Car"/>
+  <bpmn2:itemDefinition id="__BAB5955C-0151-4A4F-9B33-66CB50436518_carOutputOutputItem" structureRef="com.salaboy.model.Car"/>
+  <bpmn2:itemDefinition id="__0424C00E-22E6-4585-8AAB-84A0A7E00841_carInputInputItem" structureRef="com.salaboy.model.Car"/>
+  <bpmn2:itemDefinition id="__0424C00E-22E6-4585-8AAB-84A0A7E00841_carOutputOutputItem" structureRef="com.salaboy.model.Car"/>
+  <bpmn2:process id="com.salaboy.process.stateless-rules-decoration" drools:packageName="defaultPackage" name="stateless-rules-decoration" isExecutable="true">
+    <bpmn2:property id="car" itemSubjectRef="_carItem"/>
+    <bpmn2:startEvent id="_5573E387-7503-42A6-BD0B-B66CE4F4320E" drools:bgcolor="#ffffff" name="">
+      <bpmn2:outgoing>_B4BF8790-6510-4A7D-8D68-6739BABE67BC</bpmn2:outgoing>
+    </bpmn2:startEvent>
+    <bpmn2:task id="_BAB5955C-0151-4A4F-9B33-66CB50436518" drools:taskName="Rank Car" name="Rank Car">
+      <bpmn2:incoming>_B4BF8790-6510-4A7D-8D68-6739BABE67BC</bpmn2:incoming>
+      <bpmn2:outgoing>_6B05AAA8-EB85-47B7-A3F3-30E4A5048D19</bpmn2:outgoing>
+      <bpmn2:ioSpecification id="_gKR8EdNgEeGNQYNSauHVNA">
+        <bpmn2:dataInput id="_BAB5955C-0151-4A4F-9B33-66CB50436518_TaskNameInput" name="TaskName"/>
+        <bpmn2:dataInput id="_BAB5955C-0151-4A4F-9B33-66CB50436518_carInputInput" drools:dtype="com.salaboy.model.Car" itemSubjectRef="__BAB5955C-0151-4A4F-9B33-66CB50436518_carInputInputItem" name="carInput"/>
+        <bpmn2:dataOutput id="_BAB5955C-0151-4A4F-9B33-66CB50436518_carOutputOutput" drools:dtype="com.salaboy.model.Car" itemSubjectRef="__BAB5955C-0151-4A4F-9B33-66CB50436518_carOutputOutputItem" name="carOutput"/>
+        <bpmn2:inputSet id="_gKR8EtNgEeGNQYNSauHVNA">
+          <bpmn2:dataInputRefs>_BAB5955C-0151-4A4F-9B33-66CB50436518_carInputInput</bpmn2:dataInputRefs>
+          <bpmn2:dataInputRefs>_BAB5955C-0151-4A4F-9B33-66CB50436518_TaskNameInput</bpmn2:dataInputRefs>
+        </bpmn2:inputSet>
+        <bpmn2:outputSet id="_gKR8E9NgEeGNQYNSauHVNA">
+          <bpmn2:dataOutputRefs>_BAB5955C-0151-4A4F-9B33-66CB50436518_carOutputOutput</bpmn2:dataOutputRefs>
+        </bpmn2:outputSet>
+      </bpmn2:ioSpecification>
+      <bpmn2:dataInputAssociation id="_gKR8FNNgEeGNQYNSauHVNA">
+        <bpmn2:targetRef>_BAB5955C-0151-4A4F-9B33-66CB50436518_TaskNameInput</bpmn2:targetRef>
+        <bpmn2:assignment id="_gKR8FdNgEeGNQYNSauHVNA">
+          <bpmn2:from xsi:type="bpmn2:tFormalExpression" id="_gKR8FtNgEeGNQYNSauHVNA">Rank Car</bpmn2:from>
+          <bpmn2:to xsi:type="bpmn2:tFormalExpression" id="_gKR8F9NgEeGNQYNSauHVNA">_BAB5955C-0151-4A4F-9B33-66CB50436518_TaskNameInput</bpmn2:to>
+        </bpmn2:assignment>
+      </bpmn2:dataInputAssociation>
+      <bpmn2:dataInputAssociation id="_gKR8GNNgEeGNQYNSauHVNA">
+        <bpmn2:sourceRef>car</bpmn2:sourceRef>
+        <bpmn2:targetRef>_BAB5955C-0151-4A4F-9B33-66CB50436518_carInputInput</bpmn2:targetRef>
+      </bpmn2:dataInputAssociation>
+      <bpmn2:dataOutputAssociation id="_gKR8GdNgEeGNQYNSauHVNA">
+        <bpmn2:sourceRef>_BAB5955C-0151-4A4F-9B33-66CB50436518_carOutputOutput</bpmn2:sourceRef>
+        <bpmn2:targetRef>car</bpmn2:targetRef>
+      </bpmn2:dataOutputAssociation>
+    </bpmn2:task>
+    <bpmn2:sequenceFlow id="_B4BF8790-6510-4A7D-8D68-6739BABE67BC" sourceRef="_5573E387-7503-42A6-BD0B-B66CE4F4320E" targetRef="_BAB5955C-0151-4A4F-9B33-66CB50436518"/>
+    <bpmn2:task id="_0424C00E-22E6-4585-8AAB-84A0A7E00841" drools:taskName="Define Car Price" name="Define Car Price">
+      <bpmn2:incoming>_6B05AAA8-EB85-47B7-A3F3-30E4A5048D19</bpmn2:incoming>
+      <bpmn2:outgoing>_AE49D9CE-F884-46A5-AA17-E01D985209BA</bpmn2:outgoing>
+      <bpmn2:ioSpecification id="_gKR8GtNgEeGNQYNSauHVNA">
+        <bpmn2:dataInput id="_0424C00E-22E6-4585-8AAB-84A0A7E00841_TaskNameInput" name="TaskName"/>
+        <bpmn2:dataInput id="_0424C00E-22E6-4585-8AAB-84A0A7E00841_carInputInput" drools:dtype="com.salaboy.model.Car" itemSubjectRef="__0424C00E-22E6-4585-8AAB-84A0A7E00841_carInputInputItem" name="carInput"/>
+        <bpmn2:dataOutput id="_0424C00E-22E6-4585-8AAB-84A0A7E00841_carOutputOutput" drools:dtype="com.salaboy.model.Car" itemSubjectRef="__0424C00E-22E6-4585-8AAB-84A0A7E00841_carOutputOutputItem" name="carOutput"/>
+        <bpmn2:inputSet id="_gKR8G9NgEeGNQYNSauHVNA">
+          <bpmn2:dataInputRefs>_0424C00E-22E6-4585-8AAB-84A0A7E00841_carInputInput</bpmn2:dataInputRefs>
+          <bpmn2:dataInputRefs>_0424C00E-22E6-4585-8AAB-84A0A7E00841_TaskNameInput</bpmn2:dataInputRefs>
+        </bpmn2:inputSet>
+        <bpmn2:outputSet id="_gKR8HNNgEeGNQYNSauHVNA">
+          <bpmn2:dataOutputRefs>_0424C00E-22E6-4585-8AAB-84A0A7E00841_carOutputOutput</bpmn2:dataOutputRefs>
+        </bpmn2:outputSet>
+      </bpmn2:ioSpecification>
+      <bpmn2:dataInputAssociation id="_gKR8HdNgEeGNQYNSauHVNA">
+        <bpmn2:targetRef>_0424C00E-22E6-4585-8AAB-84A0A7E00841_TaskNameInput</bpmn2:targetRef>
+        <bpmn2:assignment id="_gKR8HtNgEeGNQYNSauHVNA">
+          <bpmn2:from xsi:type="bpmn2:tFormalExpression" id="_gKR8H9NgEeGNQYNSauHVNA">Define Car Price</bpmn2:from>
+          <bpmn2:to xsi:type="bpmn2:tFormalExpression" id="_gKR8INNgEeGNQYNSauHVNA">_0424C00E-22E6-4585-8AAB-84A0A7E00841_TaskNameInput</bpmn2:to>
+        </bpmn2:assignment>
+      </bpmn2:dataInputAssociation>
+      <bpmn2:dataInputAssociation id="_gKR8IdNgEeGNQYNSauHVNA">
+        <bpmn2:sourceRef>car</bpmn2:sourceRef>
+        <bpmn2:targetRef>_0424C00E-22E6-4585-8AAB-84A0A7E00841_carInputInput</bpmn2:targetRef>
+      </bpmn2:dataInputAssociation>
+      <bpmn2:dataOutputAssociation id="_gKR8ItNgEeGNQYNSauHVNA">
+        <bpmn2:sourceRef>_0424C00E-22E6-4585-8AAB-84A0A7E00841_carOutputOutput</bpmn2:sourceRef>
+        <bpmn2:targetRef>car</bpmn2:targetRef>
+      </bpmn2:dataOutputAssociation>
+    </bpmn2:task>
+    <bpmn2:sequenceFlow id="_6B05AAA8-EB85-47B7-A3F3-30E4A5048D19" sourceRef="_BAB5955C-0151-4A4F-9B33-66CB50436518" targetRef="_0424C00E-22E6-4585-8AAB-84A0A7E00841"/>
+    <bpmn2:endEvent id="_C5685134-500F-4041-822A-C0EB4F1E0DD9" drools:bgcolor="#ffffff" name="">
+      <bpmn2:incoming>_AE49D9CE-F884-46A5-AA17-E01D985209BA</bpmn2:incoming>
+    </bpmn2:endEvent>
+    <bpmn2:sequenceFlow id="_AE49D9CE-F884-46A5-AA17-E01D985209BA" sourceRef="_0424C00E-22E6-4585-8AAB-84A0A7E00841" targetRef="_C5685134-500F-4041-822A-C0EB4F1E0DD9"/>
+  </bpmn2:process>
+  <bpmndi:BPMNDiagram id="_gKR8I9NgEeGNQYNSauHVNA">
+    <bpmndi:BPMNPlane id="_gKSjINNgEeGNQYNSauHVNA" bpmnElement="com.salaboy.process.stateless-rules-decoration">
+      <bpmndi:BPMNShape id="_gKSjIdNgEeGNQYNSauHVNA" bpmnElement="_5573E387-7503-42A6-BD0B-B66CE4F4320E">
+        <dc:Bounds height="30.0" width="30.0" x="105.0" y="150.0"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="_gKSjItNgEeGNQYNSauHVNA" bpmnElement="_BAB5955C-0151-4A4F-9B33-66CB50436518">
+        <dc:Bounds height="80.0" width="100.0" x="180.0" y="125.0"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="_gKSjI9NgEeGNQYNSauHVNA" bpmnElement="_B4BF8790-6510-4A7D-8D68-6739BABE67BC">
+        <di:waypoint xsi:type="dc:Point" x="120.0" y="165.0"/>
+        <di:waypoint xsi:type="dc:Point" x="230.0" y="165.0"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNShape id="_gKSjJNNgEeGNQYNSauHVNA" bpmnElement="_0424C00E-22E6-4585-8AAB-84A0A7E00841">
+        <dc:Bounds height="80.0" width="100.0" x="325.0" y="125.0"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="_gKSjJdNgEeGNQYNSauHVNA" bpmnElement="_6B05AAA8-EB85-47B7-A3F3-30E4A5048D19">
+        <di:waypoint xsi:type="dc:Point" x="230.0" y="165.0"/>
+        <di:waypoint xsi:type="dc:Point" x="375.0" y="165.0"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNShape id="_gKSjJtNgEeGNQYNSauHVNA" bpmnElement="_C5685134-500F-4041-822A-C0EB4F1E0DD9">
+        <dc:Bounds height="28.0" width="28.0" x="466.0" y="147.0"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="_gKSjJ9NgEeGNQYNSauHVNA" bpmnElement="_AE49D9CE-F884-46A5-AA17-E01D985209BA">
+        <di:waypoint xsi:type="dc:Point" x="375.0" y="165.0"/>
+        <di:waypoint xsi:type="dc:Point" x="480.0" y="161.0"/>
+      </bpmndi:BPMNEdge>
+    </bpmndi:BPMNPlane>
+  </bpmndi:BPMNDiagram>
+</bpmn2:definitions>

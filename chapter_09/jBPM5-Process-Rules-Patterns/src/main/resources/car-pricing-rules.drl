@@ -1,0 +1,22 @@
+package com.salaboy.rules.pricing;
+
+import com.salaboy.model.*;
+
+rule "Pricing based on demand -> Used AUDI 70% of the original price"
+    lock-on-active true
+    salience 1
+    when
+        $car: Car(name contains "AUDI")
+    then
+        $car.setCurrentPrice($car.getOriginalPrice() * 0.7);
+        update($car);
+end
+
+rule "Pricing based on ranking -> Less than 5 then 80%"
+    lock-on-active true
+    when
+        $car: Car( ranking < 5 )
+    then
+        $car.setCurrentPrice($car.getCurrentPrice() * 0.8);
+        update($car);
+end

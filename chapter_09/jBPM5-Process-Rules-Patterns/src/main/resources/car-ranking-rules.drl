@@ -1,0 +1,27 @@
+package com.salaboy.rules.ranking;
+
+import com.salaboy.model.*;
+
+
+rule "Rank +2 on Original price gt 10000"
+    when
+        $car: Car(originalPrice > 10000)
+    then
+        $car.setRanking($car.getRanking()+2);
+end
+
+rule "Rank -2  on Original Price lt 10000"
+    when
+        $car: Car(originalPrice < 10000)
+    then
+        $car.setRanking($car.getRanking()-2);
+end
+
+rule "Rank +4 when Name contains BMW, AUDI"
+    when
+        $car: Car(name contains "BMW" || name contains "AUDI")
+    then
+        $car.setRanking($car.getRanking()+4);
+end
+
+
