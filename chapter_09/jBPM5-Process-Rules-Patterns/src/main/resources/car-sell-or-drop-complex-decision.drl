@@ -1,0 +1,14 @@
+package com.salaboy.jbpm5.rules;
+
+
+import com.salaboy.model.*;
+
+
+rule "decide based on market information"
+    when
+        $mm: MarketMetric( metric > 0.6 )
+        $car: Car()
+    then
+        System.out.println(" ->  The Metric today for "+$car.getName() + " is: "+$mm.getMetric());
+        $mm.setResult(true);
+end

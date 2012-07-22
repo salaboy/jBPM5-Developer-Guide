@@ -1,0 +1,168 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<bpmn2:definitions xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://www.omg.org/bpmn20" xmlns:bpmn2="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" xmlns:drools="http://www.jboss.org/drools" id="_60twMNPVEeGNQYNSauHVNA" xsi:schemaLocation="http://www.omg.org/spec/BPMN/20100524/MODEL BPMN20.xsd" targetNamespace="http://www.omg.org/bpmn20">
+  <bpmn2:itemDefinition id="_carItem" structureRef="com.salaboy.model.Car"/>
+  <bpmn2:itemDefinition id="__A9161856-F199-4CC8-8BAC-3A7E3D7A9DF3_carInputInputItem" structureRef="com.salaboy.model.Car"/>
+  <bpmn2:itemDefinition id="__A9161856-F199-4CC8-8BAC-3A7E3D7A9DF3_carOutputOutputItem" structureRef="com.salaboy.model.Car"/>
+  <bpmn2:itemDefinition id="__C85ECDF9-7415-4E13-9908-10A428384335_carInputInputItem" structureRef="com.salaboy.model.Car"/>
+  <bpmn2:itemDefinition id="__C85ECDF9-7415-4E13-9908-10A428384335_carOutputOutputItem" structureRef="com.salaboy.model.Car"/>
+  <bpmn2:process id="com.salaboy.process.stateless-rules-decoration" drools:packageName="defaultPackage" name="stateless-rules-decoration" isExecutable="true">
+    <bpmn2:property id="car" itemSubjectRef="_carItem"/>
+    <bpmn2:startEvent id="_01E184C7-E086-477C-A36C-3C321ECEF043" drools:bgcolor="#ffffff" name="">
+      <bpmn2:outgoing>_AFA11242-637E-4125-9D97-00A109BB91AA</bpmn2:outgoing>
+    </bpmn2:startEvent>
+    <bpmn2:task id="_A9161856-F199-4CC8-8BAC-3A7E3D7A9DF3" drools:taskName="Rank Car" name="Rank Car">
+      <bpmn2:incoming>_AFA11242-637E-4125-9D97-00A109BB91AA</bpmn2:incoming>
+      <bpmn2:outgoing>_7D625EA0-7DA9-47F8-BD4C-8ECC0ECBA559</bpmn2:outgoing>
+      <bpmn2:ioSpecification id="_60twMdPVEeGNQYNSauHVNA">
+        <bpmn2:dataInput id="_A9161856-F199-4CC8-8BAC-3A7E3D7A9DF3_TaskNameInput" name="TaskName"/>
+        <bpmn2:dataInput id="_A9161856-F199-4CC8-8BAC-3A7E3D7A9DF3_carInputInput" drools:dtype="com.salaboy.model.Car" itemSubjectRef="__A9161856-F199-4CC8-8BAC-3A7E3D7A9DF3_carInputInputItem" name="carInput"/>
+        <bpmn2:dataOutput id="_A9161856-F199-4CC8-8BAC-3A7E3D7A9DF3_carOutputOutput" drools:dtype="com.salaboy.model.Car" itemSubjectRef="__A9161856-F199-4CC8-8BAC-3A7E3D7A9DF3_carOutputOutputItem" name="carOutput"/>
+        <bpmn2:inputSet id="_60twMtPVEeGNQYNSauHVNA">
+          <bpmn2:dataInputRefs>_A9161856-F199-4CC8-8BAC-3A7E3D7A9DF3_carInputInput</bpmn2:dataInputRefs>
+          <bpmn2:dataInputRefs>_A9161856-F199-4CC8-8BAC-3A7E3D7A9DF3_TaskNameInput</bpmn2:dataInputRefs>
+        </bpmn2:inputSet>
+        <bpmn2:outputSet id="_60twM9PVEeGNQYNSauHVNA">
+          <bpmn2:dataOutputRefs>_A9161856-F199-4CC8-8BAC-3A7E3D7A9DF3_carOutputOutput</bpmn2:dataOutputRefs>
+        </bpmn2:outputSet>
+      </bpmn2:ioSpecification>
+      <bpmn2:dataInputAssociation id="_60twNNPVEeGNQYNSauHVNA">
+        <bpmn2:targetRef>_A9161856-F199-4CC8-8BAC-3A7E3D7A9DF3_TaskNameInput</bpmn2:targetRef>
+        <bpmn2:assignment id="_60twNdPVEeGNQYNSauHVNA">
+          <bpmn2:from xsi:type="bpmn2:tFormalExpression" id="_60twNtPVEeGNQYNSauHVNA">Rank Car</bpmn2:from>
+          <bpmn2:to xsi:type="bpmn2:tFormalExpression" id="_60twN9PVEeGNQYNSauHVNA">_A9161856-F199-4CC8-8BAC-3A7E3D7A9DF3_TaskNameInput</bpmn2:to>
+        </bpmn2:assignment>
+      </bpmn2:dataInputAssociation>
+      <bpmn2:dataInputAssociation id="_60twONPVEeGNQYNSauHVNA">
+        <bpmn2:sourceRef>car</bpmn2:sourceRef>
+        <bpmn2:targetRef>_A9161856-F199-4CC8-8BAC-3A7E3D7A9DF3_carInputInput</bpmn2:targetRef>
+      </bpmn2:dataInputAssociation>
+      <bpmn2:dataOutputAssociation id="_60twOdPVEeGNQYNSauHVNA">
+        <bpmn2:sourceRef>_A9161856-F199-4CC8-8BAC-3A7E3D7A9DF3_carOutputOutput</bpmn2:sourceRef>
+        <bpmn2:targetRef>car</bpmn2:targetRef>
+      </bpmn2:dataOutputAssociation>
+    </bpmn2:task>
+    <bpmn2:sequenceFlow id="_AFA11242-637E-4125-9D97-00A109BB91AA" sourceRef="_01E184C7-E086-477C-A36C-3C321ECEF043" targetRef="_A9161856-F199-4CC8-8BAC-3A7E3D7A9DF3"/>
+    <bpmn2:task id="_C85ECDF9-7415-4E13-9908-10A428384335" drools:taskName="Define Car Price" name="Define Car Price">
+      <bpmn2:incoming>_7D625EA0-7DA9-47F8-BD4C-8ECC0ECBA559</bpmn2:incoming>
+      <bpmn2:outgoing>_D1265C8D-84CF-44EC-9D11-A24BFBE6EB98</bpmn2:outgoing>
+      <bpmn2:ioSpecification id="_60twOtPVEeGNQYNSauHVNA">
+        <bpmn2:dataInput id="_C85ECDF9-7415-4E13-9908-10A428384335_TaskNameInput" name="TaskName"/>
+        <bpmn2:dataInput id="_C85ECDF9-7415-4E13-9908-10A428384335_carInputInput" drools:dtype="com.salaboy.model.Car" itemSubjectRef="__C85ECDF9-7415-4E13-9908-10A428384335_carInputInputItem" name="carInput"/>
+        <bpmn2:dataOutput id="_C85ECDF9-7415-4E13-9908-10A428384335_carOutputOutput" drools:dtype="com.salaboy.model.Car" itemSubjectRef="__C85ECDF9-7415-4E13-9908-10A428384335_carOutputOutputItem" name="carOutput"/>
+        <bpmn2:inputSet id="_60twO9PVEeGNQYNSauHVNA">
+          <bpmn2:dataInputRefs>_C85ECDF9-7415-4E13-9908-10A428384335_carInputInput</bpmn2:dataInputRefs>
+          <bpmn2:dataInputRefs>_C85ECDF9-7415-4E13-9908-10A428384335_TaskNameInput</bpmn2:dataInputRefs>
+        </bpmn2:inputSet>
+        <bpmn2:outputSet id="_60twPNPVEeGNQYNSauHVNA">
+          <bpmn2:dataOutputRefs>_C85ECDF9-7415-4E13-9908-10A428384335_carOutputOutput</bpmn2:dataOutputRefs>
+        </bpmn2:outputSet>
+      </bpmn2:ioSpecification>
+      <bpmn2:dataInputAssociation id="_60uXQNPVEeGNQYNSauHVNA">
+        <bpmn2:targetRef>_C85ECDF9-7415-4E13-9908-10A428384335_TaskNameInput</bpmn2:targetRef>
+        <bpmn2:assignment id="_60uXQdPVEeGNQYNSauHVNA">
+          <bpmn2:from xsi:type="bpmn2:tFormalExpression" id="_60uXQtPVEeGNQYNSauHVNA">Define Car Price</bpmn2:from>
+          <bpmn2:to xsi:type="bpmn2:tFormalExpression" id="_60uXQ9PVEeGNQYNSauHVNA">_C85ECDF9-7415-4E13-9908-10A428384335_TaskNameInput</bpmn2:to>
+        </bpmn2:assignment>
+      </bpmn2:dataInputAssociation>
+      <bpmn2:dataInputAssociation id="_60uXRNPVEeGNQYNSauHVNA">
+        <bpmn2:sourceRef>car</bpmn2:sourceRef>
+        <bpmn2:targetRef>_C85ECDF9-7415-4E13-9908-10A428384335_carInputInput</bpmn2:targetRef>
+      </bpmn2:dataInputAssociation>
+      <bpmn2:dataOutputAssociation id="_60uXRdPVEeGNQYNSauHVNA">
+        <bpmn2:sourceRef>_C85ECDF9-7415-4E13-9908-10A428384335_carOutputOutput</bpmn2:sourceRef>
+        <bpmn2:targetRef>car</bpmn2:targetRef>
+      </bpmn2:dataOutputAssociation>
+    </bpmn2:task>
+    <bpmn2:sequenceFlow id="_7D625EA0-7DA9-47F8-BD4C-8ECC0ECBA559" sourceRef="_A9161856-F199-4CC8-8BAC-3A7E3D7A9DF3" targetRef="_C85ECDF9-7415-4E13-9908-10A428384335"/>
+    <bpmn2:exclusiveGateway id="_1F8C9E04-E0DE-428A-B06B-A2640B935C14" drools:bgcolor="#ffffff" drools:dg="" name="" gatewayDirection="Diverging">
+      <bpmn2:incoming>_D1265C8D-84CF-44EC-9D11-A24BFBE6EB98</bpmn2:incoming>
+      <bpmn2:outgoing>_22C59CE0-3C65-4534-A582-5CF1A4F06795</bpmn2:outgoing>
+      <bpmn2:outgoing>_13088CC1-495A-4F84-ADD2-4EEAF3F72520</bpmn2:outgoing>
+    </bpmn2:exclusiveGateway>
+    <bpmn2:sequenceFlow id="_D1265C8D-84CF-44EC-9D11-A24BFBE6EB98" sourceRef="_C85ECDF9-7415-4E13-9908-10A428384335" targetRef="_1F8C9E04-E0DE-428A-B06B-A2640B935C14"/>
+    <bpmn2:scriptTask id="_EC41E70D-6728-4401-BCB5-B56C635BCAC8" name="Drop" scriptFormat="http://www.java.com/java">
+      <bpmn2:incoming>_22C59CE0-3C65-4534-A582-5CF1A4F06795</bpmn2:incoming>
+      <bpmn2:outgoing>_D03ACC05-2F2A-4EFB-BF44-41A62654C0A8</bpmn2:outgoing>
+      <bpmn2:script><![CDATA[System.out.println("We cannot sell this car - Dropping!");]]></bpmn2:script>
+    </bpmn2:scriptTask>
+    <bpmn2:sequenceFlow id="_22C59CE0-3C65-4534-A582-5CF1A4F06795" sourceRef="_1F8C9E04-E0DE-428A-B06B-A2640B935C14" targetRef="_EC41E70D-6728-4401-BCB5-B56C635BCAC8">
+      <bpmn2:conditionExpression xsi:type="bpmn2:tFormalExpression" id="_60uXRtPVEeGNQYNSauHVNA" language="http://www.java.com/java"><![CDATA[return !(com.salaboy.jbpm5.RulesHelper.evaluate(car));]]></bpmn2:conditionExpression>
+    </bpmn2:sequenceFlow>
+    <bpmn2:scriptTask id="_77E45269-E860-47CC-85E4-8EFB19B972B3" name="Sell" scriptFormat="http://www.java.com/java">
+      <bpmn2:incoming>_13088CC1-495A-4F84-ADD2-4EEAF3F72520</bpmn2:incoming>
+      <bpmn2:outgoing>_E814B566-748C-4989-9663-6C7002D8946B</bpmn2:outgoing>
+      <bpmn2:script><![CDATA[System.out.println("We can sell this car - Start Advertisment!");]]></bpmn2:script>
+    </bpmn2:scriptTask>
+    <bpmn2:sequenceFlow id="_13088CC1-495A-4F84-ADD2-4EEAF3F72520" sourceRef="_1F8C9E04-E0DE-428A-B06B-A2640B935C14" targetRef="_77E45269-E860-47CC-85E4-8EFB19B972B3">
+      <bpmn2:conditionExpression xsi:type="bpmn2:tFormalExpression" id="_60uXR9PVEeGNQYNSauHVNA" language="http://www.java.com/java"><![CDATA[return com.salaboy.jbpm5.RulesHelper.evaluate(car);]]></bpmn2:conditionExpression>
+    </bpmn2:sequenceFlow>
+    <bpmn2:sequenceFlow id="_E814B566-748C-4989-9663-6C7002D8946B" sourceRef="_77E45269-E860-47CC-85E4-8EFB19B972B3" targetRef="_251B75AC-D3FB-4224-9A3F-7311BBE814EC"/>
+    <bpmn2:sequenceFlow id="_D03ACC05-2F2A-4EFB-BF44-41A62654C0A8" sourceRef="_EC41E70D-6728-4401-BCB5-B56C635BCAC8" targetRef="_F7838C0D-F95E-4267-9AC9-41FEBDD30CC2"/>
+    <bpmn2:endEvent id="_F7838C0D-F95E-4267-9AC9-41FEBDD30CC2" drools:bgcolor="#ffffff" name="">
+      <bpmn2:incoming>_D03ACC05-2F2A-4EFB-BF44-41A62654C0A8</bpmn2:incoming>
+      <bpmn2:terminateEventDefinition id="_60uXSNPVEeGNQYNSauHVNA"/>
+    </bpmn2:endEvent>
+    <bpmn2:endEvent id="_251B75AC-D3FB-4224-9A3F-7311BBE814EC" drools:bgcolor="#ffffff" name="">
+      <bpmn2:incoming>_E814B566-748C-4989-9663-6C7002D8946B</bpmn2:incoming>
+      <bpmn2:terminateEventDefinition id="_60uXSdPVEeGNQYNSauHVNA"/>
+    </bpmn2:endEvent>
+  </bpmn2:process>
+  <bpmndi:BPMNDiagram id="_60uXStPVEeGNQYNSauHVNA">
+    <bpmndi:BPMNPlane id="_60uXS9PVEeGNQYNSauHVNA" bpmnElement="com.salaboy.process.stateless-rules-decoration">
+      <bpmndi:BPMNShape id="_60uXTNPVEeGNQYNSauHVNA" bpmnElement="_01E184C7-E086-477C-A36C-3C321ECEF043">
+        <dc:Bounds height="30.0" width="30.0" x="105.0" y="150.0"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="_60uXTdPVEeGNQYNSauHVNA" bpmnElement="_A9161856-F199-4CC8-8BAC-3A7E3D7A9DF3">
+        <dc:Bounds height="80.0" width="100.0" x="180.0" y="125.0"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="_60uXTtPVEeGNQYNSauHVNA" bpmnElement="_AFA11242-637E-4125-9D97-00A109BB91AA">
+        <di:waypoint xsi:type="dc:Point" x="120.0" y="165.0"/>
+        <di:waypoint xsi:type="dc:Point" x="230.0" y="165.0"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNShape id="_60uXT9PVEeGNQYNSauHVNA" bpmnElement="_C85ECDF9-7415-4E13-9908-10A428384335">
+        <dc:Bounds height="80.0" width="100.0" x="330.0" y="125.0"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="_60uXUNPVEeGNQYNSauHVNA" bpmnElement="_7D625EA0-7DA9-47F8-BD4C-8ECC0ECBA559">
+        <di:waypoint xsi:type="dc:Point" x="230.0" y="165.0"/>
+        <di:waypoint xsi:type="dc:Point" x="380.0" y="165.0"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNShape id="_60uXUdPVEeGNQYNSauHVNA" bpmnElement="_1F8C9E04-E0DE-428A-B06B-A2640B935C14">
+        <dc:Bounds height="40.0" width="40.0" x="470.0" y="145.0"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="_60uXUtPVEeGNQYNSauHVNA" bpmnElement="_D1265C8D-84CF-44EC-9D11-A24BFBE6EB98">
+        <di:waypoint xsi:type="dc:Point" x="380.0" y="165.0"/>
+        <di:waypoint xsi:type="dc:Point" x="490.0" y="165.0"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNShape id="_60uXU9PVEeGNQYNSauHVNA" bpmnElement="_EC41E70D-6728-4401-BCB5-B56C635BCAC8">
+        <dc:Bounds height="80.0" width="100.0" x="555.0" y="60.0"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="_60uXVNPVEeGNQYNSauHVNA" bpmnElement="_22C59CE0-3C65-4534-A582-5CF1A4F06795">
+        <di:waypoint xsi:type="dc:Point" x="490.0" y="165.0"/>
+        <di:waypoint xsi:type="dc:Point" x="494.0" y="96.0"/>
+        <di:waypoint xsi:type="dc:Point" x="605.0" y="100.0"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNShape id="_60uXVdPVEeGNQYNSauHVNA" bpmnElement="_77E45269-E860-47CC-85E4-8EFB19B972B3">
+        <dc:Bounds height="80.0" width="100.0" x="555.0" y="210.0"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="_60uXVtPVEeGNQYNSauHVNA" bpmnElement="_13088CC1-495A-4F84-ADD2-4EEAF3F72520">
+        <di:waypoint xsi:type="dc:Point" x="490.0" y="165.0"/>
+        <di:waypoint xsi:type="dc:Point" x="490.0" y="250.0"/>
+        <di:waypoint xsi:type="dc:Point" x="605.0" y="250.0"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="_60uXV9PVEeGNQYNSauHVNA" bpmnElement="_E814B566-748C-4989-9663-6C7002D8946B">
+        <di:waypoint xsi:type="dc:Point" x="605.0" y="250.0"/>
+        <di:waypoint xsi:type="dc:Point" x="709.0" y="245.0"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="_60uXWNPVEeGNQYNSauHVNA" bpmnElement="_D03ACC05-2F2A-4EFB-BF44-41A62654C0A8">
+        <di:waypoint xsi:type="dc:Point" x="605.0" y="100.0"/>
+        <di:waypoint xsi:type="dc:Point" x="709.0" y="95.0"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNShape id="_60uXWdPVEeGNQYNSauHVNA" bpmnElement="_F7838C0D-F95E-4267-9AC9-41FEBDD30CC2">
+        <dc:Bounds height="28.0" width="28.0" x="695.0" y="81.0"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="_60uXWtPVEeGNQYNSauHVNA" bpmnElement="_251B75AC-D3FB-4224-9A3F-7311BBE814EC">
+        <dc:Bounds height="28.0" width="28.0" x="695.0" y="231.0"/>
+      </bpmndi:BPMNShape>
+    </bpmndi:BPMNPlane>
+  </bpmndi:BPMNDiagram>
+</bpmn2:definitions>
