@@ -165,6 +165,7 @@ public class OldIntegrationPatterns {
         
     } 
     
+    
     @Test
     public void statelessGatewayCallTest() {
         KnowledgeBuilder kbuilder = KnowledgeBuilderFactory.newKnowledgeBuilder();
