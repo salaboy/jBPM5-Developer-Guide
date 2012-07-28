@@ -5,6 +5,7 @@
 package com.salaboy.jbpm5;
 
 import com.salaboy.model.Car;
+import com.salaboy.model.MarketMetric;
 import com.salaboy.model.Person;
 import java.util.Date;
 import java.util.HashMap;
@@ -16,6 +17,7 @@ import org.drools.builder.KnowledgeBuilderError;
 import org.drools.builder.KnowledgeBuilderFactory;
 import org.drools.builder.ResourceType;
 import org.drools.io.impl.ClassPathResource;
+import org.drools.logger.KnowledgeRuntimeLoggerFactory;
 import org.drools.runtime.StatefulKnowledgeSession;
 import org.drools.runtime.process.ProcessInstance;
 import org.junit.*;
@@ -30,22 +32,6 @@ public class OldIntegrationPatterns {
     public OldIntegrationPatterns() {
     }
 
-    @BeforeClass
-    public static void setUpClass() throws Exception {
-    }
-
-    @AfterClass
-    public static void tearDownClass() throws Exception {
-    }
-    
-    @Before
-    public void setUp() {
-    }
-    
-    @After
-    public void tearDown() {
-    }
-   
     @Test
     public void javaBasedDecisionTest() {
     
@@ -166,7 +152,7 @@ public class OldIntegrationPatterns {
     } 
     
     
-    @Test
+    @Test 
     public void statelessGatewayCallTest() {
         KnowledgeBuilder kbuilder = KnowledgeBuilderFactory.newKnowledgeBuilder();
 
@@ -200,12 +186,45 @@ public class OldIntegrationPatterns {
 
         ksession.startProcessInstance(processInstance.getId());
         
-        System.out.println("Car : "+car);
+        assertEquals(new Double(17500), new Double(car.getCurrentPrice()));
+        assertEquals(6, car.getRanking());
         
-       
+        
         
     } 
-    
-    
+    @Test
+    public void theRuleEngineWay(){
+        KnowledgeBuilder kbuilder = KnowledgeBuilderFactory.newKnowledgeBuilder();
+
+        kbuilder.add(new ClassPathResource("car-evaluations.drl"), ResourceType.DRL);
+        
+        
+        if (kbuilder.hasErrors()) {
+            for (KnowledgeBuilderError error : kbuilder.getErrors()) {
+                System.out.println(">>> Error:" + error.getMessage());
+
+            }
+            fail(">>> Knowledge couldn't be parsed! ");
+        }
+
+        KnowledgeBase kbase = KnowledgeBaseFactory.newKnowledgeBase();
+
+        kbase.addKnowledgePackages(kbuilder.getKnowledgePackages());
+
+        StatefulKnowledgeSession ksession = kbase.newStatefulKnowledgeSession();
+        //KnowledgeRuntimeLoggerFactory.newConsoleLogger(ksession);
+        
+        Car car = new Car("AUDI 78", new Date(), 5, "manual", "gas", 285, 25000);
+        MarketMetric metric = new MarketMetric(0.8);
+        ksession.insert(metric);
+        ksession.insert(car);
+        
+        ksession.fireAllRules();
+        
+        assertEquals(new Double(17500), new Double(car.getCurrentPrice()));
+        assertEquals(6, car.getRanking());
+        assertTrue(metric.getResult());
+        
+    } 
     
 }

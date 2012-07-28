@@ -1,0 +1,108 @@
+package com.salaboy.the.rule.engine.way;
+
+import com.salaboy.model.*;
+
+declare RankedCar
+    car: Car
+end
+
+declare PricedCar
+    car: Car
+end
+
+
+rule "Rank +2 on Original price gt 10000"
+    lock-on-active true
+    when
+        $car: Car(originalPrice > 10000)
+    then
+        $car.setRanking($car.getRanking()+2);
+        update($car);
+end
+
+rule "Rank -2  on Original Price lt 10000"
+    lock-on-active true
+    when
+        $car: Car(originalPrice < 10000)
+    then
+        $car.setRanking($car.getRanking()-2);
+        update($car);
+end
+
+rule "Rank +4 when Name contains BMW, AUDI"
+    lock-on-active true
+    when
+        $car: Car(name contains "BMW" || name contains "AUDI")
+    then
+        $car.setRanking($car.getRanking()+4);
+        update($car);
+end
+
+rule "the car was ranked"
+    salience -10
+    when
+        $car: Car(ranking > 0)
+        not( RankedCar(car == $car))
+    then
+        System.out.println("XXXX - The Car Was Ranked");
+        insert(new RankedCar($car));
+end
+
+rule "Pricing based on demand -> Used AUDI 70% of the original price"
+    no-loop true
+    salience 1
+    when
+        RankedCar($rankedCar: car)
+        $car: Car(this == $rankedCar, name contains "AUDI")
+        
+    then
+        $car.setCurrentPrice($car.getOriginalPrice() * 0.7);
+        update($car);
+end
+
+rule "Pricing based on ranking -> Less than 5 then 80%"
+    no-loop true
+    when
+        RankedCar($rankedCar: car)
+        $car: Car(this == $rankedCar, ranking < 5 )
+        
+    then
+        $car.setCurrentPrice($car.getCurrentPrice() * 0.8);
+        update($car);
+end
+
+rule "the car was priced"
+    salience -10
+    when
+        $car: Car(currentPrice > 0)
+        not( PricedCar(car == $car))
+    then
+        System.out.println("XXXX - The Car Was Priced");
+        insert(new PricedCar($car));
+end
+
+rule "decide to advertise based on market information"
+    
+    when
+        PricedCar($pricedCar: car)
+        $mm: MarketMetric( metric > 0.6 )
+        $car: Car(this == $pricedCar, currentPrice > 15000)
+        
+    then
+        $mm.setResult(true);
+        System.out.println(" ->  The Metric today for "+$car.getName() + " is: "+$mm);
+        System.out.println("We can sell this car - Start Advertisment!");
+end
+
+rule "decide to drop based on market information"
+    
+    when
+        PricedCar($pricedCar: car)
+        $mm: MarketMetric( metric > 0.6 )
+        $car: Car(this == $pricedCar, currentPrice < 15000)
+        
+    then
+        $mm.setResult(false);
+        System.out.println(" ->  The Metric today for "+$car.getName() + " is: "+$mm);
+        System.out.println("We cannot sell this car - Dropping!");
+end

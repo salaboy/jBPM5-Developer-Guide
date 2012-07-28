@@ -40,7 +40,7 @@ public class RulesHelper {
         //   - Check for the competitors prices in the last two months
         // We can get a metric about the current status of the market
         // when the process is being executed and use that to influence our decision
-        MarketMetric metric = new MarketMetric(Math.random());
+        MarketMetric metric = new MarketMetric(0.8);
         list.add(metric);
         
         session.execute(list);
