@@ -8,13 +8,11 @@ package com.salaboy.jbpm5.dev.guide;
 import java.util.Map;
 import org.drools.KnowledgeBase;
 import org.drools.KnowledgeBaseFactory;
-import org.drools.WorkingMemory;
 import org.drools.builder.KnowledgeBuilder;
 import org.drools.builder.KnowledgeBuilderError;
 import org.drools.builder.KnowledgeBuilderErrors;
 import org.drools.builder.KnowledgeBuilderFactory;
 import org.drools.builder.ResourceType;
-import org.drools.event.RuleFlowGroupActivatedEvent;
 import org.drools.event.rule.DefaultAgendaEventListener;
 import org.drools.io.Resource;
 import org.drools.logger.KnowledgeRuntimeLoggerFactory;
@@ -68,15 +66,14 @@ public abstract class EmergencyBedRequestBaseTest {
 
         session.addEventListener(new DefaultAgendaEventListener(){
 
-            
-            public void afterRuleFlowGroupActivated(RuleFlowGroupActivatedEvent event, WorkingMemory workingMemory) {
-                workingMemory.fireAllRules();
+            @Override
+            public void afterRuleFlowGroupActivated(org.drools.event.rule.RuleFlowGroupActivatedEvent event) {
+                session.fireAllRules();
             }
-
+            
         });
-
-
     }
+    
     
     protected abstract Map<Resource, ResourceType> getResources();
     

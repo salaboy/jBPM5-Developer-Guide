@@ -4,14 +4,13 @@ import com.salaboy.jbpm5.dev.guide.workitems.MockWorkItemHandler;
 import java.text.DateFormat;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Map;
-import java.util.Set;
 import junit.framework.Assert;
 import org.drools.builder.ResourceType;
 import org.drools.io.Resource;
 import org.drools.io.ResourceFactory;
 import org.drools.runtime.process.ProcessInstance;
+import org.jbpm.workflow.instance.WorkflowProcessInstance;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -38,7 +37,7 @@ public class EmergencyBedRequestV1Test extends EmergencyBedRequestBaseTest{
         mockWorkItemHandler = new MockWorkItemHandler();
         
         //register the same handler for all the Work Items present in the process.
-        this.session.getWorkItemManager().registerWorkItemHandler("User Task", mockWorkItemHandler);
+        this.session.getWorkItemManager().registerWorkItemHandler("Human Task", mockWorkItemHandler);
         this.session.getWorkItemManager().registerWorkItemHandler("Notification System", mockWorkItemHandler);
     }
     
@@ -59,7 +58,9 @@ public class EmergencyBedRequestV1Test extends EmergencyBedRequestBaseTest{
         inputVariables.put("bedrequest_patientstatus", patientStatus);
         
         //Start the process using its ID and pass the input variables
-        ProcessInstance startProcess = session.startProcess("hospitalEmergencyV1", inputVariables);
+        WorkflowProcessInstance processInstance = (WorkflowProcessInstance) session.startProcess("hospitalEmergencyV1", inputVariables);
+        
+        //**************   Coordinate Staff   **************//
         
         //The process must be in the 'Coordinate Staff' task. Let's check the
         //input parameters received by the handler associated to that task.
@@ -72,7 +73,40 @@ public class EmergencyBedRequestV1Test extends EmergencyBedRequestBaseTest{
         //let's complete the task emulating the results of this task.
         Map<String,Object> taskResults = new HashMap<String, Object>();
         taskResults.put("checkinresults_gate", "3C");
-        mockWorkItemHandler.completeWorkItem(inputVariables);
+        mockWorkItemHandler.completeWorkItem(taskResults);
+        
+        
+        //**************   Notification System   **************//
+        
+        //Now we are at 'Notification System' task. Let's check that the input
+        //parameters configured for this tasks arrived as expected.
+        Assert.assertEquals("3C", mockWorkItemHandler.getInputParameter("checkinresults_gate"));
+        
+        //let's complete the task with a mocked resource
+        taskResults = new HashMap<String, Object>();
+        taskResults.put("checkinresults_notified", "true");
+        mockWorkItemHandler.completeWorkItem(taskResults);
+        
+        
+        //**************   Check In Patient   **************//
+        
+        //In 'Check In Patient' task we are expecting a 'checkinresults_notified'
+        //parameter containing the value returned by the last task
+        Assert.assertEquals("true", mockWorkItemHandler.getInputParameter("checkinresults_notified"));
+        
+        //let's complete the task passing the mocked results
+        taskResults = new HashMap<String, Object>();
+        String checkinDate = DateFormat.getTimeInstance().format(new Date());
+        taskResults.put("checkinresults_checkedin", "true");
+        taskResults.put("checkinresults_time", checkinDate);
+        mockWorkItemHandler.completeWorkItem(taskResults);
+        
+        
+        //The process should be completed now. Let's check the 2 output
+        //parameters of the last task: they should be mapped to process variables.
+        Assert.assertEquals(ProcessInstance.STATE_COMPLETED, processInstance.getState());
+        Assert.assertEquals("true", processInstance.getVariable("checkinresults_checkedin"));
+        Assert.assertEquals(checkinDate, processInstance.getVariable("checkinresults_time"));
         
     }
     
