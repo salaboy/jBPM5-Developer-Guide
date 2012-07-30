@@ -13,6 +13,8 @@ import org.drools.builder.KnowledgeBuilderError;
 import org.drools.builder.KnowledgeBuilderErrors;
 import org.drools.builder.KnowledgeBuilderFactory;
 import org.drools.builder.ResourceType;
+import org.drools.event.process.DefaultProcessEventListener;
+import org.drools.event.process.ProcessStartedEvent;
 import org.drools.event.rule.DefaultAgendaEventListener;
 import org.drools.io.Resource;
 import org.drools.logger.KnowledgeRuntimeLoggerFactory;
@@ -69,6 +71,15 @@ public abstract class EmergencyBedRequestBaseTest {
             @Override
             public void afterRuleFlowGroupActivated(org.drools.event.rule.RuleFlowGroupActivatedEvent event) {
                 session.fireAllRules();
+            }
+            
+        });
+        
+        session.addEventListener(new DefaultProcessEventListener(){
+
+            @Override
+            public void beforeProcessStarted(ProcessStartedEvent event) {
+                session.insert(event.getProcessInstance());
             }
             
         });
