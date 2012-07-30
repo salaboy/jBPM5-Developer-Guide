@@ -5,7 +5,7 @@
 package com.salaboy.jbpm5.dev.guide;
 
 
-import java.util.Set;
+import java.util.Map;
 import org.drools.KnowledgeBase;
 import org.drools.KnowledgeBaseFactory;
 import org.drools.WorkingMemory;
@@ -45,8 +45,8 @@ public abstract class EmergencyBedRequestBaseTest {
     private void initializeSession() {
         KnowledgeBuilder kbuilder = KnowledgeBuilderFactory.newKnowledgeBuilder();
 
-        for (Resource resource : this.getResources()) {
-            kbuilder.add(resource, ResourceType.BPMN2);
+        for (Map.Entry<Resource, ResourceType> entry : this.getResources().entrySet()) {
+            kbuilder.add(entry.getKey(), entry.getValue());
         }
         
         if (kbuilder.hasErrors()) {
@@ -68,6 +68,7 @@ public abstract class EmergencyBedRequestBaseTest {
 
         session.addEventListener(new DefaultAgendaEventListener(){
 
+            
             public void afterRuleFlowGroupActivated(RuleFlowGroupActivatedEvent event, WorkingMemory workingMemory) {
                 workingMemory.fireAllRules();
             }
@@ -77,5 +78,6 @@ public abstract class EmergencyBedRequestBaseTest {
 
     }
     
-    protected abstract Set<Resource> getResources();
+    protected abstract Map<Resource, ResourceType> getResources();
+    
 }

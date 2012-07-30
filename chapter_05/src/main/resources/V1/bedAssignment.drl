@@ -1,0 +1,12 @@
+package com.salaboy.jbpm5.dev.guide
+
+/*
+Empty rule
+*/
+rule "Assign Bed"
+ruleflow-group 'assign-bed'
+when
+
+then
+
+end
