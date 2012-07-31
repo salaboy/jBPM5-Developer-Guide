@@ -98,6 +98,7 @@ public class EmergencyBedRequestV3Test extends EmergencyBedRequestBaseTest{
         //at this point, the end node is reached, but since it is not a terminate
         //end event, the process will remain active waiting for an event ('Ambulance Arrived')
         //to happen. At this point there is no 'active' node
+        System.out.println("Process state= "+processInstance.getState());
         Assert.assertTrue(processInstance.getNodeInstances().isEmpty());
         
         //At some point, the ambulance arrives to the gate and the process is
