@@ -1,0 +1,326 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<bpmn2:definitions xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://www.omg.org/bpmn20" xmlns:bpmn2="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" xmlns:drools="http://www.jboss.org/drools" id="_-KugANr3EeGJKu5S-SpYhg" xsi:schemaLocation="http://www.omg.org/spec/BPMN/20100524/MODEL BPMN20.xsd" targetNamespace="http://www.omg.org/bpmn20">
+  <bpmn2:itemDefinition id="_bedrequest_idItem" structureRef="String"/>
+  <bpmn2:itemDefinition id="_bedrequest_dateItem" structureRef="String"/>
+  <bpmn2:itemDefinition id="_bedrequest_entityItem" structureRef="String"/>
+  <bpmn2:itemDefinition id="_bedrequest_patientageItem" structureRef="String"/>
+  <bpmn2:itemDefinition id="_bedrequest_patientnameItem" structureRef="String"/>
+  <bpmn2:itemDefinition id="_bedrequest_patientgenderItem" structureRef="String"/>
+  <bpmn2:itemDefinition id="_bedrequest_patientstatusItem" structureRef="String"/>
+  <bpmn2:itemDefinition id="_checkinresults_gateItem" structureRef="String"/>
+  <bpmn2:itemDefinition id="_checkinresults_checkedinItem" structureRef="String"/>
+  <bpmn2:itemDefinition id="_checkinresults_notifiedItem" structureRef="String"/>
+  <bpmn2:itemDefinition id="_checkinresults_timeItem" structureRef="String"/>
+  <bpmn2:itemDefinition id="_assignbed_successItem" structureRef="Boolean"/>
+  <bpmn2:itemDefinition id="_assignbed_rejection_messageItem" structureRef="String"/>
+  <bpmn2:itemDefinition id="__C9027A87-A498-44B1-A495-C562F37B7771_bedrequest_dateInputItem" structureRef="String"/>
+  <bpmn2:itemDefinition id="__C9027A87-A498-44B1-A495-C562F37B7771_bedrequest_patientageInputItem" structureRef="String"/>
+  <bpmn2:itemDefinition id="__C9027A87-A498-44B1-A495-C562F37B7771_bedrequest_entityInputItem" structureRef="String"/>
+  <bpmn2:itemDefinition id="__C9027A87-A498-44B1-A495-C562F37B7771_bedrequest_patientgenderInputItem" structureRef="String"/>
+  <bpmn2:itemDefinition id="__C9027A87-A498-44B1-A495-C562F37B7771_bedrequest_patientstatusInputItem" structureRef="String"/>
+  <bpmn2:itemDefinition id="__C9027A87-A498-44B1-A495-C562F37B7771_checkinresults_gateOutputItem" structureRef="String"/>
+  <bpmn2:itemDefinition id="__26E405C5-FF42-4D02-8BB9-9E7EC0C2D42E_checkinresults_gateInputItem" structureRef="String"/>
+  <bpmn2:itemDefinition id="__26E405C5-FF42-4D02-8BB9-9E7EC0C2D42E_checkinresults_notifiedOutputItem" structureRef="String"/>
+  <bpmn2:itemDefinition id="__6F36C8AE-AC1F-47F5-BADD-EC264FC1B491_checkinresults_notifiedInputItem" structureRef="String"/>
+  <bpmn2:itemDefinition id="__6F36C8AE-AC1F-47F5-BADD-EC264FC1B491_checkinresults_checkedinOutputItem" structureRef="String"/>
+  <bpmn2:itemDefinition id="__6F36C8AE-AC1F-47F5-BADD-EC264FC1B491_checkinresults_timeOutputItem" structureRef="String"/>
+  <bpmn2:itemDefinition id="__33CF2156-D222-488F-90C4-187B421E960F_messageInputItem" structureRef="String"/>
+  <bpmn2:process id="hospitalEmergencyV4" drools:packageName="com.salaboy.jbpm5.dev.guide" name="" isExecutable="true">
+    <bpmn2:property id="bedrequest_id" itemSubjectRef="_bedrequest_idItem"/>
+    <bpmn2:property id="bedrequest_date" itemSubjectRef="_bedrequest_dateItem"/>
+    <bpmn2:property id="bedrequest_entity" itemSubjectRef="_bedrequest_entityItem"/>
+    <bpmn2:property id="bedrequest_patientage" itemSubjectRef="_bedrequest_patientageItem"/>
+    <bpmn2:property id="bedrequest_patientname" itemSubjectRef="_bedrequest_patientnameItem"/>
+    <bpmn2:property id="bedrequest_patientgender" itemSubjectRef="_bedrequest_patientgenderItem"/>
+    <bpmn2:property id="bedrequest_patientstatus" itemSubjectRef="_bedrequest_patientstatusItem"/>
+    <bpmn2:property id="checkinresults_gate" itemSubjectRef="_checkinresults_gateItem"/>
+    <bpmn2:property id="checkinresults_checkedin" itemSubjectRef="_checkinresults_checkedinItem"/>
+    <bpmn2:property id="checkinresults_notified" itemSubjectRef="_checkinresults_notifiedItem"/>
+    <bpmn2:property id="checkinresults_time" itemSubjectRef="_checkinresults_timeItem"/>
+    <bpmn2:property id="assignbed_success" itemSubjectRef="_assignbed_successItem"/>
+    <bpmn2:property id="assignbed_rejection_message" itemSubjectRef="_assignbed_rejection_messageItem"/>
+    <bpmn2:startEvent id="_B424E12F-0833-4D36-91D6-3AF485D7827F" drools:bgcolor="#d2b29f" drools:selectable="true" name="">
+      <bpmn2:outgoing>_8EFAF07B-1651-4A2F-987F-01A0EA750A63</bpmn2:outgoing>
+    </bpmn2:startEvent>
+    <bpmn2:businessRuleTask id="_7124998B-D713-487D-BB11-BA4AD7914F51" drools:bgcolor="#f3df8c" drools:selectable="true" drools:ruleFlowGroup="assign-bed" name="Assign Bed">
+      <bpmn2:incoming>_8EFAF07B-1651-4A2F-987F-01A0EA750A63</bpmn2:incoming>
+      <bpmn2:outgoing>_0FEA173D-DB55-4281-84B6-F3A2180B18B4</bpmn2:outgoing>
+    </bpmn2:businessRuleTask>
+    <bpmn2:sequenceFlow id="_8EFAF07B-1651-4A2F-987F-01A0EA750A63" drools:selectable="true" sourceRef="_B424E12F-0833-4D36-91D6-3AF485D7827F" targetRef="_7124998B-D713-487D-BB11-BA4AD7914F51"/>
+    <bpmn2:userTask id="_C9027A87-A498-44B1-A495-C562F37B7771" drools:bgcolor="#f3df8c" drools:selectable="true" drools:taskName="Coordinate Staff" drools:scriptFormat="http://www.java.com/java" name="Coordinate Staff">
+      <bpmn2:incoming>_62EBA985-E8ED-4DF5-96A5-D4BEFDF74B61</bpmn2:incoming>
+      <bpmn2:outgoing>_46D835F6-2B61-4F41-A1D1-872FB49C85B6</bpmn2:outgoing>
+      <bpmn2:ioSpecification id="_-KvHENr3EeGJKu5S-SpYhg">
+        <bpmn2:dataInput id="_C9027A87-A498-44B1-A495-C562F37B7771_TaskNameInput" name="TaskName"/>
+        <bpmn2:dataInput id="_C9027A87-A498-44B1-A495-C562F37B7771_bedrequest_dateInput" drools:dtype="String" itemSubjectRef="__C9027A87-A498-44B1-A495-C562F37B7771_bedrequest_dateInputItem" name="bedrequest_date"/>
+        <bpmn2:dataInput id="_C9027A87-A498-44B1-A495-C562F37B7771_bedrequest_patientageInput" drools:dtype="String" itemSubjectRef="__C9027A87-A498-44B1-A495-C562F37B7771_bedrequest_patientageInputItem" name="bedrequest_patientage"/>
+        <bpmn2:dataInput id="_C9027A87-A498-44B1-A495-C562F37B7771_bedrequest_entityInput" drools:dtype="String" itemSubjectRef="__C9027A87-A498-44B1-A495-C562F37B7771_bedrequest_entityInputItem" name="bedrequest_entity"/>
+        <bpmn2:dataInput id="_C9027A87-A498-44B1-A495-C562F37B7771_bedrequest_patientgenderInput" drools:dtype="String" itemSubjectRef="__C9027A87-A498-44B1-A495-C562F37B7771_bedrequest_patientgenderInputItem" name="bedrequest_patientgender"/>
+        <bpmn2:dataInput id="_C9027A87-A498-44B1-A495-C562F37B7771_bedrequest_patientstatusInput" drools:dtype="String" itemSubjectRef="__C9027A87-A498-44B1-A495-C562F37B7771_bedrequest_patientstatusInputItem" name="bedrequest_patientstatus"/>
+        <bpmn2:dataInput id="_C9027A87-A498-44B1-A495-C562F37B7771_CommentInput" name="Comment"/>
+        <bpmn2:dataOutput id="_C9027A87-A498-44B1-A495-C562F37B7771_checkinresults_gateOutput" drools:dtype="String" itemSubjectRef="__C9027A87-A498-44B1-A495-C562F37B7771_checkinresults_gateOutputItem" name="checkinresults_gate"/>
+        <bpmn2:inputSet id="_-KvHEdr3EeGJKu5S-SpYhg">
+          <bpmn2:dataInputRefs>_C9027A87-A498-44B1-A495-C562F37B7771_bedrequest_dateInput</bpmn2:dataInputRefs>
+          <bpmn2:dataInputRefs>_C9027A87-A498-44B1-A495-C562F37B7771_bedrequest_patientageInput</bpmn2:dataInputRefs>
+          <bpmn2:dataInputRefs>_C9027A87-A498-44B1-A495-C562F37B7771_bedrequest_entityInput</bpmn2:dataInputRefs>
+          <bpmn2:dataInputRefs>_C9027A87-A498-44B1-A495-C562F37B7771_bedrequest_patientgenderInput</bpmn2:dataInputRefs>
+          <bpmn2:dataInputRefs>_C9027A87-A498-44B1-A495-C562F37B7771_bedrequest_patientstatusInput</bpmn2:dataInputRefs>
+          <bpmn2:dataInputRefs>_C9027A87-A498-44B1-A495-C562F37B7771_CommentInput</bpmn2:dataInputRefs>
+          <bpmn2:dataInputRefs>_C9027A87-A498-44B1-A495-C562F37B7771_TaskNameInput</bpmn2:dataInputRefs>
+        </bpmn2:inputSet>
+        <bpmn2:outputSet id="_-KvHEtr3EeGJKu5S-SpYhg">
+          <bpmn2:dataOutputRefs>_C9027A87-A498-44B1-A495-C562F37B7771_checkinresults_gateOutput</bpmn2:dataOutputRefs>
+        </bpmn2:outputSet>
+      </bpmn2:ioSpecification>
+      <bpmn2:dataInputAssociation id="_-KvHE9r3EeGJKu5S-SpYhg">
+        <bpmn2:targetRef>_C9027A87-A498-44B1-A495-C562F37B7771_TaskNameInput</bpmn2:targetRef>
+        <bpmn2:assignment id="_-KvHFNr3EeGJKu5S-SpYhg">
+          <bpmn2:from xsi:type="bpmn2:tFormalExpression" id="_-KvHFdr3EeGJKu5S-SpYhg">Coordinate Staff</bpmn2:from>
+          <bpmn2:to xsi:type="bpmn2:tFormalExpression" id="_-KvHFtr3EeGJKu5S-SpYhg">_C9027A87-A498-44B1-A495-C562F37B7771_TaskNameInput</bpmn2:to>
+        </bpmn2:assignment>
+      </bpmn2:dataInputAssociation>
+      <bpmn2:dataInputAssociation id="_-KvHF9r3EeGJKu5S-SpYhg">
+        <bpmn2:sourceRef>bedrequest_date</bpmn2:sourceRef>
+        <bpmn2:targetRef>_C9027A87-A498-44B1-A495-C562F37B7771_bedrequest_dateInput</bpmn2:targetRef>
+      </bpmn2:dataInputAssociation>
+      <bpmn2:dataInputAssociation id="_-KvHGNr3EeGJKu5S-SpYhg">
+        <bpmn2:sourceRef>bedrequest_patientage</bpmn2:sourceRef>
+        <bpmn2:targetRef>_C9027A87-A498-44B1-A495-C562F37B7771_bedrequest_patientageInput</bpmn2:targetRef>
+      </bpmn2:dataInputAssociation>
+      <bpmn2:dataInputAssociation id="_-KvHGdr3EeGJKu5S-SpYhg">
+        <bpmn2:sourceRef>bedrequest_entity</bpmn2:sourceRef>
+        <bpmn2:targetRef>_C9027A87-A498-44B1-A495-C562F37B7771_bedrequest_entityInput</bpmn2:targetRef>
+      </bpmn2:dataInputAssociation>
+      <bpmn2:dataInputAssociation id="_-KvHGtr3EeGJKu5S-SpYhg">
+        <bpmn2:sourceRef>bedrequest_patientgender</bpmn2:sourceRef>
+        <bpmn2:targetRef>_C9027A87-A498-44B1-A495-C562F37B7771_bedrequest_patientgenderInput</bpmn2:targetRef>
+      </bpmn2:dataInputAssociation>
+      <bpmn2:dataInputAssociation id="_-KvHG9r3EeGJKu5S-SpYhg">
+        <bpmn2:sourceRef>bedrequest_patientstatus</bpmn2:sourceRef>
+        <bpmn2:targetRef>_C9027A87-A498-44B1-A495-C562F37B7771_bedrequest_patientstatusInput</bpmn2:targetRef>
+      </bpmn2:dataInputAssociation>
+      <bpmn2:dataInputAssociation id="_-KvHHNr3EeGJKu5S-SpYhg">
+        <bpmn2:targetRef>_C9027A87-A498-44B1-A495-C562F37B7771_CommentInput</bpmn2:targetRef>
+        <bpmn2:assignment id="_-KvHHdr3EeGJKu5S-SpYhg">
+          <bpmn2:from xsi:type="bpmn2:tFormalExpression" id="_-KvHHtr3EeGJKu5S-SpYhg">Task for staff coordination</bpmn2:from>
+          <bpmn2:to xsi:type="bpmn2:tFormalExpression" id="_-KvHH9r3EeGJKu5S-SpYhg">_C9027A87-A498-44B1-A495-C562F37B7771_CommentInput</bpmn2:to>
+        </bpmn2:assignment>
+      </bpmn2:dataInputAssociation>
+      <bpmn2:dataOutputAssociation id="_-KvHINr3EeGJKu5S-SpYhg">
+        <bpmn2:sourceRef>_C9027A87-A498-44B1-A495-C562F37B7771_checkinresults_gateOutput</bpmn2:sourceRef>
+        <bpmn2:targetRef>checkinresults_gate</bpmn2:targetRef>
+      </bpmn2:dataOutputAssociation>
+      <bpmn2:potentialOwner id="_-KvHIdr3EeGJKu5S-SpYhg">
+        <bpmn2:resourceAssignmentExpression id="_-KvHItr3EeGJKu5S-SpYhg">
+          <bpmn2:formalExpression id="_-KvHI9r3EeGJKu5S-SpYhg">hospital</bpmn2:formalExpression>
+        </bpmn2:resourceAssignmentExpression>
+      </bpmn2:potentialOwner>
+    </bpmn2:userTask>
+    <bpmn2:task id="_26E405C5-FF42-4D02-8BB9-9E7EC0C2D42E" drools:bgcolor="#f3df8c" drools:selectable="true" drools:taskName="Notification System" name="Notify Gate to Ambulance">
+      <bpmn2:incoming>_46D835F6-2B61-4F41-A1D1-872FB49C85B6</bpmn2:incoming>
+      <bpmn2:outgoing>_92D156AB-0EC8-4612-840B-E8C2EC5C6E9D</bpmn2:outgoing>
+      <bpmn2:ioSpecification id="_-KvHJNr3EeGJKu5S-SpYhg">
+        <bpmn2:dataInput id="_26E405C5-FF42-4D02-8BB9-9E7EC0C2D42E_TaskNameInput" name="TaskName"/>
+        <bpmn2:dataInput id="_26E405C5-FF42-4D02-8BB9-9E7EC0C2D42E_checkinresults_gateInput" drools:dtype="String" itemSubjectRef="__26E405C5-FF42-4D02-8BB9-9E7EC0C2D42E_checkinresults_gateInputItem" name="checkinresults_gate"/>
+        <bpmn2:dataOutput id="_26E405C5-FF42-4D02-8BB9-9E7EC0C2D42E_checkinresults_notifiedOutput" drools:dtype="String" itemSubjectRef="__26E405C5-FF42-4D02-8BB9-9E7EC0C2D42E_checkinresults_notifiedOutputItem" name="checkinresults_notified"/>
+        <bpmn2:inputSet id="_-KvHJdr3EeGJKu5S-SpYhg">
+          <bpmn2:dataInputRefs>_26E405C5-FF42-4D02-8BB9-9E7EC0C2D42E_checkinresults_gateInput</bpmn2:dataInputRefs>
+          <bpmn2:dataInputRefs>_26E405C5-FF42-4D02-8BB9-9E7EC0C2D42E_TaskNameInput</bpmn2:dataInputRefs>
+        </bpmn2:inputSet>
+        <bpmn2:outputSet id="_-KvHJtr3EeGJKu5S-SpYhg">
+          <bpmn2:dataOutputRefs>_26E405C5-FF42-4D02-8BB9-9E7EC0C2D42E_checkinresults_notifiedOutput</bpmn2:dataOutputRefs>
+        </bpmn2:outputSet>
+      </bpmn2:ioSpecification>
+      <bpmn2:dataInputAssociation id="_-KvHJ9r3EeGJKu5S-SpYhg">
+        <bpmn2:targetRef>_26E405C5-FF42-4D02-8BB9-9E7EC0C2D42E_TaskNameInput</bpmn2:targetRef>
+        <bpmn2:assignment id="_-KvHKNr3EeGJKu5S-SpYhg">
+          <bpmn2:from xsi:type="bpmn2:tFormalExpression" id="_-KvHKdr3EeGJKu5S-SpYhg">Notification System</bpmn2:from>
+          <bpmn2:to xsi:type="bpmn2:tFormalExpression" id="_-KvHKtr3EeGJKu5S-SpYhg">_26E405C5-FF42-4D02-8BB9-9E7EC0C2D42E_TaskNameInput</bpmn2:to>
+        </bpmn2:assignment>
+      </bpmn2:dataInputAssociation>
+      <bpmn2:dataInputAssociation id="_-KvHK9r3EeGJKu5S-SpYhg">
+        <bpmn2:sourceRef>checkinresults_gate</bpmn2:sourceRef>
+        <bpmn2:targetRef>_26E405C5-FF42-4D02-8BB9-9E7EC0C2D42E_checkinresults_gateInput</bpmn2:targetRef>
+      </bpmn2:dataInputAssociation>
+      <bpmn2:dataOutputAssociation id="_-KvHLNr3EeGJKu5S-SpYhg">
+        <bpmn2:sourceRef>_26E405C5-FF42-4D02-8BB9-9E7EC0C2D42E_checkinresults_notifiedOutput</bpmn2:sourceRef>
+        <bpmn2:targetRef>checkinresults_notified</bpmn2:targetRef>
+      </bpmn2:dataOutputAssociation>
+    </bpmn2:task>
+    <bpmn2:sequenceFlow id="_46D835F6-2B61-4F41-A1D1-872FB49C85B6" drools:selectable="true" sourceRef="_C9027A87-A498-44B1-A495-C562F37B7771" targetRef="_26E405C5-FF42-4D02-8BB9-9E7EC0C2D42E"/>
+    <bpmn2:userTask id="_6F36C8AE-AC1F-47F5-BADD-EC264FC1B491" drools:bgcolor="#f3df8c" drools:selectable="true" drools:taskName="Check In Patient" drools:scriptFormat="http://www.java.com/java" name="Check In Patient">
+      <bpmn2:incoming>_8CBBF0AE-15FD-4BA2-BB15-54FEB2C3581D</bpmn2:incoming>
+      <bpmn2:outgoing>_0E1E1FE7-61A0-4587-BFA7-B89CB0E6E74A</bpmn2:outgoing>
+      <bpmn2:ioSpecification id="_-KvHLdr3EeGJKu5S-SpYhg">
+        <bpmn2:dataInput id="_6F36C8AE-AC1F-47F5-BADD-EC264FC1B491_TaskNameInput" name="TaskName"/>
+        <bpmn2:dataInput id="_6F36C8AE-AC1F-47F5-BADD-EC264FC1B491_checkinresults_notifiedInput" drools:dtype="String" itemSubjectRef="__6F36C8AE-AC1F-47F5-BADD-EC264FC1B491_checkinresults_notifiedInputItem" name="checkinresults_notified"/>
+        <bpmn2:dataInput id="_6F36C8AE-AC1F-47F5-BADD-EC264FC1B491_CommentInput" name="Comment"/>
+        <bpmn2:dataOutput id="_6F36C8AE-AC1F-47F5-BADD-EC264FC1B491_checkinresults_checkedinOutput" drools:dtype="String" itemSubjectRef="__6F36C8AE-AC1F-47F5-BADD-EC264FC1B491_checkinresults_checkedinOutputItem" name="checkinresults_checkedin"/>
+        <bpmn2:dataOutput id="_6F36C8AE-AC1F-47F5-BADD-EC264FC1B491_checkinresults_timeOutput" drools:dtype="String" itemSubjectRef="__6F36C8AE-AC1F-47F5-BADD-EC264FC1B491_checkinresults_timeOutputItem" name="checkinresults_time"/>
+        <bpmn2:inputSet id="_-KvHLtr3EeGJKu5S-SpYhg">
+          <bpmn2:dataInputRefs>_6F36C8AE-AC1F-47F5-BADD-EC264FC1B491_checkinresults_notifiedInput</bpmn2:dataInputRefs>
+          <bpmn2:dataInputRefs>_6F36C8AE-AC1F-47F5-BADD-EC264FC1B491_CommentInput</bpmn2:dataInputRefs>
+          <bpmn2:dataInputRefs>_6F36C8AE-AC1F-47F5-BADD-EC264FC1B491_TaskNameInput</bpmn2:dataInputRefs>
+        </bpmn2:inputSet>
+        <bpmn2:outputSet id="_-KvHL9r3EeGJKu5S-SpYhg">
+          <bpmn2:dataOutputRefs>_6F36C8AE-AC1F-47F5-BADD-EC264FC1B491_checkinresults_checkedinOutput</bpmn2:dataOutputRefs>
+          <bpmn2:dataOutputRefs>_6F36C8AE-AC1F-47F5-BADD-EC264FC1B491_checkinresults_timeOutput</bpmn2:dataOutputRefs>
+        </bpmn2:outputSet>
+      </bpmn2:ioSpecification>
+      <bpmn2:dataInputAssociation id="_-KvHMNr3EeGJKu5S-SpYhg">
+        <bpmn2:targetRef>_6F36C8AE-AC1F-47F5-BADD-EC264FC1B491_TaskNameInput</bpmn2:targetRef>
+        <bpmn2:assignment id="_-KvHMdr3EeGJKu5S-SpYhg">
+          <bpmn2:from xsi:type="bpmn2:tFormalExpression" id="_-KvHMtr3EeGJKu5S-SpYhg">Check In Patient</bpmn2:from>
+          <bpmn2:to xsi:type="bpmn2:tFormalExpression" id="_-KvHM9r3EeGJKu5S-SpYhg">_6F36C8AE-AC1F-47F5-BADD-EC264FC1B491_TaskNameInput</bpmn2:to>
+        </bpmn2:assignment>
+      </bpmn2:dataInputAssociation>
+      <bpmn2:dataInputAssociation id="_-KvHNNr3EeGJKu5S-SpYhg">
+        <bpmn2:sourceRef>checkinresults_notified</bpmn2:sourceRef>
+        <bpmn2:targetRef>_6F36C8AE-AC1F-47F5-BADD-EC264FC1B491_checkinresults_notifiedInput</bpmn2:targetRef>
+      </bpmn2:dataInputAssociation>
+      <bpmn2:dataInputAssociation id="_-KvHNdr3EeGJKu5S-SpYhg">
+        <bpmn2:targetRef>_6F36C8AE-AC1F-47F5-BADD-EC264FC1B491_CommentInput</bpmn2:targetRef>
+        <bpmn2:assignment id="_-KvHNtr3EeGJKu5S-SpYhg">
+          <bpmn2:from xsi:type="bpmn2:tFormalExpression" id="_-KvHN9r3EeGJKu5S-SpYhg">Task for checking in patient.</bpmn2:from>
+          <bpmn2:to xsi:type="bpmn2:tFormalExpression" id="_-KvHONr3EeGJKu5S-SpYhg">_6F36C8AE-AC1F-47F5-BADD-EC264FC1B491_CommentInput</bpmn2:to>
+        </bpmn2:assignment>
+      </bpmn2:dataInputAssociation>
+      <bpmn2:dataOutputAssociation id="_-KvHOdr3EeGJKu5S-SpYhg">
+        <bpmn2:sourceRef>_6F36C8AE-AC1F-47F5-BADD-EC264FC1B491_checkinresults_checkedinOutput</bpmn2:sourceRef>
+        <bpmn2:targetRef>checkinresults_checkedin</bpmn2:targetRef>
+      </bpmn2:dataOutputAssociation>
+      <bpmn2:dataOutputAssociation id="_-KvHOtr3EeGJKu5S-SpYhg">
+        <bpmn2:sourceRef>_6F36C8AE-AC1F-47F5-BADD-EC264FC1B491_checkinresults_timeOutput</bpmn2:sourceRef>
+        <bpmn2:targetRef>checkinresults_time</bpmn2:targetRef>
+      </bpmn2:dataOutputAssociation>
+      <bpmn2:potentialOwner id="_-KvHO9r3EeGJKu5S-SpYhg">
+        <bpmn2:resourceAssignmentExpression id="_-KvHPNr3EeGJKu5S-SpYhg">
+          <bpmn2:formalExpression id="_-KvHPdr3EeGJKu5S-SpYhg">nurse</bpmn2:formalExpression>
+        </bpmn2:resourceAssignmentExpression>
+      </bpmn2:potentialOwner>
+    </bpmn2:userTask>
+    <bpmn2:exclusiveGateway id="_B5786705-8901-4F03-9AE6-9A7E9BDDC503" drools:bgcolor="#ccaea0" drools:selectable="true" drools:bordercolor="#330600" drools:dg="" name="is Bed Assigned?" gatewayDirection="Diverging">
+      <bpmn2:incoming>_0FEA173D-DB55-4281-84B6-F3A2180B18B4</bpmn2:incoming>
+      <bpmn2:outgoing>_62EBA985-E8ED-4DF5-96A5-D4BEFDF74B61</bpmn2:outgoing>
+      <bpmn2:outgoing>_F0BD236F-14E4-4AFC-9ACC-25DA63A9F7D2</bpmn2:outgoing>
+    </bpmn2:exclusiveGateway>
+    <bpmn2:sequenceFlow id="_0FEA173D-DB55-4281-84B6-F3A2180B18B4" drools:selectable="true" sourceRef="_7124998B-D713-487D-BB11-BA4AD7914F51" targetRef="_B5786705-8901-4F03-9AE6-9A7E9BDDC503"/>
+    <bpmn2:sequenceFlow id="_62EBA985-E8ED-4DF5-96A5-D4BEFDF74B61" drools:selectable="true" name="Yes" sourceRef="_B5786705-8901-4F03-9AE6-9A7E9BDDC503" targetRef="_C9027A87-A498-44B1-A495-C562F37B7771">
+      <bpmn2:conditionExpression xsi:type="bpmn2:tFormalExpression" id="_-KvHPtr3EeGJKu5S-SpYhg" language="http://www.java.com/java"><![CDATA[return assignbed_success == true;]]></bpmn2:conditionExpression>
+    </bpmn2:sequenceFlow>
+    <bpmn2:task id="_33CF2156-D222-488F-90C4-187B421E960F" drools:bgcolor="#f3df8c" drools:selectable="true" drools:taskName="Notify Rejection to Ambulance" name="Notify Rejection to Ambulance">
+      <bpmn2:incoming>_F0BD236F-14E4-4AFC-9ACC-25DA63A9F7D2</bpmn2:incoming>
+      <bpmn2:outgoing>_2F4BB3D4-2F86-4126-AF2C-C60907184E15</bpmn2:outgoing>
+      <bpmn2:ioSpecification id="_-KvHP9r3EeGJKu5S-SpYhg">
+        <bpmn2:dataInput id="_33CF2156-D222-488F-90C4-187B421E960F_TaskNameInput" name="TaskName"/>
+        <bpmn2:dataInput id="_33CF2156-D222-488F-90C4-187B421E960F_messageInput" drools:dtype="String" itemSubjectRef="__33CF2156-D222-488F-90C4-187B421E960F_messageInputItem" name="message"/>
+        <bpmn2:inputSet id="_-KvHQNr3EeGJKu5S-SpYhg">
+          <bpmn2:dataInputRefs>_33CF2156-D222-488F-90C4-187B421E960F_messageInput</bpmn2:dataInputRefs>
+          <bpmn2:dataInputRefs>_33CF2156-D222-488F-90C4-187B421E960F_TaskNameInput</bpmn2:dataInputRefs>
+        </bpmn2:inputSet>
+        <bpmn2:outputSet id="_-KvHQdr3EeGJKu5S-SpYhg"/>
+      </bpmn2:ioSpecification>
+      <bpmn2:dataInputAssociation id="_-KvHQtr3EeGJKu5S-SpYhg">
+        <bpmn2:targetRef>_33CF2156-D222-488F-90C4-187B421E960F_TaskNameInput</bpmn2:targetRef>
+        <bpmn2:assignment id="_-KvHQ9r3EeGJKu5S-SpYhg">
+          <bpmn2:from xsi:type="bpmn2:tFormalExpression" id="_-KvHRNr3EeGJKu5S-SpYhg">Notify Rejection to Ambulance</bpmn2:from>
+          <bpmn2:to xsi:type="bpmn2:tFormalExpression" id="_-KvHRdr3EeGJKu5S-SpYhg">_33CF2156-D222-488F-90C4-187B421E960F_TaskNameInput</bpmn2:to>
+        </bpmn2:assignment>
+      </bpmn2:dataInputAssociation>
+      <bpmn2:dataInputAssociation id="_-KvHRtr3EeGJKu5S-SpYhg">
+        <bpmn2:sourceRef>assignbed_rejection_message</bpmn2:sourceRef>
+        <bpmn2:targetRef>_33CF2156-D222-488F-90C4-187B421E960F_messageInput</bpmn2:targetRef>
+      </bpmn2:dataInputAssociation>
+    </bpmn2:task>
+    <bpmn2:sequenceFlow id="_F0BD236F-14E4-4AFC-9ACC-25DA63A9F7D2" drools:selectable="true" name="No " sourceRef="_B5786705-8901-4F03-9AE6-9A7E9BDDC503" targetRef="_33CF2156-D222-488F-90C4-187B421E960F">
+      <bpmn2:conditionExpression xsi:type="bpmn2:tFormalExpression" id="_-KvHR9r3EeGJKu5S-SpYhg" language="http://www.java.com/java"><![CDATA[return assignbed_success == false;]]></bpmn2:conditionExpression>
+    </bpmn2:sequenceFlow>
+    <bpmn2:sequenceFlow id="_2F4BB3D4-2F86-4126-AF2C-C60907184E15" drools:selectable="true" sourceRef="_33CF2156-D222-488F-90C4-187B421E960F" targetRef="_E87F9DFC-5035-4DEF-96DB-1A84AD82D173"/>
+    <bpmn2:sequenceFlow id="_0E1E1FE7-61A0-4587-BFA7-B89CB0E6E74A" drools:selectable="true" sourceRef="_6F36C8AE-AC1F-47F5-BADD-EC264FC1B491" targetRef="_C325C069-C44F-4400-B7D2-5C3C2354216B"/>
+    <bpmn2:endEvent id="_C325C069-C44F-4400-B7D2-5C3C2354216B" drools:bgcolor="#ffc4d1" drools:selectable="true" name="">
+      <bpmn2:incoming>_0E1E1FE7-61A0-4587-BFA7-B89CB0E6E74A</bpmn2:incoming>
+      <bpmn2:terminateEventDefinition id="_-KvHSNr3EeGJKu5S-SpYhg"/>
+    </bpmn2:endEvent>
+    <bpmn2:endEvent id="_E87F9DFC-5035-4DEF-96DB-1A84AD82D173" drools:bgcolor="#ffc4d1" drools:selectable="true" name="">
+      <bpmn2:incoming>_2F4BB3D4-2F86-4126-AF2C-C60907184E15</bpmn2:incoming>
+      <bpmn2:terminateEventDefinition id="_-KvHSdr3EeGJKu5S-SpYhg"/>
+    </bpmn2:endEvent>
+    <bpmn2:sequenceFlow id="_8CBBF0AE-15FD-4BA2-BB15-54FEB2C3581D" drools:selectable="true" sourceRef="_6E312324-984A-4922-B3F7-CA0C326A9C5C" targetRef="_6F36C8AE-AC1F-47F5-BADD-EC264FC1B491"/>
+    <bpmn2:intermediateCatchEvent id="_6E312324-984A-4922-B3F7-CA0C326A9C5C" drools:bgcolor="#ffd3a6" drools:selectable="true" drools:bordercolor="#a37e25" drools:boundaryca="false" name="Ambulance Arrived">
+      <bpmn2:incoming>_92D156AB-0EC8-4612-840B-E8C2EC5C6E9D</bpmn2:incoming>
+      <bpmn2:outgoing>_8CBBF0AE-15FD-4BA2-BB15-54FEB2C3581D</bpmn2:outgoing>
+      <bpmn2:signalEventDefinition id="_-KvuINr3EeGJKu5S-SpYhg" signalRef="Ambulance Arrived"/>
+    </bpmn2:intermediateCatchEvent>
+    <bpmn2:sequenceFlow id="_92D156AB-0EC8-4612-840B-E8C2EC5C6E9D" drools:selectable="true" sourceRef="_26E405C5-FF42-4D02-8BB9-9E7EC0C2D42E" targetRef="_6E312324-984A-4922-B3F7-CA0C326A9C5C"/>
+  </bpmn2:process>
+  <bpmndi:BPMNDiagram id="_-KvuIdr3EeGJKu5S-SpYhg">
+    <bpmndi:BPMNPlane id="_-KvuItr3EeGJKu5S-SpYhg" bpmnElement="hospitalEmergencyV4">
+      <bpmndi:BPMNShape id="_-KvuI9r3EeGJKu5S-SpYhg" bpmnElement="_B424E12F-0833-4D36-91D6-3AF485D7827F">
+        <dc:Bounds height="30.0" width="30.0" x="125.0" y="169.0"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="_-KvuJNr3EeGJKu5S-SpYhg" bpmnElement="_7124998B-D713-487D-BB11-BA4AD7914F51">
+        <dc:Bounds height="80.0" width="100.0" x="195.0" y="144.0"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="_-KvuJdr3EeGJKu5S-SpYhg" bpmnElement="_8EFAF07B-1651-4A2F-987F-01A0EA750A63">
+        <di:waypoint xsi:type="dc:Point" x="140.0" y="184.0"/>
+        <di:waypoint xsi:type="dc:Point" x="245.0" y="184.0"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNShape id="_-KvuJtr3EeGJKu5S-SpYhg" bpmnElement="_C9027A87-A498-44B1-A495-C562F37B7771">
+        <dc:Bounds height="80.0" width="100.0" x="435.0" y="144.0"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="_-KvuJ9r3EeGJKu5S-SpYhg" bpmnElement="_26E405C5-FF42-4D02-8BB9-9E7EC0C2D42E">
+        <dc:Bounds height="80.0" width="100.0" x="600.0" y="144.0"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="_-KvuKNr3EeGJKu5S-SpYhg" bpmnElement="_46D835F6-2B61-4F41-A1D1-872FB49C85B6">
+        <di:waypoint xsi:type="dc:Point" x="485.0" y="184.0"/>
+        <di:waypoint xsi:type="dc:Point" x="650.0" y="184.0"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNShape id="_-KvuKdr3EeGJKu5S-SpYhg" bpmnElement="_6F36C8AE-AC1F-47F5-BADD-EC264FC1B491">
+        <dc:Bounds height="80.0" width="100.0" x="810.0" y="144.0"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="_-KvuKtr3EeGJKu5S-SpYhg" bpmnElement="_B5786705-8901-4F03-9AE6-9A7E9BDDC503">
+        <dc:Bounds height="40.0" width="40.0" x="340.0" y="164.0"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="_-KvuK9r3EeGJKu5S-SpYhg" bpmnElement="_0FEA173D-DB55-4281-84B6-F3A2180B18B4">
+        <di:waypoint xsi:type="dc:Point" x="245.0" y="184.0"/>
+        <di:waypoint xsi:type="dc:Point" x="360.0" y="184.0"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="_-KvuLNr3EeGJKu5S-SpYhg" bpmnElement="_62EBA985-E8ED-4DF5-96A5-D4BEFDF74B61">
+        <di:waypoint xsi:type="dc:Point" x="360.0" y="184.0"/>
+        <di:waypoint xsi:type="dc:Point" x="485.0" y="184.0"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNShape id="_-KvuLdr3EeGJKu5S-SpYhg" bpmnElement="_33CF2156-D222-488F-90C4-187B421E960F">
+        <dc:Bounds height="80.0" width="100.0" x="310.0" y="270.0"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="_-KvuLtr3EeGJKu5S-SpYhg" bpmnElement="_F0BD236F-14E4-4AFC-9ACC-25DA63A9F7D2">
+        <di:waypoint xsi:type="dc:Point" x="360.0" y="184.0"/>
+        <di:waypoint xsi:type="dc:Point" x="360.0" y="310.0"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="_-KvuL9r3EeGJKu5S-SpYhg" bpmnElement="_2F4BB3D4-2F86-4126-AF2C-C60907184E15">
+        <di:waypoint xsi:type="dc:Point" x="360.0" y="310.0"/>
+        <di:waypoint xsi:type="dc:Point" x="458.0" y="308.0"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="_-KvuMNr3EeGJKu5S-SpYhg" bpmnElement="_0E1E1FE7-61A0-4587-BFA7-B89CB0E6E74A">
+        <di:waypoint xsi:type="dc:Point" x="860.0" y="184.0"/>
+        <di:waypoint xsi:type="dc:Point" x="972.0" y="182.0"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNShape id="_-KvuMdr3EeGJKu5S-SpYhg" bpmnElement="_C325C069-C44F-4400-B7D2-5C3C2354216B">
+        <dc:Bounds height="28.0" width="28.0" x="958.0" y="168.0"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="_-KvuMtr3EeGJKu5S-SpYhg" bpmnElement="_E87F9DFC-5035-4DEF-96DB-1A84AD82D173">
+        <dc:Bounds height="28.0" width="28.0" x="444.0" y="294.0"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="_-KvuM9r3EeGJKu5S-SpYhg" bpmnElement="_8CBBF0AE-15FD-4BA2-BB15-54FEB2C3581D">
+        <di:waypoint xsi:type="dc:Point" x="750.0" y="184.0"/>
+        <di:waypoint xsi:type="dc:Point" x="860.0" y="184.0"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNShape id="_-KvuNNr3EeGJKu5S-SpYhg" bpmnElement="_6E312324-984A-4922-B3F7-CA0C326A9C5C">
+        <dc:Bounds height="30.0" width="30.0" x="735.0" y="169.0"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="_-KvuNdr3EeGJKu5S-SpYhg" bpmnElement="_92D156AB-0EC8-4612-840B-E8C2EC5C6E9D">
+        <di:waypoint xsi:type="dc:Point" x="650.0" y="184.0"/>
+        <di:waypoint xsi:type="dc:Point" x="750.0" y="184.0"/>
+      </bpmndi:BPMNEdge>
+    </bpmndi:BPMNPlane>
+  </bpmndi:BPMNDiagram>
+</bpmn2:definitions>

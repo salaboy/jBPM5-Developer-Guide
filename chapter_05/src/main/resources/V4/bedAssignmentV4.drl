@@ -1,0 +1,32 @@
+package com.salaboy.jbpm5.dev.guide
+
+import org.jbpm.workflow.instance.WorkflowProcessInstance;
+
+/*
+If the status of the patient is 'Critical' then assign a bed.
+*/
+rule "Assign Bed if status is Critical"
+ruleflow-group 'assign-bed'
+when
+    $process: WorkflowProcessInstance(getVariable('bedrequest_patientstatus') == 'Critical')
+then
+    //<insert bed assignment logic here>
+    
+    //let the process know about the assignment
+    $process.setVariable('assignbed_success', true);
+end
+
+
+/*
+If the status of the patient is not 'Critical' then do not assign a bed.
+*/
+rule "Do not Assign Bed if the status is not Critical"
+ruleflow-group 'assign-bed'
+when
+    $process: WorkflowProcessInstance(getVariable('bedrequest_patientstatus') != 'Critical')
+then
+    
+    //let the process know about the assignment
+    $process.setVariable('assignbed_success', false);
+    $process.setVariable('assignbed_rejection_message', "The patient is not in a Critical situation.");
+end
