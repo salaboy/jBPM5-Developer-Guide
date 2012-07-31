@@ -18,15 +18,15 @@ import org.junit.Test;
  *
  * @author esteban
  */
-public class EmergencyBedRequestV2Test extends EmergencyBedRequestBaseTest{
+public class EmergencyBedRequestV3Test extends EmergencyBedRequestBaseTest{
 
     private MockWorkItemHandler mockWorkItemHandler;
     
     @Override
     protected Map<Resource, ResourceType> getResources() {
         Map<Resource, ResourceType> resources = new HashMap<Resource, ResourceType>();
-        resources.put(ResourceFactory.newClassPathResource("V2/EmergencyBedRequestV2.bpmn"), ResourceType.BPMN2);
-        resources.put(ResourceFactory.newClassPathResource("V2/bedAssignmentV2.drl"), ResourceType.DRL);
+        resources.put(ResourceFactory.newClassPathResource("V3/EmergencyBedRequestV3.bpmn"), ResourceType.BPMN2);
+        resources.put(ResourceFactory.newClassPathResource("V3/bedAssignmentV3.drl"), ResourceType.DRL);
         
         return resources;
     }
@@ -43,7 +43,7 @@ public class EmergencyBedRequestV2Test extends EmergencyBedRequestBaseTest{
     }
     
     @Test
-    public void testHappyPath(){
+    public void doTest(){
         //prepare input parameters for the process:
         String date = DateFormat.getDateInstance().format(new Date());
         String entity = "911";
@@ -59,7 +59,7 @@ public class EmergencyBedRequestV2Test extends EmergencyBedRequestBaseTest{
         inputVariables.put("bedrequest_patientstatus", patientStatus);
         
         //Start the process using its ID and pass the input variables
-        WorkflowProcessInstance processInstance = (WorkflowProcessInstance) session.startProcess("hospitalEmergencyV2", inputVariables);
+        WorkflowProcessInstance processInstance = (WorkflowProcessInstance) session.startProcess("hospitalEmergencyV3", inputVariables);
         
         //**************   Coordinate Staff   **************//
         
@@ -78,6 +78,7 @@ public class EmergencyBedRequestV2Test extends EmergencyBedRequestBaseTest{
         taskResults.put("checkinresults_gate", "3C");
         mockWorkItemHandler.completeWorkItem(taskResults);
         
+        System.out.println("\n'Coordinate Staff' task completed \n");
         
         //**************   Notify Gate to Ambulance   **************//
         
@@ -92,6 +93,19 @@ public class EmergencyBedRequestV2Test extends EmergencyBedRequestBaseTest{
         taskResults.put("checkinresults_notified", "true");
         mockWorkItemHandler.completeWorkItem(taskResults);
         
+        System.out.println("\n'Notify Gate to Ambulance' task completed\n");
+        
+        //at this point, the end node is reached, but since it is not a terminate
+        //end event, the process will remain active waiting for an event ('Ambulance Arrived')
+        //to happen. At this point there is no 'active' node
+        Assert.assertTrue(processInstance.getNodeInstances().isEmpty());
+        
+        //At some point, the ambulance arrives to the gate and the process is
+        //notified. (The second parameter is used when we want to send data
+        //associated with the event. This is not our case)
+        session.signalEvent("Ambulance Arrived", null);
+        //processInstance.signalEvent("Ambulance Arrived", null);
+        System.out.println("\n'Ambulance Arrived' event signaled \n");
         
         //**************   Check In Patient   **************//
         
@@ -108,6 +122,7 @@ public class EmergencyBedRequestV2Test extends EmergencyBedRequestBaseTest{
         taskResults.put("checkinresults_time", checkinDate);
         mockWorkItemHandler.completeWorkItem(taskResults);
         
+        System.out.println("\n'Check In Patient' task completed \n");
         
         //The process should be completed now. Let's check the 2 output
         //parameters of the last task: they should be mapped to process variables.
@@ -117,43 +132,5 @@ public class EmergencyBedRequestV2Test extends EmergencyBedRequestBaseTest{
         
     }
     
-    
-    @Test
-    public void testUnhappyPath(){
-        //prepare input parameters for the process:
-        String date = DateFormat.getDateInstance().format(new Date());
-        String entity = "911";
-        String patientAge = "21";
-        String patientGender = "F";
-        String patientStatus = "Not Critical";
-        
-        Map<String, Object> inputVariables = new HashMap<String, Object>();
-        inputVariables.put("bedrequest_date", date);
-        inputVariables.put("bedrequest_entity", entity);
-        inputVariables.put("bedrequest_patientage", patientAge);
-        inputVariables.put("bedrequest_patientgender", patientGender);
-        inputVariables.put("bedrequest_patientstatus", patientStatus);
-        
-        //Start the process using its ID and pass the input variables
-        WorkflowProcessInstance processInstance = (WorkflowProcessInstance) session.startProcess("hospitalEmergencyV2", inputVariables);
-        
-        //**************   Notify Rejection to Ambulance   **************//
-        
-        //The process must be in the 'Notify Rejection to Ambulance' task. 
-        //The reason is that the business rules are rejecting the bed request
-        //if the status of the patient is not 'Critical'
-        Assert.assertEquals("Notify Rejection to Ambulance", processInstance.getNodeInstances().iterator().next().getNodeName());
-        
-        Assert.assertEquals("The patient is not in a Critical situation.", mockWorkItemHandler.getInputParameter("message"));
-        
-        //let's complete the task
-        mockWorkItemHandler.completeWorkItem(null);
-        
-
-        
-        //The process should be completed now.
-        Assert.assertEquals(ProcessInstance.STATE_COMPLETED, processInstance.getState());
-        
-    }
     
 }

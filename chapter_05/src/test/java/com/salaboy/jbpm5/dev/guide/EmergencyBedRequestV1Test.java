@@ -78,11 +78,11 @@ public class EmergencyBedRequestV1Test extends EmergencyBedRequestBaseTest{
         mockWorkItemHandler.completeWorkItem(taskResults);
         
         
-        //**************   Notification System   **************//
+        //**************   Notify Gate to Ambulance   **************//
         
-        //Now we are at 'Notification System' task. Let's check that the input
+        //Now we are at 'Notify Gate to Ambulance' task. Let's check that the input
         //parameters configured for this tasks arrived as expected.
-        Assert.assertEquals("Notification System", processInstance.getNodeInstances().iterator().next().getNodeName());
+        Assert.assertEquals("Notify Gate to Ambulance", processInstance.getNodeInstances().iterator().next().getNodeName());
         
         Assert.assertEquals("3C", mockWorkItemHandler.getInputParameter("checkinresults_gate"));
         
