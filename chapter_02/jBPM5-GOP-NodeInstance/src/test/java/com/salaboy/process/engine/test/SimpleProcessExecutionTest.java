@@ -8,16 +8,15 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import junit.framework.Assert;
 import com.salaboy.process.engine.structures.*;
 import com.salaboy.process.engine.factories.ProcessInstanceFactory;
 import com.salaboy.process.engine.structures.impl.ProcessDefinitionImpl;
-import com.salaboy.process.engine.structures.impl.ProcessInstanceImpl.STATUS;
-import com.salaboy.process.engine.tasks.impl.EndEvent;
+import com.salaboy.process.engine.tasks.impl.EndTask;
 import com.salaboy.process.engine.tasks.impl.SequenceFlowImpl;
-import com.salaboy.process.engine.tasks.impl.StartEvent;
+import com.salaboy.process.engine.tasks.impl.StartTask;
 import com.salaboy.process.engine.services.ProcessEventSupportService;
 import com.salaboy.process.engine.services.Service;
+import com.salaboy.process.engine.structures.ProcessInstance.STATUS;
 import com.salaboy.process.engine.tasks.impl.ScriptTask;
 import org.junit.After;
 import org.junit.AfterClass;
@@ -145,9 +144,9 @@ public class SimpleProcessExecutionTest {
         // Process Definition
         ProcessDefinition process = new ProcessDefinitionImpl();
         
-        //Start Event
-        StartEvent startEvent = new StartEvent();
-        process.addTask(0L, startEvent);
+        //Start Task
+        StartTask startTask = new StartTask();
+        process.addTask(0L, startTask);
         
         //Action Task
         ScriptTask scriptTask = new ScriptTask("java", new Action() {
@@ -159,13 +158,13 @@ public class SimpleProcessExecutionTest {
         });
         process.addTask(1L, scriptTask);
         
-        //End Event
-        EndEvent endEvent = new EndEvent();
-        process.addTask(2L, endEvent);
+        //End Task
+        EndTask endTask = new EndTask();
+        process.addTask(2L, endTask);
         
         //Adding the connections
-        startEvent.addOutgoingFlow(SequenceFlow.FLOW_DEFAULT_TYPE, new SequenceFlowImpl(SequenceFlow.FLOW_DEFAULT_TYPE, scriptTask));
-        scriptTask.addOutgoingFlow(SequenceFlow.FLOW_DEFAULT_TYPE, new SequenceFlowImpl(SequenceFlow.FLOW_DEFAULT_TYPE, endEvent));
+        startTask.addOutgoingFlow(SequenceFlow.FLOW_DEFAULT_TYPE, new SequenceFlowImpl(SequenceFlow.FLOW_DEFAULT_TYPE, scriptTask));
+        scriptTask.addOutgoingFlow(SequenceFlow.FLOW_DEFAULT_TYPE, new SequenceFlowImpl(SequenceFlow.FLOW_DEFAULT_TYPE, endTask));
         return process;
     }
 }

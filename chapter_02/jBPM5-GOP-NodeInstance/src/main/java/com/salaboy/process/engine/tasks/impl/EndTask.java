@@ -8,6 +8,6 @@ package com.salaboy.process.engine.tasks.impl;
  *
  * @author salaboy
  */
-public class EndEvent extends AbstractBaseTask{
+public class EndTask extends AbstractBaseTask{
     
 }

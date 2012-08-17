@@ -13,6 +13,11 @@ import com.salaboy.process.engine.services.Service;
  * @author salaboy
  */
 public interface ProcessInstance extends NodeInstanceContainer{
+    public enum STATUS {
+
+        CREATED, ACTIVE, SUSPENDED, CANCELLED, ENDED
+    };
+    
     public void setId(long id);
 
     public long getId();

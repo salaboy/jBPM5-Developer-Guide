@@ -13,11 +13,11 @@ import com.salaboy.process.engine.structures.Task;
  *
  * @author salaboy
  */
-public class StartEventNodeInstance extends AbstractNodeInstance {
+public class StartTaskNodeInstance extends AbstractNodeInstance {
 
     private long id;
 
-    public StartEventNodeInstance(ProcessInstance pI, Task task) {
+    public StartTaskNodeInstance(ProcessInstance pI, Task task) {
         super(pI, task);
     }
 
@@ -33,11 +33,11 @@ public class StartEventNodeInstance extends AbstractNodeInstance {
     public void internalTrigger(NodeInstance from, String type) {
         if (type != null) {
             throw new IllegalArgumentException(
-                    "A StartEvent does not accept incoming connections!");
+                    "A StartTask does not accept incoming connections!");
         }
         if (from != null) {
             throw new IllegalArgumentException(
-                    "A StartEvent can only be triggered by the process itself!");
+                    "A StartTask can only be triggered by the process itself!");
         }
         
         triggerCompleted();

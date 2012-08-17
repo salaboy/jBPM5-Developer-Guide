@@ -14,5 +14,4 @@ public interface ProcessDefinition {
     public Map<Long, Task> getTasks();
     public void setTasks(Map<Long, Task> tasks);
     public void addTask(Long id, Task task);
-    public void addFlow(Long id, Flow flow);
 }

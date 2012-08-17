@@ -9,7 +9,7 @@ import java.util.List;
 import com.salaboy.process.engine.structures.Task;
 import com.salaboy.process.engine.structures.NodeInstanceContainer;
 import com.salaboy.process.engine.structures.NodeInstance;
-import com.salaboy.process.engine.taskinstances.impl.EndEventNodeInstance;
+import com.salaboy.process.engine.taskinstances.impl.EndTaskNodeInstance;
 
 /**
  *
@@ -57,7 +57,7 @@ public class NodeContainerImpl implements NodeInstanceContainer {
 
     @Override
     public void nodeInstanceCompleted(NodeInstance nodeInstance, String outType) {
-        if (nodeInstance instanceof EndEventNodeInstance) {
+        if (nodeInstance instanceof EndTaskNodeInstance) {
 
             if (nodeInstances.isEmpty()) {
                 nodeInstance.getProcessInstance().triggerCompleted();

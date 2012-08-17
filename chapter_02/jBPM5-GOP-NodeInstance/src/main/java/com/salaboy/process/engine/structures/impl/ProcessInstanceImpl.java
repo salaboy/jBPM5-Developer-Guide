@@ -18,10 +18,7 @@ import java.util.List;
  */
 public class ProcessInstanceImpl implements ProcessInstance {
 
-     public enum STATUS {
-
-        CREATED, ACTIVE, SUSPENDED, CANCELLED, ENDED
-    };
+    
 
    
     private long id;
@@ -64,11 +61,11 @@ public class ProcessInstanceImpl implements ProcessInstance {
 
     @Override
     public void start() {
-        // We should check that the first task inside the process.tasks is a startEvent
-        NodeInstance startEvent = NodeInstanceFactory.newNodeInstance(this, process.getTasks().get(0L));
-        this.nodeContainer.addNodeInstance(startEvent);
+        // We should check that the first task inside the process.tasks is a startTask
+        NodeInstance startTask = NodeInstanceFactory.newNodeInstance(this, process.getTasks().get(0L));
+        this.nodeContainer.addNodeInstance(startTask);
         this.status = STATUS.ACTIVE;
-        startEvent.trigger(null, null);
+        startTask.trigger(null, null);
 
     }
     

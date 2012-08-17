@@ -14,15 +14,13 @@ import com.salaboy.process.engine.services.ProcessEventSupportService;
  *
  * @author salaboy
  */
-public class EndEventNodeInstance extends AbstractNodeInstance {
+public class EndTaskNodeInstance extends AbstractNodeInstance {
 
-    public EndEventNodeInstance(ProcessInstance pI, Task task) {
+    public EndTaskNodeInstance(ProcessInstance pI, Task task) {
         super(pI, task);
     }
 
-    
-    
-    
+
     @Override
     public void internalTrigger(NodeInstance from, String type) {
         this.processInstance.setStatus(ProcessInstanceImpl.STATUS.ENDED);
