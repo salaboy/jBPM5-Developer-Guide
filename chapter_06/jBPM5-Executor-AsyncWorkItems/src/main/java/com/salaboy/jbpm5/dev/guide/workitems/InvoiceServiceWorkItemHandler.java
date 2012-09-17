@@ -5,7 +5,6 @@
 package com.salaboy.jbpm5.dev.guide.workitems;
 
 import com.salaboy.jbpm5.dev.guide.model.ConceptCode;
-import com.salaboy.jbpm5.dev.guide.model.ConceptCode;
 import com.salaboy.jbpm5.dev.guide.model.Patient;
 import com.salaboy.jbpm5.dev.guide.webservice.InsuranceService;
 import java.math.BigDecimal;
