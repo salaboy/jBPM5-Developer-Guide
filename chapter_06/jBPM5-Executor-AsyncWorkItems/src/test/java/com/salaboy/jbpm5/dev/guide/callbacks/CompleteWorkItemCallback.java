@@ -5,17 +5,19 @@
 package com.salaboy.jbpm5.dev.guide.callbacks;
 
 import com.salaboy.jbpm5.dev.guide.SessionStoreUtil;
-import com.salaboy.jbpm5.dev.guide.executor.CommandContext;
-import com.salaboy.jbpm5.dev.guide.executor.CommandCallback;
-import com.salaboy.jbpm5.dev.guide.executor.ExecutionResults;
 import java.util.HashMap;
 import java.util.Map;
+import javax.inject.Named;
 import org.drools.runtime.StatefulKnowledgeSession;
+import org.jbpm.executor.api.CommandCallback;
+import org.jbpm.executor.api.CommandContext;
+import org.jbpm.executor.api.ExecutionResults;
 
 /**
  *
  * @author salaboy
  */
+@Named
 public class CompleteWorkItemCallback implements CommandCallback {
 
     public void onCommandDone(CommandContext ctx, ExecutionResults results) {

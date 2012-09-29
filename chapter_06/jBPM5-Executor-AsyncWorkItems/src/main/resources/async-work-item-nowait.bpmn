@@ -29,11 +29,11 @@
     <task id="_3" name="Check-In" tns:taskName="Async Work" >
       <ioSpecification>
         <dataInput id="_3_bedrequest_patientnameInput" name="bedrequest_patientname" />
-        <dataInput id="_3_commandClassInput" name="commandClass" />
+        <dataInput id="_3_commandInput" name="command" />
         <dataInput id="_3_waitTillCompleteInput" name="waitTillComplete" />
         <inputSet>
           <dataInputRefs>_3_bedrequest_patientnameInput</dataInputRefs>
-          <dataInputRefs>_3_commandClassInput</dataInputRefs>
+          <dataInputRefs>_3_commandInput</dataInputRefs>
           <dataInputRefs>_3_waitTillCompleteInput</dataInputRefs>
         </inputSet>
         <outputSet>
@@ -44,10 +44,10 @@
         <targetRef>_3_bedrequest_patientnameInput</targetRef>
       </dataInputAssociation>
       <dataInputAssociation>
-        <targetRef>_3_commandClassInput</targetRef>
+        <targetRef>_3_commandInput</targetRef>
         <assignment>
-          <from xsi:type="tFormalExpression">com.salaboy.jbpm5.dev.guide.commands.CheckInCommand</from>
-          <to xsi:type="tFormalExpression">_3_commandClassInput</to>
+          <from xsi:type="tFormalExpression">CheckInCommand</from>
+          <to xsi:type="tFormalExpression">_3_commandInput</to>
         </assignment>
       </dataInputAssociation>
       <dataInputAssociation>

@@ -2,15 +2,12 @@ package com.salaboy.jbpm5.dev.guide.ws;
 
 
 import com.salaboy.jbpm5.dev.guide.SessionStoreUtil;
-import com.salaboy.jbpm5.dev.guide.executor.Executor;
-import com.salaboy.jbpm5.dev.guide.executor.wih.AsyncGenericWorkItemHandler;
 import com.salaboy.jbpm5.dev.guide.webservice.SlowService;
 import com.salaboy.jbpm5.dev.guide.webservice.SlowServiceImpl;
+import com.salaboy.jbpm5.dev.guide.workitems.AsyncGenericWorkItemHandler;
 import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.List;
-import javax.persistence.EntityManager;
-import javax.persistence.EntityManagerFactory;
 import javax.xml.ws.Endpoint;
 import org.drools.KnowledgeBase;
 import org.drools.KnowledgeBaseFactory;
@@ -26,23 +23,23 @@ import org.drools.runtime.process.ProcessInstance;
 import org.drools.runtime.process.WorkflowProcessInstance;
 import org.h2.tools.DeleteDbFiles;
 import org.h2.tools.Server;
+import org.jbpm.executor.ExecutorModule;
+import org.jbpm.executor.ExecutorServiceEntryPoint;
+import org.jbpm.executor.entities.RequestInfo;
 import org.junit.After;
 import static org.junit.Assert.assertEquals;
 import org.junit.Before;
 import org.junit.Test;
-import org.springframework.context.ApplicationContext;
-import org.springframework.context.support.ClassPathXmlApplicationContext;
 
 
 public class SlowWebServicesInteractionsTest {
 
-    protected Executor executor;
-    protected EntityManagerFactory emf;
+    protected ExecutorServiceEntryPoint executor;
     protected StatefulKnowledgeSession session;
     private Endpoint endpoint;
     private SlowService service;
-    private ApplicationContext ctx;
     private Server server;
+
     public SlowWebServicesInteractionsTest() {
     }
 
@@ -77,10 +74,8 @@ public class SlowWebServicesInteractionsTest {
    
 
     protected void initializeExecutionEnvironment() throws Exception {
-        ctx = new ClassPathXmlApplicationContext("applicationContext.xml");
-        executor = (Executor) ctx.getBean("executorService");
+        executor = ExecutorModule.getInstance().getExecutorServiceEntryPoint();
         executor.init();
-        emf = ((EntityManagerFactory)ctx.getBean("entityManagerFactory"));
     }
 
     
@@ -161,8 +156,7 @@ public class SlowWebServicesInteractionsTest {
         
         Thread.sleep(25000);
         
-        EntityManager em = emf.createEntityManager();
-        List resultList = em.createNamedQuery("ExecutedRequests").getResultList();
+        List<RequestInfo> resultList = executor.getExecutedRequests();
         assertEquals(3, resultList.size());
     }
     
@@ -187,8 +181,7 @@ public class SlowWebServicesInteractionsTest {
         
         Thread.sleep(25000);
         
-        EntityManager em = emf.createEntityManager();
-        List resultList = em.createNamedQuery("ExecutedRequests").getResultList();
+        List<RequestInfo> resultList = executor.getExecutedRequests();
         assertEquals(3, resultList.size());
         
         assertEquals(ProcessInstance.STATE_COMPLETED, pI.getState());

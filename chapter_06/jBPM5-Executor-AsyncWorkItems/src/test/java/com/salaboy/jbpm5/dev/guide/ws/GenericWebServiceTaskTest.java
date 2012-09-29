@@ -27,8 +27,6 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
-import com.salaboy.jbpm5.dev.guide.webservice.InsuranceService;
-import com.salaboy.jbpm5.dev.guide.webservice.InsuranceServiceImpl;
 import com.salaboy.jbpm5.dev.guide.webservice.SimpleValidationService;
 import com.salaboy.jbpm5.dev.guide.webservice.SimpleValidationServiceImpl;
 import com.salaboy.jbpm5.dev.guide.workitems.CXFWebServiceWorkItemHandler;

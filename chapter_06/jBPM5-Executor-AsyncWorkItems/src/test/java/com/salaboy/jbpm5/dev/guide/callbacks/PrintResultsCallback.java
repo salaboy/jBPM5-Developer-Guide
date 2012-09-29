@@ -4,14 +4,16 @@
  */
 package com.salaboy.jbpm5.dev.guide.callbacks;
 
-import com.salaboy.jbpm5.dev.guide.executor.CommandContext;
-import com.salaboy.jbpm5.dev.guide.executor.CommandCallback;
-import com.salaboy.jbpm5.dev.guide.executor.ExecutionResults;
+import javax.inject.Named;
+import org.jbpm.executor.api.CommandCallback;
+import org.jbpm.executor.api.CommandContext;
+import org.jbpm.executor.api.ExecutionResults;
 
 /**
  *
  * @author salaboy
  */
+@Named
 public class PrintResultsCallback implements CommandCallback{
 
     public void onCommandDone(CommandContext ctx, ExecutionResults results) {

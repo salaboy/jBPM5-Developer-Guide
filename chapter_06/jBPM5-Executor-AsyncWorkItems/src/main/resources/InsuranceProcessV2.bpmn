@@ -7,22 +7,22 @@
   <bpmn2:itemDefinition id="_conceptsItem" structureRef="java.util.List"/>
   <bpmn2:itemDefinition id="_patientNotifiedItem" structureRef="Boolean"/>
   <bpmn2:itemDefinition id="__B5027B42-8FD4-4E86-AEFA-B24A374C8D6C_insured_patientNameInputItem" structureRef="String"/>
-  <bpmn2:itemDefinition id="__B5027B42-8FD4-4E86-AEFA-B24A374C8D6C_commandClassInputItem" structureRef="String"/>
+  <bpmn2:itemDefinition id="__B5027B42-8FD4-4E86-AEFA-B24A374C8D6C_commandInputItem" structureRef="String"/>
   <bpmn2:itemDefinition id="__B5027B42-8FD4-4E86-AEFA-B24A374C8D6C_callbacksInputItem" structureRef="String"/>
   <bpmn2:itemDefinition id="__B5027B42-8FD4-4E86-AEFA-B24A374C8D6C_waitTillCompleteInputItem" structureRef="Boolean"/>
   <bpmn2:itemDefinition id="__B5027B42-8FD4-4E86-AEFA-B24A374C8D6C_insured_isPatientInsuredOutputItem" structureRef="Boolean"/>
   <bpmn2:itemDefinition id="__CF4824F4-C059-49CA-A038-D25F5DBB5999_gatherdata_patientNameInputItem" structureRef="String"/>
-  <bpmn2:itemDefinition id="__CF4824F4-C059-49CA-A038-D25F5DBB5999_commandClassInputItem" structureRef="String"/>
+  <bpmn2:itemDefinition id="__CF4824F4-C059-49CA-A038-D25F5DBB5999_commandInputItem" structureRef="String"/>
   <bpmn2:itemDefinition id="__CF4824F4-C059-49CA-A038-D25F5DBB5999_callbacksInputItem" structureRef="String"/>
   <bpmn2:itemDefinition id="__CF4824F4-C059-49CA-A038-D25F5DBB5999_waitTillCompleteInputItem" structureRef="Boolean"/>
   <bpmn2:itemDefinition id="__CF4824F4-C059-49CA-A038-D25F5DBB5999_gatherdata_patientOutputItem" structureRef="com.salaboy.jbpm5.dev.guide.model.Patient"/>
   <bpmn2:itemDefinition id="__591157C2-F43C-4156-B984-C8E298EFE584_company_patientNameInputItem" structureRef="String"/>
-  <bpmn2:itemDefinition id="__591157C2-F43C-4156-B984-C8E298EFE584_commandClassInputItem" structureRef="String"/>
+  <bpmn2:itemDefinition id="__591157C2-F43C-4156-B984-C8E298EFE584_commandInputItem" structureRef="String"/>
   <bpmn2:itemDefinition id="__591157C2-F43C-4156-B984-C8E298EFE584_callbacksInputItem" structureRef="String"/>
   <bpmn2:itemDefinition id="__591157C2-F43C-4156-B984-C8E298EFE584_waitTillCompleteInputItem" structureRef="Boolean"/>
   <bpmn2:itemDefinition id="__591157C2-F43C-4156-B984-C8E298EFE584_company_finalAmountOutputItem" structureRef="java.math.BigDecimal"/>
   <bpmn2:itemDefinition id="__591157C2-F43C-4156-B984-C8E298EFE584_company_conceptsOutputItem" structureRef="java.util.List"/>
-  <bpmn2:itemDefinition id="__13D5A055-9964-42FA-88F6-0E768AA2D4F9_commandClassInputItem" structureRef="String"/>
+  <bpmn2:itemDefinition id="__13D5A055-9964-42FA-88F6-0E768AA2D4F9_commandInputItem" structureRef="String"/>
   <bpmn2:itemDefinition id="__13D5A055-9964-42FA-88F6-0E768AA2D4F9_callbacksInputItem" structureRef="String"/>
   <bpmn2:itemDefinition id="__13D5A055-9964-42FA-88F6-0E768AA2D4F9_waitTillCompleteInputItem" structureRef="Boolean"/>
   <bpmn2:itemDefinition id="__13D5A055-9964-42FA-88F6-0E768AA2D4F9_rates_finalAmountOutputItem" structureRef="java.math.BigDecimal"/>
@@ -32,7 +32,7 @@
   <bpmn2:itemDefinition id="__B7664677-D018-42B8-80D3-BD5FF1CDC019_invoice_conceptsInputItem" structureRef="java.util.List"/>
   <bpmn2:itemDefinition id="__B7664677-D018-42B8-80D3-BD5FF1CDC019_waitTillCompleteInputItem" structureRef="Boolean"/>
   <bpmn2:itemDefinition id="__B7664677-D018-42B8-80D3-BD5FF1CDC019_callbacksInputItem" structureRef="String"/>
-  <bpmn2:itemDefinition id="__B7664677-D018-42B8-80D3-BD5FF1CDC019_commandClassInputItem" structureRef="String"/>
+  <bpmn2:itemDefinition id="__B7664677-D018-42B8-80D3-BD5FF1CDC019_commandInputItem" structureRef="String"/>
   <bpmn2:itemDefinition id="__B7664677-D018-42B8-80D3-BD5FF1CDC019_invoice_patientNotifiedOutputItem" structureRef="Boolean"/>
   <bpmn2:process id="NewPatientInsuranceCheck" drools:packageName="jbpmExamples.evaluation" name="test" isExecutable="true">
     <bpmn2:property id="patientName" itemSubjectRef="_patientNameItem"/>
@@ -50,13 +50,13 @@
       <bpmn2:ioSpecification id="_TONNwXbHEeGE3Yfy3fPHUw">
         <bpmn2:dataInput id="_B5027B42-8FD4-4E86-AEFA-B24A374C8D6C_TaskNameInput" name="TaskName"/>
         <bpmn2:dataInput id="_B5027B42-8FD4-4E86-AEFA-B24A374C8D6C_insured_patientNameInput" drools:dtype="String" itemSubjectRef="__B5027B42-8FD4-4E86-AEFA-B24A374C8D6C_insured_patientNameInputItem" name="insured_patientName"/>
-        <bpmn2:dataInput id="_B5027B42-8FD4-4E86-AEFA-B24A374C8D6C_commandClassInput" drools:dtype="String" itemSubjectRef="__B5027B42-8FD4-4E86-AEFA-B24A374C8D6C_commandClassInputItem" name="commandClass"/>
+        <bpmn2:dataInput id="_B5027B42-8FD4-4E86-AEFA-B24A374C8D6C_commandInput" drools:dtype="String" itemSubjectRef="__B5027B42-8FD4-4E86-AEFA-B24A374C8D6C_commandInputItem" name="command"/>
         <bpmn2:dataInput id="_B5027B42-8FD4-4E86-AEFA-B24A374C8D6C_callbacksInput" drools:dtype="String" itemSubjectRef="__B5027B42-8FD4-4E86-AEFA-B24A374C8D6C_callbacksInputItem" name="callbacks"/>
         <bpmn2:dataInput id="_B5027B42-8FD4-4E86-AEFA-B24A374C8D6C_waitTillCompleteInput" drools:dtype="Boolean" itemSubjectRef="__B5027B42-8FD4-4E86-AEFA-B24A374C8D6C_waitTillCompleteInputItem" name="waitTillComplete"/>
         <bpmn2:dataOutput id="_B5027B42-8FD4-4E86-AEFA-B24A374C8D6C_insured_isPatientInsuredOutput" drools:dtype="Boolean" itemSubjectRef="__B5027B42-8FD4-4E86-AEFA-B24A374C8D6C_insured_isPatientInsuredOutputItem" name="insured_isPatientInsured"/>
         <bpmn2:inputSet id="_TONNwnbHEeGE3Yfy3fPHUw">
           <bpmn2:dataInputRefs>_B5027B42-8FD4-4E86-AEFA-B24A374C8D6C_insured_patientNameInput</bpmn2:dataInputRefs>
-          <bpmn2:dataInputRefs>_B5027B42-8FD4-4E86-AEFA-B24A374C8D6C_commandClassInput</bpmn2:dataInputRefs>
+          <bpmn2:dataInputRefs>_B5027B42-8FD4-4E86-AEFA-B24A374C8D6C_commandInput</bpmn2:dataInputRefs>
           <bpmn2:dataInputRefs>_B5027B42-8FD4-4E86-AEFA-B24A374C8D6C_callbacksInput</bpmn2:dataInputRefs>
           <bpmn2:dataInputRefs>_B5027B42-8FD4-4E86-AEFA-B24A374C8D6C_waitTillCompleteInput</bpmn2:dataInputRefs>
           <bpmn2:dataInputRefs>_B5027B42-8FD4-4E86-AEFA-B24A374C8D6C_TaskNameInput</bpmn2:dataInputRefs>
@@ -84,10 +84,10 @@
         </bpmn2:assignment>
       </bpmn2:dataInputAssociation>
       <bpmn2:dataInputAssociation id="_TONNzXbHEeGE3Yfy3fPHUw">
-        <bpmn2:targetRef>_B5027B42-8FD4-4E86-AEFA-B24A374C8D6C_commandClassInput</bpmn2:targetRef>
+        <bpmn2:targetRef>_B5027B42-8FD4-4E86-AEFA-B24A374C8D6C_commandInput</bpmn2:targetRef>
         <bpmn2:assignment id="_TONNznbHEeGE3Yfy3fPHUw">
-          <bpmn2:from xsi:type="bpmn2:tFormalExpression" id="_TONNz3bHEeGE3Yfy3fPHUw">com.salaboy.jbpm5.dev.guide.commands.IsPatientInsuredCommand</bpmn2:from>
-          <bpmn2:to xsi:type="bpmn2:tFormalExpression" id="_TONN0HbHEeGE3Yfy3fPHUw">_B5027B42-8FD4-4E86-AEFA-B24A374C8D6C_commandClassInput</bpmn2:to>
+          <bpmn2:from xsi:type="bpmn2:tFormalExpression" id="_TONNz3bHEeGE3Yfy3fPHUw">IsPatientInsuredCommand</bpmn2:from>
+          <bpmn2:to xsi:type="bpmn2:tFormalExpression" id="_TONN0HbHEeGE3Yfy3fPHUw">_B5027B42-8FD4-4E86-AEFA-B24A374C8D6C_commandInput</bpmn2:to>
         </bpmn2:assignment>
       </bpmn2:dataInputAssociation>
       <bpmn2:dataInputAssociation id="_TONN0XbHEeGE3Yfy3fPHUw">
@@ -108,13 +108,13 @@
       <bpmn2:ioSpecification id="_TON00HbHEeGE3Yfy3fPHUw">
         <bpmn2:dataInput id="_CF4824F4-C059-49CA-A038-D25F5DBB5999_TaskNameInput" name="TaskName"/>
         <bpmn2:dataInput id="_CF4824F4-C059-49CA-A038-D25F5DBB5999_gatherdata_patientNameInput" drools:dtype="String" itemSubjectRef="__CF4824F4-C059-49CA-A038-D25F5DBB5999_gatherdata_patientNameInputItem" name="gatherdata_patientName"/>
-        <bpmn2:dataInput id="_CF4824F4-C059-49CA-A038-D25F5DBB5999_commandClassInput" drools:dtype="String" itemSubjectRef="__CF4824F4-C059-49CA-A038-D25F5DBB5999_commandClassInputItem" name="commandClass"/>
+        <bpmn2:dataInput id="_CF4824F4-C059-49CA-A038-D25F5DBB5999_commandInput" drools:dtype="String" itemSubjectRef="__CF4824F4-C059-49CA-A038-D25F5DBB5999_commandInputItem" name="command"/>
         <bpmn2:dataInput id="_CF4824F4-C059-49CA-A038-D25F5DBB5999_callbacksInput" drools:dtype="String" itemSubjectRef="__CF4824F4-C059-49CA-A038-D25F5DBB5999_callbacksInputItem" name="callbacks"/>
         <bpmn2:dataInput id="_CF4824F4-C059-49CA-A038-D25F5DBB5999_waitTillCompleteInput" drools:dtype="Boolean" itemSubjectRef="__CF4824F4-C059-49CA-A038-D25F5DBB5999_waitTillCompleteInputItem" name="waitTillComplete"/>
         <bpmn2:dataOutput id="_CF4824F4-C059-49CA-A038-D25F5DBB5999_gatherdata_patientOutput" drools:dtype="com.salaboy.jbpm5.dev.guide.model.Patient" itemSubjectRef="__CF4824F4-C059-49CA-A038-D25F5DBB5999_gatherdata_patientOutputItem" name="gatherdata_patient"/>
         <bpmn2:inputSet id="_TON00XbHEeGE3Yfy3fPHUw">
           <bpmn2:dataInputRefs>_CF4824F4-C059-49CA-A038-D25F5DBB5999_gatherdata_patientNameInput</bpmn2:dataInputRefs>
-          <bpmn2:dataInputRefs>_CF4824F4-C059-49CA-A038-D25F5DBB5999_commandClassInput</bpmn2:dataInputRefs>
+          <bpmn2:dataInputRefs>_CF4824F4-C059-49CA-A038-D25F5DBB5999_commandInput</bpmn2:dataInputRefs>
           <bpmn2:dataInputRefs>_CF4824F4-C059-49CA-A038-D25F5DBB5999_callbacksInput</bpmn2:dataInputRefs>
           <bpmn2:dataInputRefs>_CF4824F4-C059-49CA-A038-D25F5DBB5999_waitTillCompleteInput</bpmn2:dataInputRefs>
           <bpmn2:dataInputRefs>_CF4824F4-C059-49CA-A038-D25F5DBB5999_TaskNameInput</bpmn2:dataInputRefs>
@@ -135,10 +135,10 @@
         <bpmn2:targetRef>_CF4824F4-C059-49CA-A038-D25F5DBB5999_gatherdata_patientNameInput</bpmn2:targetRef>
       </bpmn2:dataInputAssociation>
       <bpmn2:dataInputAssociation id="_TON02HbHEeGE3Yfy3fPHUw">
-        <bpmn2:targetRef>_CF4824F4-C059-49CA-A038-D25F5DBB5999_commandClassInput</bpmn2:targetRef>
+        <bpmn2:targetRef>_CF4824F4-C059-49CA-A038-D25F5DBB5999_commandInput</bpmn2:targetRef>
         <bpmn2:assignment id="_TON02XbHEeGE3Yfy3fPHUw">
-          <bpmn2:from xsi:type="bpmn2:tFormalExpression" id="_TON02nbHEeGE3Yfy3fPHUw">com.salaboy.jbpm5.dev.guide.commands.GetPatientDataCommand</bpmn2:from>
-          <bpmn2:to xsi:type="bpmn2:tFormalExpression" id="_TON023bHEeGE3Yfy3fPHUw">_CF4824F4-C059-49CA-A038-D25F5DBB5999_commandClassInput</bpmn2:to>
+          <bpmn2:from xsi:type="bpmn2:tFormalExpression" id="_TON02nbHEeGE3Yfy3fPHUw">GetPatientDataCommand</bpmn2:from>
+          <bpmn2:to xsi:type="bpmn2:tFormalExpression" id="_TON023bHEeGE3Yfy3fPHUw">_CF4824F4-C059-49CA-A038-D25F5DBB5999_commandInput</bpmn2:to>
         </bpmn2:assignment>
       </bpmn2:dataInputAssociation>
       <bpmn2:dataInputAssociation id="_TON03HbHEeGE3Yfy3fPHUw">
@@ -168,14 +168,14 @@
       <bpmn2:ioSpecification id="_TON05XbHEeGE3Yfy3fPHUw">
         <bpmn2:dataInput id="_591157C2-F43C-4156-B984-C8E298EFE584_TaskNameInput" name="TaskName"/>
         <bpmn2:dataInput id="_591157C2-F43C-4156-B984-C8E298EFE584_company_patientNameInput" drools:dtype="String" itemSubjectRef="__591157C2-F43C-4156-B984-C8E298EFE584_company_patientNameInputItem" name="company_patientName"/>
-        <bpmn2:dataInput id="_591157C2-F43C-4156-B984-C8E298EFE584_commandClassInput" drools:dtype="String" itemSubjectRef="__591157C2-F43C-4156-B984-C8E298EFE584_commandClassInputItem" name="commandClass"/>
+        <bpmn2:dataInput id="_591157C2-F43C-4156-B984-C8E298EFE584_commandInput" drools:dtype="String" itemSubjectRef="__591157C2-F43C-4156-B984-C8E298EFE584_commandInputItem" name="command"/>
         <bpmn2:dataInput id="_591157C2-F43C-4156-B984-C8E298EFE584_callbacksInput" drools:dtype="String" itemSubjectRef="__591157C2-F43C-4156-B984-C8E298EFE584_callbacksInputItem" name="callbacks"/>
         <bpmn2:dataInput id="_591157C2-F43C-4156-B984-C8E298EFE584_waitTillCompleteInput" drools:dtype="Boolean" itemSubjectRef="__591157C2-F43C-4156-B984-C8E298EFE584_waitTillCompleteInputItem" name="waitTillComplete"/>
         <bpmn2:dataOutput id="_591157C2-F43C-4156-B984-C8E298EFE584_company_finalAmountOutput" drools:dtype="java.math.BigDecimal" itemSubjectRef="__591157C2-F43C-4156-B984-C8E298EFE584_company_finalAmountOutputItem" name="company_finalAmount"/>
         <bpmn2:dataOutput id="_591157C2-F43C-4156-B984-C8E298EFE584_company_conceptsOutput" drools:dtype="java.util.List" itemSubjectRef="__591157C2-F43C-4156-B984-C8E298EFE584_company_conceptsOutputItem" name="company_concepts"/>
         <bpmn2:inputSet id="_TON05nbHEeGE3Yfy3fPHUw">
           <bpmn2:dataInputRefs>_591157C2-F43C-4156-B984-C8E298EFE584_company_patientNameInput</bpmn2:dataInputRefs>
-          <bpmn2:dataInputRefs>_591157C2-F43C-4156-B984-C8E298EFE584_commandClassInput</bpmn2:dataInputRefs>
+          <bpmn2:dataInputRefs>_591157C2-F43C-4156-B984-C8E298EFE584_commandInput</bpmn2:dataInputRefs>
           <bpmn2:dataInputRefs>_591157C2-F43C-4156-B984-C8E298EFE584_callbacksInput</bpmn2:dataInputRefs>
           <bpmn2:dataInputRefs>_591157C2-F43C-4156-B984-C8E298EFE584_waitTillCompleteInput</bpmn2:dataInputRefs>
           <bpmn2:dataInputRefs>_591157C2-F43C-4156-B984-C8E298EFE584_TaskNameInput</bpmn2:dataInputRefs>
@@ -211,10 +211,10 @@
         </bpmn2:assignment>
       </bpmn2:dataInputAssociation>
       <bpmn2:dataInputAssociation id="_TON09XbHEeGE3Yfy3fPHUw">
-        <bpmn2:targetRef>_591157C2-F43C-4156-B984-C8E298EFE584_commandClassInput</bpmn2:targetRef>
+        <bpmn2:targetRef>_591157C2-F43C-4156-B984-C8E298EFE584_commandInput</bpmn2:targetRef>
         <bpmn2:assignment id="_TON09nbHEeGE3Yfy3fPHUw">
-          <bpmn2:from xsi:type="bpmn2:tFormalExpression" id="_TON093bHEeGE3Yfy3fPHUw">com.salaboy.jbpm5.dev.guide.commands.NotifyInsuranceCompanyCommand</bpmn2:from>
-          <bpmn2:to xsi:type="bpmn2:tFormalExpression" id="_TON0-HbHEeGE3Yfy3fPHUw">_591157C2-F43C-4156-B984-C8E298EFE584_commandClassInput</bpmn2:to>
+          <bpmn2:from xsi:type="bpmn2:tFormalExpression" id="_TON093bHEeGE3Yfy3fPHUw">NotifyInsuranceCompanyCommand</bpmn2:from>
+          <bpmn2:to xsi:type="bpmn2:tFormalExpression" id="_TON0-HbHEeGE3Yfy3fPHUw">_591157C2-F43C-4156-B984-C8E298EFE584_commandInput</bpmn2:to>
         </bpmn2:assignment>
       </bpmn2:dataInputAssociation>
       <bpmn2:dataOutputAssociation id="_TON0-XbHEeGE3Yfy3fPHUw">
@@ -240,13 +240,13 @@
       <bpmn2:outgoing>_A24DC59B-2B0C-47EE-A58A-99AF730BBE0B</bpmn2:outgoing>
       <bpmn2:ioSpecification id="_TON0_HbHEeGE3Yfy3fPHUw">
         <bpmn2:dataInput id="_13D5A055-9964-42FA-88F6-0E768AA2D4F9_TaskNameInput" name="TaskName"/>
-        <bpmn2:dataInput id="_13D5A055-9964-42FA-88F6-0E768AA2D4F9_commandClassInput" drools:dtype="String" itemSubjectRef="__13D5A055-9964-42FA-88F6-0E768AA2D4F9_commandClassInputItem" name="commandClass"/>
+        <bpmn2:dataInput id="_13D5A055-9964-42FA-88F6-0E768AA2D4F9_commandInput" drools:dtype="String" itemSubjectRef="__13D5A055-9964-42FA-88F6-0E768AA2D4F9_commandInputItem" name="command"/>
         <bpmn2:dataInput id="_13D5A055-9964-42FA-88F6-0E768AA2D4F9_callbacksInput" drools:dtype="String" itemSubjectRef="__13D5A055-9964-42FA-88F6-0E768AA2D4F9_callbacksInputItem" name="callbacks"/>
         <bpmn2:dataInput id="_13D5A055-9964-42FA-88F6-0E768AA2D4F9_waitTillCompleteInput" drools:dtype="Boolean" itemSubjectRef="__13D5A055-9964-42FA-88F6-0E768AA2D4F9_waitTillCompleteInputItem" name="waitTillComplete"/>
         <bpmn2:dataOutput id="_13D5A055-9964-42FA-88F6-0E768AA2D4F9_rates_finalAmountOutput" drools:dtype="java.math.BigDecimal" itemSubjectRef="__13D5A055-9964-42FA-88F6-0E768AA2D4F9_rates_finalAmountOutputItem" name="rates_finalAmount"/>
         <bpmn2:dataOutput id="_13D5A055-9964-42FA-88F6-0E768AA2D4F9_rates_conceptsOutput" drools:dtype="java.util.List" itemSubjectRef="__13D5A055-9964-42FA-88F6-0E768AA2D4F9_rates_conceptsOutputItem" name="rates_concepts"/>
         <bpmn2:inputSet id="_TON0_XbHEeGE3Yfy3fPHUw">
-          <bpmn2:dataInputRefs>_13D5A055-9964-42FA-88F6-0E768AA2D4F9_commandClassInput</bpmn2:dataInputRefs>
+          <bpmn2:dataInputRefs>_13D5A055-9964-42FA-88F6-0E768AA2D4F9_commandInput</bpmn2:dataInputRefs>
           <bpmn2:dataInputRefs>_13D5A055-9964-42FA-88F6-0E768AA2D4F9_callbacksInput</bpmn2:dataInputRefs>
           <bpmn2:dataInputRefs>_13D5A055-9964-42FA-88F6-0E768AA2D4F9_waitTillCompleteInput</bpmn2:dataInputRefs>
           <bpmn2:dataInputRefs>_13D5A055-9964-42FA-88F6-0E768AA2D4F9_TaskNameInput</bpmn2:dataInputRefs>
@@ -278,10 +278,10 @@
         </bpmn2:assignment>
       </bpmn2:dataInputAssociation>
       <bpmn2:dataInputAssociation id="_TON1C3bHEeGE3Yfy3fPHUw">
-        <bpmn2:targetRef>_13D5A055-9964-42FA-88F6-0E768AA2D4F9_commandClassInput</bpmn2:targetRef>
+        <bpmn2:targetRef>_13D5A055-9964-42FA-88F6-0E768AA2D4F9_commandInput</bpmn2:targetRef>
         <bpmn2:assignment id="_TON1DHbHEeGE3Yfy3fPHUw">
-          <bpmn2:from xsi:type="bpmn2:tFormalExpression" id="_TON1DXbHEeGE3Yfy3fPHUw">com.salaboy.jbpm5.dev.guide.commands.CalculateHospitalRatesCommand</bpmn2:from>
-          <bpmn2:to xsi:type="bpmn2:tFormalExpression" id="_TON1DnbHEeGE3Yfy3fPHUw">_13D5A055-9964-42FA-88F6-0E768AA2D4F9_commandClassInput</bpmn2:to>
+          <bpmn2:from xsi:type="bpmn2:tFormalExpression" id="_TON1DXbHEeGE3Yfy3fPHUw">CalculateHospitalRatesCommand</bpmn2:from>
+          <bpmn2:to xsi:type="bpmn2:tFormalExpression" id="_TON1DnbHEeGE3Yfy3fPHUw">_13D5A055-9964-42FA-88F6-0E768AA2D4F9_commandInput</bpmn2:to>
         </bpmn2:assignment>
       </bpmn2:dataInputAssociation>
       <bpmn2:dataOutputAssociation id="_TON1D3bHEeGE3Yfy3fPHUw">
@@ -313,7 +313,7 @@
         <bpmn2:dataInput id="_B7664677-D018-42B8-80D3-BD5FF1CDC019_invoice_conceptsInput" drools:dtype="java.util.List" itemSubjectRef="__B7664677-D018-42B8-80D3-BD5FF1CDC019_invoice_conceptsInputItem" name="invoice_concepts"/>
         <bpmn2:dataInput id="_B7664677-D018-42B8-80D3-BD5FF1CDC019_waitTillCompleteInput" drools:dtype="Boolean" itemSubjectRef="__B7664677-D018-42B8-80D3-BD5FF1CDC019_waitTillCompleteInputItem" name="waitTillComplete"/>
         <bpmn2:dataInput id="_B7664677-D018-42B8-80D3-BD5FF1CDC019_callbacksInput" drools:dtype="String" itemSubjectRef="__B7664677-D018-42B8-80D3-BD5FF1CDC019_callbacksInputItem" name="callbacks"/>
-        <bpmn2:dataInput id="_B7664677-D018-42B8-80D3-BD5FF1CDC019_commandClassInput" drools:dtype="String" itemSubjectRef="__B7664677-D018-42B8-80D3-BD5FF1CDC019_commandClassInputItem" name="commandClass"/>
+        <bpmn2:dataInput id="_B7664677-D018-42B8-80D3-BD5FF1CDC019_commandInput" drools:dtype="String" itemSubjectRef="__B7664677-D018-42B8-80D3-BD5FF1CDC019_commandInputItem" name="command"/>
         <bpmn2:dataOutput id="_B7664677-D018-42B8-80D3-BD5FF1CDC019_invoice_patientNotifiedOutput" drools:dtype="Boolean" itemSubjectRef="__B7664677-D018-42B8-80D3-BD5FF1CDC019_invoice_patientNotifiedOutputItem" name="invoice_patientNotified"/>
         <bpmn2:inputSet id="_TON1E3bHEeGE3Yfy3fPHUw">
           <bpmn2:dataInputRefs>_B7664677-D018-42B8-80D3-BD5FF1CDC019_invoice_finalAmountInput</bpmn2:dataInputRefs>
@@ -321,7 +321,7 @@
           <bpmn2:dataInputRefs>_B7664677-D018-42B8-80D3-BD5FF1CDC019_invoice_conceptsInput</bpmn2:dataInputRefs>
           <bpmn2:dataInputRefs>_B7664677-D018-42B8-80D3-BD5FF1CDC019_waitTillCompleteInput</bpmn2:dataInputRefs>
           <bpmn2:dataInputRefs>_B7664677-D018-42B8-80D3-BD5FF1CDC019_callbacksInput</bpmn2:dataInputRefs>
-          <bpmn2:dataInputRefs>_B7664677-D018-42B8-80D3-BD5FF1CDC019_commandClassInput</bpmn2:dataInputRefs>
+          <bpmn2:dataInputRefs>_B7664677-D018-42B8-80D3-BD5FF1CDC019_commandInput</bpmn2:dataInputRefs>
           <bpmn2:dataInputRefs>_B7664677-D018-42B8-80D3-BD5FF1CDC019_TaskNameInput</bpmn2:dataInputRefs>
         </bpmn2:inputSet>
         <bpmn2:outputSet id="_TON1FHbHEeGE3Yfy3fPHUw">
@@ -362,10 +362,10 @@
         </bpmn2:assignment>
       </bpmn2:dataInputAssociation>
       <bpmn2:dataInputAssociation id="_TOOb6HbHEeGE3Yfy3fPHUw">
-        <bpmn2:targetRef>_B7664677-D018-42B8-80D3-BD5FF1CDC019_commandClassInput</bpmn2:targetRef>
+        <bpmn2:targetRef>_B7664677-D018-42B8-80D3-BD5FF1CDC019_commandInput</bpmn2:targetRef>
         <bpmn2:assignment id="_TOOb6XbHEeGE3Yfy3fPHUw">
-          <bpmn2:from xsi:type="bpmn2:tFormalExpression" id="_TOOb6nbHEeGE3Yfy3fPHUw">com.salaboy.jbpm5.dev.guide.commands.NotifyAndChargePatientCommand</bpmn2:from>
-          <bpmn2:to xsi:type="bpmn2:tFormalExpression" id="_TOOb63bHEeGE3Yfy3fPHUw">_B7664677-D018-42B8-80D3-BD5FF1CDC019_commandClassInput</bpmn2:to>
+          <bpmn2:from xsi:type="bpmn2:tFormalExpression" id="_TOOb6nbHEeGE3Yfy3fPHUw">NotifyAndChargePatientCommand</bpmn2:from>
+          <bpmn2:to xsi:type="bpmn2:tFormalExpression" id="_TOOb63bHEeGE3Yfy3fPHUw">_B7664677-D018-42B8-80D3-BD5FF1CDC019_commandInput</bpmn2:to>
         </bpmn2:assignment>
       </bpmn2:dataInputAssociation>
       <bpmn2:dataOutputAssociation id="_TOOb7HbHEeGE3Yfy3fPHUw">

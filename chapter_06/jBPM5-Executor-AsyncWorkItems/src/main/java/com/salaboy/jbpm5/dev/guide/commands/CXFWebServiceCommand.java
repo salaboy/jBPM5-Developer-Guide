@@ -1,14 +1,14 @@
 package com.salaboy.jbpm5.dev.guide.commands;
 
 import java.io.Serializable;
-
+import javax.inject.Named;
 import org.apache.cxf.endpoint.Client;
 import org.apache.cxf.jaxws.endpoint.dynamic.JaxWsDynamicClientFactory;
+import org.jbpm.executor.api.Command;
+import org.jbpm.executor.api.CommandContext;
+import org.jbpm.executor.api.ExecutionResults;
 
-import com.salaboy.jbpm5.dev.guide.executor.Command;
-import com.salaboy.jbpm5.dev.guide.executor.CommandContext;
-import com.salaboy.jbpm5.dev.guide.executor.ExecutionResults;
-
+@Named
 public class CXFWebServiceCommand implements Command {
 
 	public ExecutionResults execute(CommandContext ctx) {

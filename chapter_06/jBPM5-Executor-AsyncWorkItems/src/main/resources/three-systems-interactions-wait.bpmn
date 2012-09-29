@@ -37,7 +37,7 @@
         <dataInput id="_3_webServiceParametersInput" name="webServiceParameters" />
         <dataInput id="_3_wsdlUrlInput" name="wsdlUrl" />
         <dataInput id="_3_methodNameInput" name="methodName" />
-        <dataInput id="_3_commandClassInput" name="commandClass" />
+        <dataInput id="_3_commandInput" name="command" />
         <dataInput id="_3_callbacksInput" name="callbacks" />
         <dataInput id="_3_waitTillCompleteInput" name="waitTillComplete" />
         <dataOutput id="_3_slowservice_resultOneOutput" name="slowservice_resultOne" />
@@ -47,7 +47,7 @@
           <dataInputRefs>_3_webServiceParametersInput</dataInputRefs>
           <dataInputRefs>_3_wsdlUrlInput</dataInputRefs>
           <dataInputRefs>_3_methodNameInput</dataInputRefs>
-          <dataInputRefs>_3_commandClassInput</dataInputRefs>
+          <dataInputRefs>_3_commandInput</dataInputRefs>
           <dataInputRefs>_3_callbacksInput</dataInputRefs>
           <dataInputRefs>_3_waitTillCompleteInput</dataInputRefs>
         </inputSet>
@@ -56,10 +56,10 @@
         </outputSet>
       </ioSpecification>
       <dataInputAssociation>
-        <targetRef>_3_commandClassInput</targetRef>
+        <targetRef>_3_commandInput</targetRef>
         <assignment>
-          <from xsi:type="tFormalExpression">com.salaboy.jbpm5.dev.guide.commands.CXFWebServiceCommand</from>
-          <to xsi:type="tFormalExpression">_3_commandClassInput</to>
+          <from xsi:type="tFormalExpression">CXFWebServiceCommand</from>
+          <to xsi:type="tFormalExpression">_3_commandInput</to>
         </assignment>
       </dataInputAssociation>
       <dataInputAssociation>
@@ -120,7 +120,7 @@
         <dataInput id="_4_webServiceParametersInput" name="webServiceParameters" />
         <dataInput id="_4_wsdlUrlInput" name="wsdlUrl" />
         <dataInput id="_4_methodNameInput" name="methodName" />
-        <dataInput id="_4_commandClassInput" name="commandClass" />
+        <dataInput id="_4_commandInput" name="command" />
         <dataInput id="_4_callbacksInput" name="callbacks" />
         <dataInput id="_4_waitTillCompleteInput" name="waitTillComplete" />
         <dataOutput id="_4_slowservice_resultTwoOutput" name="slowservice_resultTwo" />
@@ -130,7 +130,7 @@
           <dataInputRefs>_4_webServiceParametersInput</dataInputRefs>
           <dataInputRefs>_4_wsdlUrlInput</dataInputRefs>
           <dataInputRefs>_4_methodNameInput</dataInputRefs>
-          <dataInputRefs>_4_commandClassInput</dataInputRefs>
+          <dataInputRefs>_4_commandInput</dataInputRefs>
           <dataInputRefs>_4_callbacksInput</dataInputRefs>
           <dataInputRefs>_4_waitTillCompleteInput</dataInputRefs>
         </inputSet>
@@ -139,10 +139,10 @@
         </outputSet>
       </ioSpecification>
       <dataInputAssociation>
-        <targetRef>_4_commandClassInput</targetRef>
+        <targetRef>_4_commandInput</targetRef>
         <assignment>
-          <from xsi:type="tFormalExpression">com.salaboy.jbpm5.dev.guide.commands.CXFWebServiceCommand</from>
-          <to xsi:type="tFormalExpression">_4_commandClassInput</to>
+          <from xsi:type="tFormalExpression">CXFWebServiceCommand</from>
+          <to xsi:type="tFormalExpression">_4_commandInput</to>
         </assignment>
       </dataInputAssociation>
       <dataInputAssociation>
@@ -203,7 +203,7 @@
         <dataInput id="_5_webServiceParametersInput" name="webServiceParameters" />
         <dataInput id="_5_wsdlUrlInput" name="wsdlUrl" />
         <dataInput id="_5_methodNameInput" name="methodName" />
-        <dataInput id="_5_commandClassInput" name="commandClass" />
+        <dataInput id="_5_commandInput" name="command" />
         <dataInput id="_5_callbacksInput" name="callbacks" />
         <dataInput id="_5_waitTillCompleteInput" name="waitTillComplete" />
         <dataOutput id="_5_slowservice_resultThreeOutput" name="slowservice_resultThree" />
@@ -213,7 +213,7 @@
           <dataInputRefs>_5_webServiceParametersInput</dataInputRefs>
           <dataInputRefs>_5_wsdlUrlInput</dataInputRefs>
           <dataInputRefs>_5_methodNameInput</dataInputRefs>
-          <dataInputRefs>_5_commandClassInput</dataInputRefs>
+          <dataInputRefs>_5_commandInput</dataInputRefs>
           <dataInputRefs>_5_callbacksInput</dataInputRefs>
           <dataInputRefs>_5_waitTillCompleteInput</dataInputRefs>
         </inputSet>
@@ -222,10 +222,10 @@
         </outputSet>
       </ioSpecification>
       <dataInputAssociation>
-        <targetRef>_5_commandClassInput</targetRef>
+        <targetRef>_5_commandInput</targetRef>
         <assignment>
-          <from xsi:type="tFormalExpression">com.salaboy.jbpm5.dev.guide.commands.CXFWebServiceCommand</from>
-          <to xsi:type="tFormalExpression">_5_commandClassInput</to>
+          <from xsi:type="tFormalExpression">CXFWebServiceCommand</from>
+          <to xsi:type="tFormalExpression">_5_commandInput</to>
         </assignment>
       </dataInputAssociation>
       <dataInputAssociation>

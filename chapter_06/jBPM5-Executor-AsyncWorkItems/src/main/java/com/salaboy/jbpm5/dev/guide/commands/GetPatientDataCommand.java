@@ -4,27 +4,28 @@
  */
 package com.salaboy.jbpm5.dev.guide.commands;
 
-import com.salaboy.jbpm5.dev.guide.executor.Command;
-import com.salaboy.jbpm5.dev.guide.executor.CommandContext;
-import com.salaboy.jbpm5.dev.guide.executor.ExecutionResults;
 import com.salaboy.jbpm5.dev.guide.model.Patient;
 import com.salaboy.jbpm5.dev.guide.webservice.InsuranceService;
 import java.net.MalformedURLException;
 import java.net.URL;
+import javax.inject.Named;
 import javax.xml.namespace.QName;
 import javax.xml.ws.Service;
+import org.jbpm.executor.api.Command;
+import org.jbpm.executor.api.CommandContext;
+import org.jbpm.executor.api.ExecutionResults;
 
 /**
  *
  * @author salaboy
  */
+@Named
 public class GetPatientDataCommand implements Command {
 
     public ExecutionResults execute(CommandContext ctx) throws MalformedURLException {
         String patientId = (String) ctx.getData("gatherdata_patientName");
-        Patient patientData = null;
         InsuranceService client = getClient();
-        patientData = client.getPatientData(patientId);
+        Patient patientData = client.getPatientData(patientId);
         ExecutionResults executionResults = new ExecutionResults();
         executionResults.setData("gatherdata_patient", patientData);
         return executionResults;

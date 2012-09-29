@@ -4,10 +4,10 @@
  */
 package com.salaboy.jbpm5.dev.guide;
 
-import static org.junit.Assert.assertEquals;
-
+import com.salaboy.jbpm5.dev.guide.commands.CheckInCommand;
+import com.salaboy.jbpm5.dev.guide.workitems.AsyncGenericWorkItemHandler;
+import java.sql.SQLException;
 import java.util.HashMap;
-
 import org.drools.KnowledgeBase;
 import org.drools.KnowledgeBaseFactory;
 import org.drools.WorkingMemory;
@@ -18,27 +18,22 @@ import org.drools.builder.KnowledgeBuilderFactory;
 import org.drools.builder.ResourceType;
 import org.drools.event.RuleFlowGroupActivatedEvent;
 import org.drools.event.RuleFlowGroupDeactivatedEvent;
+import org.drools.event.rule.DefaultAgendaEventListener;
 import org.drools.impl.StatefulKnowledgeSessionImpl;
 import org.drools.io.impl.ClassPathResource;
 import org.drools.logger.KnowledgeRuntimeLoggerFactory;
 import org.drools.runtime.StatefulKnowledgeSession;
 import org.drools.runtime.process.ProcessInstance;
 import org.drools.runtime.process.WorkflowProcessInstance;
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
-
-import com.salaboy.jbpm5.dev.guide.commands.CheckInCommand;
-import com.salaboy.jbpm5.dev.guide.executor.Executor;
-
-import com.salaboy.jbpm5.dev.guide.executor.ExecutorImpl;
-import com.salaboy.jbpm5.dev.guide.executor.wih.AsyncGenericWorkItemHandler;
-import java.sql.SQLException;
 import org.h2.tools.DeleteDbFiles;
 import org.h2.tools.Server;
-import org.junit.Ignore;
-import org.springframework.context.ApplicationContext;
-import org.springframework.context.support.ClassPathXmlApplicationContext;
+import org.jbpm.executor.ExecutorModule;
+import org.jbpm.executor.ExecutorServiceEntryPoint;
+import org.jbpm.executor.impl.ExecutorImpl;
+import org.junit.After;
+import static org.junit.Assert.assertEquals;
+import org.junit.Before;
+import org.junit.Test;
 
 /**
  *
@@ -46,9 +41,8 @@ import org.springframework.context.support.ClassPathXmlApplicationContext;
  */
 public class AsyncWorkItemDontWaitForCompletionTest {
 
-    protected Executor executor;
+    protected ExecutorServiceEntryPoint executor;
     protected StatefulKnowledgeSession session;
-    protected ApplicationContext ctx;
     private Server server;
 
     public AsyncWorkItemDontWaitForCompletionTest() {
@@ -76,10 +70,10 @@ public class AsyncWorkItemDontWaitForCompletionTest {
 
     protected void initializeExecutionEnvironment() throws Exception {
         CheckInCommand.reset();
-        ctx = new ClassPathXmlApplicationContext("applicationContext.xml");
-        executor = (Executor) ctx.getBean("executorService");
+        executor = ExecutorModule.getInstance().getExecutorServiceEntryPoint();
+        executor.setThreadPoolSize(1);
+        executor.setInterval(3);
         executor.init();
-        
     }
 
     
@@ -105,41 +99,15 @@ public class AsyncWorkItemDontWaitForCompletionTest {
         session = kbase.newStatefulKnowledgeSession();
         KnowledgeRuntimeLoggerFactory.newConsoleLogger(session);
 
-        ((StatefulKnowledgeSessionImpl) session).session.addEventListener(new org.drools.event.AgendaEventListener() {
+        session.addEventListener(new DefaultAgendaEventListener(){
 
-            public void activationCreated(org.drools.event.ActivationCreatedEvent event, WorkingMemory workingMemory) {
+            @Override
+            public void afterRuleFlowGroupActivated(org.drools.event.rule.RuleFlowGroupActivatedEvent event) {
+                session.fireAllRules();
             }
-
-            public void activationCancelled(org.drools.event.ActivationCancelledEvent event, WorkingMemory workingMemory) {
-            }
-
-            public void beforeActivationFired(org.drools.event.BeforeActivationFiredEvent event, WorkingMemory workingMemory) {
-            }
-
-            public void afterActivationFired(org.drools.event.AfterActivationFiredEvent event, WorkingMemory workingMemory) {
-            }
-
-            public void agendaGroupPopped(org.drools.event.AgendaGroupPoppedEvent event, WorkingMemory workingMemory) {
-            }
-
-            public void agendaGroupPushed(org.drools.event.AgendaGroupPushedEvent event, WorkingMemory workingMemory) {
-            }
-
-            public void beforeRuleFlowGroupActivated(RuleFlowGroupActivatedEvent event, WorkingMemory workingMemory) {
-            }
-
-            public void afterRuleFlowGroupActivated(RuleFlowGroupActivatedEvent event, WorkingMemory workingMemory) {
-                workingMemory.fireAllRules();
-            }
-
-            public void beforeRuleFlowGroupDeactivated(RuleFlowGroupDeactivatedEvent event, WorkingMemory workingMemory) {
-            }
-
-            public void afterRuleFlowGroupDeactivated(RuleFlowGroupDeactivatedEvent event, WorkingMemory workingMemory) {
-            }
+            
         });
-
-
+        
     }
 
     @Test
@@ -158,7 +126,7 @@ public class AsyncWorkItemDontWaitForCompletionTest {
 
         assertEquals(0, CheckInCommand.getCheckInCount());
 
-        Thread.sleep(((ExecutorImpl) executor).getWaitTime() + 1000);
+        Thread.sleep(((ExecutorImpl) executor).getInterval() + 1);
 
         assertEquals(1, CheckInCommand.getCheckInCount());
     }
@@ -179,7 +147,7 @@ public class AsyncWorkItemDontWaitForCompletionTest {
 
         assertEquals(0, CheckInCommand.getCheckInCount());
 
-        Thread.sleep(((ExecutorImpl) executor).getWaitTime() - 1000);
+        Thread.sleep(((ExecutorImpl) executor).getInterval() - 1);
 
         assertEquals(0, CheckInCommand.getCheckInCount());
 

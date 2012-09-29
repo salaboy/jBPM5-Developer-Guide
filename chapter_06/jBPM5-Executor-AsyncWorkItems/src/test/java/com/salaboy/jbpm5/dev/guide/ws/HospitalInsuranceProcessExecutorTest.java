@@ -1,15 +1,16 @@
 package com.salaboy.jbpm5.dev.guide.ws;
 
 import com.salaboy.jbpm5.dev.guide.SessionStoreUtil;
-import com.salaboy.jbpm5.dev.guide.executor.Executor;
-import com.salaboy.jbpm5.dev.guide.executor.wih.AsyncGenericWorkItemHandler;
 import com.salaboy.jbpm5.dev.guide.model.Patient;
-import static org.junit.Assert.assertEquals;
-
+import com.salaboy.jbpm5.dev.guide.webservice.InsuranceService;
+import com.salaboy.jbpm5.dev.guide.webservice.InsuranceServiceImpl;
+import com.salaboy.jbpm5.dev.guide.workitems.AsyncGenericWorkItemHandler;
+import java.math.BigDecimal;
+import java.sql.SQLException;
 import java.util.HashMap;
-
+import java.util.Map;
+import java.util.UUID;
 import javax.xml.ws.Endpoint;
-
 import org.drools.KnowledgeBase;
 import org.drools.KnowledgeBaseFactory;
 import org.drools.WorkingMemory;
@@ -26,20 +27,14 @@ import org.drools.logger.KnowledgeRuntimeLoggerFactory;
 import org.drools.runtime.StatefulKnowledgeSession;
 import org.drools.runtime.process.ProcessInstance;
 import org.drools.runtime.process.WorkflowProcessInstance;
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
-
-import com.salaboy.jbpm5.dev.guide.webservice.InsuranceService;
-import com.salaboy.jbpm5.dev.guide.webservice.InsuranceServiceImpl;
-import java.math.BigDecimal;
-import java.sql.SQLException;
-import java.util.Map;
-import java.util.UUID;
 import org.h2.tools.DeleteDbFiles;
 import org.h2.tools.Server;
-import org.springframework.context.ApplicationContext;
-import org.springframework.context.support.ClassPathXmlApplicationContext;
+import org.jbpm.executor.ExecutorModule;
+import org.jbpm.executor.ExecutorServiceEntryPoint;
+import org.junit.After;
+import static org.junit.Assert.assertEquals;
+import org.junit.Before;
+import org.junit.Test;
 
 public class HospitalInsuranceProcessExecutorTest {
 
@@ -47,8 +42,7 @@ public class HospitalInsuranceProcessExecutorTest {
     private Endpoint endpoint;
     private InsuranceService service;
     private Map<String, Patient> testPatients = new HashMap<String, Patient>();
-    protected Executor executor;
-    private ApplicationContext ctx;
+    protected ExecutorServiceEntryPoint executor;
     private Server server;
     @Before
     public void setUp() {
@@ -72,8 +66,8 @@ public class HospitalInsuranceProcessExecutorTest {
         this.service.getInsuredPatients().put(testPatients.get("brotha").getId(), Boolean.FALSE);
         
         System.out.println(" >>> Insured Patients: "+this.service.getInsuredPatients());
-        ctx = new ClassPathXmlApplicationContext("applicationContext.xml");
-        executor = (Executor) ctx.getBean("executorService");
+        
+        executor = ExecutorModule.getInstance().getExecutorServiceEntryPoint();
         executor.init();
     }
 
@@ -91,7 +85,7 @@ public class HospitalInsuranceProcessExecutorTest {
         Patient salaboy = testPatients.get("salaboy");
         input.put("patientName", salaboy.getId());
         SessionStoreUtil.sessionCache.put("sessionId="+session.getId(), session);
-        AsyncGenericWorkItemHandler genericHandler = new AsyncGenericWorkItemHandler(executor,session.getId());
+        AsyncGenericWorkItemHandler genericHandler = new AsyncGenericWorkItemHandler(executor, session.getId());
 
         session.getWorkItemManager().registerWorkItemHandler("Gather Patient Data", genericHandler);
         session.getWorkItemManager().registerWorkItemHandler("Insurance Service", genericHandler);
