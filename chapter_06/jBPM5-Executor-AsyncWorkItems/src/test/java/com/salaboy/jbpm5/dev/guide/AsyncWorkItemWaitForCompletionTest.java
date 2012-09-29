@@ -46,21 +46,14 @@ public class AsyncWorkItemWaitForCompletionTest {
 
     protected ExecutorServiceEntryPoint executor;
     protected StatefulKnowledgeSession session;
-    private Server server;
+    
 
     public AsyncWorkItemWaitForCompletionTest() {
     }
 
     @Before
     public void setUp() throws Exception {
-        DeleteDbFiles.execute("~", "mydb", false);
-
-        try {
-
-            server = Server.createTcpServer(new String[]{"-tcp", "-tcpAllowOthers", "-tcpDaemon", "-trace"}).start();
-        } catch (SQLException ex) {
-            System.out.println("ex: " + ex);
-        }
+       
         initializeExecutionEnvironment();
         initializeSession();
     }
@@ -68,7 +61,7 @@ public class AsyncWorkItemWaitForCompletionTest {
     @After
     public void tearDown() {
         executor.destroy();
-        server.stop();
+        
     }
 
     protected void initializeExecutionEnvironment() throws Exception {
@@ -180,7 +173,7 @@ public class AsyncWorkItemWaitForCompletionTest {
 
         assertEquals(0, CheckInCommand.getCheckInCount());
 
-        Thread.sleep(((ExecutorImpl) executor).getInterval() * 2);
+        Thread.sleep(((ExecutorServiceEntryPoint) executor).getInterval() * 2);
 
         assertEquals(1, CheckInCommand.getCheckInCount());
 

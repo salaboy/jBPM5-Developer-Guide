@@ -9,9 +9,6 @@ debug="true">
 HH:mm:ss,SSS}[%t] %-5p %c{3}.%M %x- %m%n"/>
        </layout>
    </appender>
-   <logger name="org.drools.mas">
-       <level value="INFO"/>
-   </logger>
    <root>
        <priority value ="INFO" />
        <appender-ref ref="console" />

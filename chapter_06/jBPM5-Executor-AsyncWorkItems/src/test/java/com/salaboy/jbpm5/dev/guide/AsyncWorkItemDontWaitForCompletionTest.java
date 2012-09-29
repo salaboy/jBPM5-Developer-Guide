@@ -43,21 +43,14 @@ public class AsyncWorkItemDontWaitForCompletionTest {
 
     protected ExecutorServiceEntryPoint executor;
     protected StatefulKnowledgeSession session;
-    private Server server;
+    
 
     public AsyncWorkItemDontWaitForCompletionTest() {
     }
 
     @Before
     public void setUp() throws Exception {
-        DeleteDbFiles.execute("~", "mydb", false);
-
-        try {
-
-            server = Server.createTcpServer(new String[]{"-tcp", "-tcpAllowOthers", "-tcpDaemon", "-trace"}).start();
-        } catch (SQLException ex) {
-            System.out.println("ex: " + ex);
-        }
+      
         initializeExecutionEnvironment();
         initializeSession();
     }
@@ -65,7 +58,7 @@ public class AsyncWorkItemDontWaitForCompletionTest {
     @After
     public void tearDown() {
         executor.destroy();
-        server.stop();
+       
     }
 
     protected void initializeExecutionEnvironment() throws Exception {
