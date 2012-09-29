@@ -54,6 +54,8 @@ public class AsyncWorkItemWaitForCompletionTest {
 
     @After
     public void tearDown() {
+        executor.clearAllRequests();
+        executor.clearAllErrors();
         executor.destroy();
         
     }
@@ -61,6 +63,8 @@ public class AsyncWorkItemWaitForCompletionTest {
     protected void initializeExecutionEnvironment() throws Exception {
         CheckInCommand.reset();
         executor = ExecutorModule.getInstance().getExecutorServiceEntryPoint();
+        executor.setThreadPoolSize(1);
+        executor.setInterval(3);
         executor.init();
     }
 

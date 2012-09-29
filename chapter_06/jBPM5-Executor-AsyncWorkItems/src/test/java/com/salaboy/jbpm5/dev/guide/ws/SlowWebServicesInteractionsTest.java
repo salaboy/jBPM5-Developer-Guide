@@ -42,6 +42,8 @@ public class SlowWebServicesInteractionsTest {
 
     @After
     public void tearDown() {
+        executor.clearAllRequests();
+        executor.clearAllErrors();
         executor.destroy();
         this.endpoint.stop();
     }
@@ -111,6 +113,7 @@ public class SlowWebServicesInteractionsTest {
 
         List<RequestInfo> resultList = executor.getExecutedRequests();
         assertEquals(3, resultList.size());
+        session.dispose();
     }
 
     @Test
@@ -138,5 +141,6 @@ public class SlowWebServicesInteractionsTest {
         assertEquals(3, resultList.size());
 
         assertEquals(ProcessInstance.STATE_COMPLETED, pI.getState());
+        session.dispose();
     }
 }

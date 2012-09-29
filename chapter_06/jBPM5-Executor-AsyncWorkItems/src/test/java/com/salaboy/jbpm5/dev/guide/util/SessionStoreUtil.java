@@ -13,8 +13,10 @@ import org.drools.runtime.StatefulKnowledgeSession;
  * @author salaboy
  */
 public class SessionStoreUtil {
-    public static Map<String, StatefulKnowledgeSession> sessionCache = new HashMap<String, StatefulKnowledgeSession>();
+    public final static Map<String, StatefulKnowledgeSession> sessionCache = new HashMap<String, StatefulKnowledgeSession>();
+    
+    
     public static void clean(){
-        sessionCache = new HashMap<String, StatefulKnowledgeSession>();
+        sessionCache.clear();
     }
 }

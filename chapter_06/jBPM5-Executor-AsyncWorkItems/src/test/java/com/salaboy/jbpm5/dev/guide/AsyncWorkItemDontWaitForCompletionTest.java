@@ -49,6 +49,8 @@ public class AsyncWorkItemDontWaitForCompletionTest {
 
     @After
     public void tearDown() {
+        executor.clearAllRequests();
+        executor.clearAllErrors();
         executor.destroy();
        
     }

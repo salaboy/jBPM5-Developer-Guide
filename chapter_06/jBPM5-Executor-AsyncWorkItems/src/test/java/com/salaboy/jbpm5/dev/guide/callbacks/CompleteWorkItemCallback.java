@@ -30,7 +30,12 @@ public class CompleteWorkItemCallback implements CommandCallback {
         String sWorkItemId = (String) ctx.getData("_workItemId");
         String businessKey = (String) ctx.getData("businessKey");
         String[] key = businessKey.split("@");
-        StatefulKnowledgeSession session = SessionStoreUtil.sessionCache.get(key[1]);
+
+        StatefulKnowledgeSession session = null;
+        synchronized(SessionStoreUtil.sessionCache){
+           session = SessionStoreUtil.sessionCache.get(key[1]);
+        }
+        
         session.getWorkItemManager().completeWorkItem(Long.valueOf(sWorkItemId), output);
     }
 }

@@ -57,12 +57,16 @@ public class HospitalInsuranceProcessExecutorTest {
         System.out.println(" >>> Insured Patients: "+this.service.getInsuredPatients());
         
         executor = ExecutorModule.getInstance().getExecutorServiceEntryPoint();
+        executor.setThreadPoolSize(1);
+        executor.setInterval(3);
         executor.init();
     }
 
     @After
     public void tearDown() {
         stopWebService();
+        executor.clearAllRequests();
+        executor.clearAllErrors();
         executor.destroy();
     }
 
