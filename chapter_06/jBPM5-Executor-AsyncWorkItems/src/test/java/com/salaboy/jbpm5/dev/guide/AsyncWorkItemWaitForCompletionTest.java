@@ -58,9 +58,12 @@ public class AsyncWorkItemWaitForCompletionTest {
         executor.clearAllErrors();
         executor.destroy();
         
+        SessionStoreUtil.clean();
+        
     }
 
     protected void initializeExecutionEnvironment() throws Exception {
+        
         CheckInCommand.reset();
         executor = ExecutorModule.getInstance().getExecutorServiceEntryPoint();
         executor.setThreadPoolSize(1);
@@ -100,19 +103,16 @@ public class AsyncWorkItemWaitForCompletionTest {
             
         });
 
+        SessionStoreUtil.sessionCache.put("sessionId="+session.getId(), session);
     }
 
     @Test
-    @Ignore
     public void executorCheckInTestFinishesWithoutHandler() throws InterruptedException {
         HashMap<String, Object> input = new HashMap<String, Object>();
 
         String patientName = "John Doe";
         input.put("bedrequest_patientname", patientName);
 
-        
-        List<String> callbacks = new ArrayList<String>();
-        callbacks.add(PrintResultsCallback.class.getCanonicalName());
         AsyncGenericWorkItemHandler asyncHandler = new AsyncGenericWorkItemHandler(executor, session.getId());
         session.getWorkItemManager().registerWorkItemHandler("Async Work", asyncHandler);
 
@@ -125,6 +125,7 @@ public class AsyncWorkItemWaitForCompletionTest {
         Thread.sleep(executor.getInterval()*1000 + 1000);
 
         assertEquals(1, CheckInCommand.getCheckInCount());
+        
     }
 
     @Test
@@ -134,8 +135,6 @@ public class AsyncWorkItemWaitForCompletionTest {
         String patientName = "John Doe";
         input.put("bedrequest_patientname", patientName);
 
-        SessionStoreUtil.sessionCache.put("sessionId="+session.getId(), session);
-        
         AsyncGenericWorkItemHandler asyncHandler = new AsyncGenericWorkItemHandler(executor, session.getId());
         session.getWorkItemManager().registerWorkItemHandler("Async Work", asyncHandler);
 
@@ -151,19 +150,15 @@ public class AsyncWorkItemWaitForCompletionTest {
 
         assertEquals(ProcessInstance.STATE_COMPLETED, pI.getState());
         
-        SessionStoreUtil.clean();
     }
 
     @Test
-    @Ignore
     public void executorCheckInTestStoppedBefore() throws InterruptedException {
         HashMap<String, Object> input = new HashMap<String, Object>();
 
         String patientName = "John Doe";
         input.put("bedrequest_patientname", patientName);
 
-        List<String> callbacks = new ArrayList<String>();
-        callbacks.add(PrintResultsCallback.class.getCanonicalName());
         AsyncGenericWorkItemHandler asyncHandler = new AsyncGenericWorkItemHandler(executor, session.getId());
         session.getWorkItemManager().registerWorkItemHandler("Async Work", asyncHandler);
 
@@ -173,12 +168,13 @@ public class AsyncWorkItemWaitForCompletionTest {
 
         assertEquals(0, CheckInCommand.getCheckInCount());
 
-        Thread.sleep(executor.getInterval()*1000 - 1000);
+        Thread.sleep(1000);
 
         assertEquals(0, CheckInCommand.getCheckInCount());
 
         Thread.sleep(1500);
 
         assertEquals(1, CheckInCommand.getCheckInCount());
+        
     }
 }
