@@ -13,9 +13,7 @@
     <url>http://salaboy.com</url>
     <modules>
         <module>jBPM5-Executor-Service</module>
-        <module>jBPM5-Executor-AsyncWorkItems</module>
-        <!--module>jBPM5-WebServiceTasksSimple</module>
-        <module>jBPM5-ServiceTasksSimple</module-->
+        <module>jBPM5-Patient-Insurance</module>
     </modules>
     
    

@@ -64,10 +64,10 @@ public class HospitalInsuranceProcessExecutorTest {
 
     @After
     public void tearDown() {
-        stopWebService();
         executor.clearAllRequests();
         executor.clearAllErrors();
         executor.destroy();
+        stopWebService();
     }
 
     @Test

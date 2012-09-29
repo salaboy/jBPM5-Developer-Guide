@@ -57,6 +57,7 @@ public class AsyncWorkItemWaitForCompletionTest {
         executor.clearAllRequests();
         executor.clearAllErrors();
         executor.destroy();
+        SessionStoreUtil.clean();
         
         SessionStoreUtil.clean();
         
@@ -102,6 +103,7 @@ public class AsyncWorkItemWaitForCompletionTest {
             }
             
         });
+        SessionStoreUtil.sessionCache.put("sessionId="+session.getId(), session);
 
         SessionStoreUtil.sessionCache.put("sessionId="+session.getId(), session);
     }
