@@ -58,14 +58,14 @@
       <dataInputAssociation>
         <targetRef>_3_commandInput</targetRef>
         <assignment>
-          <from xsi:type="tFormalExpression">CXFWebServiceCommand</from>
+          <from xsi:type="tFormalExpression">cxfwebServiceCommand</from>
           <to xsi:type="tFormalExpression">_3_commandInput</to>
         </assignment>
       </dataInputAssociation>
        <dataInputAssociation>
         <targetRef>_3_callbacksInput</targetRef>
         <assignment>
-          <from xsi:type="tFormalExpression">com.salaboy.jbpm5.dev.guide.callbacks.PrintResultsCallback</from>
+          <from xsi:type="tFormalExpression">printResultsCallback</from>
           <to xsi:type="tFormalExpression">_3_callbacksInput</to>
         </assignment>
       </dataInputAssociation>
@@ -141,14 +141,14 @@
       <dataInputAssociation>
         <targetRef>_4_commandInput</targetRef>
         <assignment>
-          <from xsi:type="tFormalExpression">CXFWebServiceCommand</from>
+          <from xsi:type="tFormalExpression">cxfwebServiceCommand</from>
           <to xsi:type="tFormalExpression">_4_commandInput</to>
         </assignment>
       </dataInputAssociation>
       <dataInputAssociation>
         <targetRef>_4_callbacksInput</targetRef>
         <assignment>
-          <from xsi:type="tFormalExpression">com.salaboy.jbpm5.dev.guide.callbacks.PrintResultsCallback</from>
+          <from xsi:type="tFormalExpression">printResultsCallback</from>
           <to xsi:type="tFormalExpression">_4_callbacksInput</to>
         </assignment>
       </dataInputAssociation>
@@ -224,14 +224,14 @@
       <dataInputAssociation>
         <targetRef>_5_commandInput</targetRef>
         <assignment>
-          <from xsi:type="tFormalExpression">CXFWebServiceCommand</from>
+          <from xsi:type="tFormalExpression">cxfwebServiceCommand</from>
           <to xsi:type="tFormalExpression">_5_commandInput</to>
         </assignment>
       </dataInputAssociation>
       <dataInputAssociation>
         <targetRef>_5_callbacksInput</targetRef>
         <assignment>
-          <from xsi:type="tFormalExpression">com.salaboy.jbpm5.dev.guide.callbacks.PrintResultsCallback</from>
+          <from xsi:type="tFormalExpression">printResultsCallback</from>
           <to xsi:type="tFormalExpression">_5_callbacksInput</to>
         </assignment>
       </dataInputAssociation>

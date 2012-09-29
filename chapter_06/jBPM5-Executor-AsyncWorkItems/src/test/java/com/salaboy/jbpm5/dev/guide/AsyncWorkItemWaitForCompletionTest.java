@@ -4,34 +4,28 @@
  */
 package com.salaboy.jbpm5.dev.guide;
 
+import com.salaboy.jbpm5.dev.guide.util.SessionStoreUtil;
 import com.salaboy.jbpm5.dev.guide.callbacks.PrintResultsCallback;
 import com.salaboy.jbpm5.dev.guide.commands.CheckInCommand;
 import com.salaboy.jbpm5.dev.guide.workitems.AsyncGenericWorkItemHandler;
-import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import org.drools.KnowledgeBase;
 import org.drools.KnowledgeBaseFactory;
-import org.drools.WorkingMemory;
 import org.drools.builder.KnowledgeBuilder;
 import org.drools.builder.KnowledgeBuilderError;
 import org.drools.builder.KnowledgeBuilderErrors;
 import org.drools.builder.KnowledgeBuilderFactory;
 import org.drools.builder.ResourceType;
-import org.drools.event.RuleFlowGroupActivatedEvent;
-import org.drools.event.RuleFlowGroupDeactivatedEvent;
-import org.drools.impl.StatefulKnowledgeSessionImpl;
+import org.drools.event.rule.DefaultAgendaEventListener;
 import org.drools.io.impl.ClassPathResource;
 import org.drools.logger.KnowledgeRuntimeLoggerFactory;
 import org.drools.runtime.StatefulKnowledgeSession;
 import org.drools.runtime.process.ProcessInstance;
 import org.drools.runtime.process.WorkflowProcessInstance;
-import org.h2.tools.DeleteDbFiles;
-import org.h2.tools.Server;
 import org.jbpm.executor.ExecutorModule;
 import org.jbpm.executor.ExecutorServiceEntryPoint;
-import org.jbpm.executor.impl.ExecutorImpl;
 import org.junit.After;
 import static org.junit.Assert.assertEquals;
 import org.junit.Before;
@@ -93,40 +87,14 @@ public class AsyncWorkItemWaitForCompletionTest {
         session = kbase.newStatefulKnowledgeSession();
         KnowledgeRuntimeLoggerFactory.newConsoleLogger(session);
 
-        ((StatefulKnowledgeSessionImpl) session).session.addEventListener(new org.drools.event.AgendaEventListener() {
+        session.addEventListener(new DefaultAgendaEventListener(){
 
-            public void activationCreated(org.drools.event.ActivationCreatedEvent event, WorkingMemory workingMemory) {
+            @Override
+            public void afterRuleFlowGroupActivated(org.drools.event.rule.RuleFlowGroupActivatedEvent event) {
+                session.fireAllRules();
             }
-
-            public void activationCancelled(org.drools.event.ActivationCancelledEvent event, WorkingMemory workingMemory) {
-            }
-
-            public void beforeActivationFired(org.drools.event.BeforeActivationFiredEvent event, WorkingMemory workingMemory) {
-            }
-
-            public void afterActivationFired(org.drools.event.AfterActivationFiredEvent event, WorkingMemory workingMemory) {
-            }
-
-            public void agendaGroupPopped(org.drools.event.AgendaGroupPoppedEvent event, WorkingMemory workingMemory) {
-            }
-
-            public void agendaGroupPushed(org.drools.event.AgendaGroupPushedEvent event, WorkingMemory workingMemory) {
-            }
-
-            public void beforeRuleFlowGroupActivated(RuleFlowGroupActivatedEvent event, WorkingMemory workingMemory) {
-            }
-
-            public void afterRuleFlowGroupActivated(RuleFlowGroupActivatedEvent event, WorkingMemory workingMemory) {
-                workingMemory.fireAllRules();
-            }
-
-            public void beforeRuleFlowGroupDeactivated(RuleFlowGroupDeactivatedEvent event, WorkingMemory workingMemory) {
-            }
-
-            public void afterRuleFlowGroupDeactivated(RuleFlowGroupDeactivatedEvent event, WorkingMemory workingMemory) {
-            }
+            
         });
-
 
     }
 
@@ -150,7 +118,7 @@ public class AsyncWorkItemWaitForCompletionTest {
 
         assertEquals(0, CheckInCommand.getCheckInCount());
 
-        Thread.sleep(((ExecutorImpl) executor).getInterval() + 1000);
+        Thread.sleep(executor.getInterval()*1000 + 1000);
 
         assertEquals(1, CheckInCommand.getCheckInCount());
     }
@@ -173,7 +141,7 @@ public class AsyncWorkItemWaitForCompletionTest {
 
         assertEquals(0, CheckInCommand.getCheckInCount());
 
-        Thread.sleep(((ExecutorServiceEntryPoint) executor).getInterval() * 2);
+        Thread.sleep(executor.getInterval() * 2000);
 
         assertEquals(1, CheckInCommand.getCheckInCount());
 
@@ -201,7 +169,7 @@ public class AsyncWorkItemWaitForCompletionTest {
 
         assertEquals(0, CheckInCommand.getCheckInCount());
 
-        Thread.sleep(((ExecutorImpl) executor).getInterval() - 1000);
+        Thread.sleep(executor.getInterval()*1000 - 1000);
 
         assertEquals(0, CheckInCommand.getCheckInCount());
 

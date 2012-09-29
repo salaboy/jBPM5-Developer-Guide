@@ -4,7 +4,7 @@
  */
 package com.salaboy.jbpm5.dev.guide.callbacks;
 
-import com.salaboy.jbpm5.dev.guide.SessionStoreUtil;
+import com.salaboy.jbpm5.dev.guide.util.SessionStoreUtil;
 import java.util.HashMap;
 import java.util.Map;
 import javax.inject.Named;

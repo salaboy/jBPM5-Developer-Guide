@@ -6,30 +6,22 @@ package com.salaboy.jbpm5.dev.guide;
 
 import com.salaboy.jbpm5.dev.guide.commands.CheckInCommand;
 import com.salaboy.jbpm5.dev.guide.workitems.AsyncGenericWorkItemHandler;
-import java.sql.SQLException;
 import java.util.HashMap;
 import org.drools.KnowledgeBase;
 import org.drools.KnowledgeBaseFactory;
-import org.drools.WorkingMemory;
 import org.drools.builder.KnowledgeBuilder;
 import org.drools.builder.KnowledgeBuilderError;
 import org.drools.builder.KnowledgeBuilderErrors;
 import org.drools.builder.KnowledgeBuilderFactory;
 import org.drools.builder.ResourceType;
-import org.drools.event.RuleFlowGroupActivatedEvent;
-import org.drools.event.RuleFlowGroupDeactivatedEvent;
 import org.drools.event.rule.DefaultAgendaEventListener;
-import org.drools.impl.StatefulKnowledgeSessionImpl;
 import org.drools.io.impl.ClassPathResource;
 import org.drools.logger.KnowledgeRuntimeLoggerFactory;
 import org.drools.runtime.StatefulKnowledgeSession;
 import org.drools.runtime.process.ProcessInstance;
 import org.drools.runtime.process.WorkflowProcessInstance;
-import org.h2.tools.DeleteDbFiles;
-import org.h2.tools.Server;
 import org.jbpm.executor.ExecutorModule;
 import org.jbpm.executor.ExecutorServiceEntryPoint;
-import org.jbpm.executor.impl.ExecutorImpl;
 import org.junit.After;
 import static org.junit.Assert.assertEquals;
 import org.junit.Before;
@@ -119,7 +111,7 @@ public class AsyncWorkItemDontWaitForCompletionTest {
 
         assertEquals(0, CheckInCommand.getCheckInCount());
 
-        Thread.sleep(((ExecutorImpl) executor).getInterval() + 1);
+        Thread.sleep(executor.getInterval()*1000 + 1000);
 
         assertEquals(1, CheckInCommand.getCheckInCount());
     }
@@ -140,7 +132,7 @@ public class AsyncWorkItemDontWaitForCompletionTest {
 
         assertEquals(0, CheckInCommand.getCheckInCount());
 
-        Thread.sleep(((ExecutorImpl) executor).getInterval() - 1);
+        Thread.sleep(1000);
 
         assertEquals(0, CheckInCommand.getCheckInCount());
 

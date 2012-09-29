@@ -86,14 +86,14 @@
       <bpmn2:dataInputAssociation id="_TONNzXbHEeGE3Yfy3fPHUw">
         <bpmn2:targetRef>_B5027B42-8FD4-4E86-AEFA-B24A374C8D6C_commandInput</bpmn2:targetRef>
         <bpmn2:assignment id="_TONNznbHEeGE3Yfy3fPHUw">
-          <bpmn2:from xsi:type="bpmn2:tFormalExpression" id="_TONNz3bHEeGE3Yfy3fPHUw">IsPatientInsuredCommand</bpmn2:from>
+          <bpmn2:from xsi:type="bpmn2:tFormalExpression" id="_TONNz3bHEeGE3Yfy3fPHUw">isPatientInsuredCommand</bpmn2:from>
           <bpmn2:to xsi:type="bpmn2:tFormalExpression" id="_TONN0HbHEeGE3Yfy3fPHUw">_B5027B42-8FD4-4E86-AEFA-B24A374C8D6C_commandInput</bpmn2:to>
         </bpmn2:assignment>
       </bpmn2:dataInputAssociation>
       <bpmn2:dataInputAssociation id="_TONN0XbHEeGE3Yfy3fPHUw">
         <bpmn2:targetRef>_B5027B42-8FD4-4E86-AEFA-B24A374C8D6C_callbacksInput</bpmn2:targetRef>
         <bpmn2:assignment id="_TONN0nbHEeGE3Yfy3fPHUw">
-          <bpmn2:from xsi:type="bpmn2:tFormalExpression" id="_TONN03bHEeGE3Yfy3fPHUw">com.salaboy.jbpm5.dev.guide.callbacks.CompleteWorkItemCallback</bpmn2:from>
+          <bpmn2:from xsi:type="bpmn2:tFormalExpression" id="_TONN03bHEeGE3Yfy3fPHUw">completeWorkItemCallback</bpmn2:from>
           <bpmn2:to xsi:type="bpmn2:tFormalExpression" id="_TONN1HbHEeGE3Yfy3fPHUw">_B5027B42-8FD4-4E86-AEFA-B24A374C8D6C_callbacksInput</bpmn2:to>
         </bpmn2:assignment>
       </bpmn2:dataInputAssociation>
@@ -137,14 +137,14 @@
       <bpmn2:dataInputAssociation id="_TON02HbHEeGE3Yfy3fPHUw">
         <bpmn2:targetRef>_CF4824F4-C059-49CA-A038-D25F5DBB5999_commandInput</bpmn2:targetRef>
         <bpmn2:assignment id="_TON02XbHEeGE3Yfy3fPHUw">
-          <bpmn2:from xsi:type="bpmn2:tFormalExpression" id="_TON02nbHEeGE3Yfy3fPHUw">GetPatientDataCommand</bpmn2:from>
+          <bpmn2:from xsi:type="bpmn2:tFormalExpression" id="_TON02nbHEeGE3Yfy3fPHUw">getPatientDataCommand</bpmn2:from>
           <bpmn2:to xsi:type="bpmn2:tFormalExpression" id="_TON023bHEeGE3Yfy3fPHUw">_CF4824F4-C059-49CA-A038-D25F5DBB5999_commandInput</bpmn2:to>
         </bpmn2:assignment>
       </bpmn2:dataInputAssociation>
       <bpmn2:dataInputAssociation id="_TON03HbHEeGE3Yfy3fPHUw">
         <bpmn2:targetRef>_CF4824F4-C059-49CA-A038-D25F5DBB5999_callbacksInput</bpmn2:targetRef>
         <bpmn2:assignment id="_TON03XbHEeGE3Yfy3fPHUw">
-          <bpmn2:from xsi:type="bpmn2:tFormalExpression" id="_TON03nbHEeGE3Yfy3fPHUw">com.salaboy.jbpm5.dev.guide.callbacks.CompleteWorkItemCallback</bpmn2:from>
+          <bpmn2:from xsi:type="bpmn2:tFormalExpression" id="_TON03nbHEeGE3Yfy3fPHUw">completeWorkItemCallback</bpmn2:from>
           <bpmn2:to xsi:type="bpmn2:tFormalExpression" id="_TON033bHEeGE3Yfy3fPHUw">_CF4824F4-C059-49CA-A038-D25F5DBB5999_callbacksInput</bpmn2:to>
         </bpmn2:assignment>
       </bpmn2:dataInputAssociation>
@@ -199,7 +199,7 @@
       <bpmn2:dataInputAssociation id="_TON07XbHEeGE3Yfy3fPHUw">
         <bpmn2:targetRef>_591157C2-F43C-4156-B984-C8E298EFE584_callbacksInput</bpmn2:targetRef>
         <bpmn2:assignment id="_TON07nbHEeGE3Yfy3fPHUw">
-          <bpmn2:from xsi:type="bpmn2:tFormalExpression" id="_TON073bHEeGE3Yfy3fPHUw">com.salaboy.jbpm5.dev.guide.callbacks.CompleteWorkItemCallback</bpmn2:from>
+          <bpmn2:from xsi:type="bpmn2:tFormalExpression" id="_TON073bHEeGE3Yfy3fPHUw">completeWorkItemCallback</bpmn2:from>
           <bpmn2:to xsi:type="bpmn2:tFormalExpression" id="_TON08HbHEeGE3Yfy3fPHUw">_591157C2-F43C-4156-B984-C8E298EFE584_callbacksInput</bpmn2:to>
         </bpmn2:assignment>
       </bpmn2:dataInputAssociation>
@@ -213,7 +213,7 @@
       <bpmn2:dataInputAssociation id="_TON09XbHEeGE3Yfy3fPHUw">
         <bpmn2:targetRef>_591157C2-F43C-4156-B984-C8E298EFE584_commandInput</bpmn2:targetRef>
         <bpmn2:assignment id="_TON09nbHEeGE3Yfy3fPHUw">
-          <bpmn2:from xsi:type="bpmn2:tFormalExpression" id="_TON093bHEeGE3Yfy3fPHUw">NotifyInsuranceCompanyCommand</bpmn2:from>
+          <bpmn2:from xsi:type="bpmn2:tFormalExpression" id="_TON093bHEeGE3Yfy3fPHUw">notifyInsuranceCompanyCommand</bpmn2:from>
           <bpmn2:to xsi:type="bpmn2:tFormalExpression" id="_TON0-HbHEeGE3Yfy3fPHUw">_591157C2-F43C-4156-B984-C8E298EFE584_commandInput</bpmn2:to>
         </bpmn2:assignment>
       </bpmn2:dataInputAssociation>
@@ -266,7 +266,7 @@
       <bpmn2:dataInputAssociation id="_TON1A3bHEeGE3Yfy3fPHUw">
         <bpmn2:targetRef>_13D5A055-9964-42FA-88F6-0E768AA2D4F9_callbacksInput</bpmn2:targetRef>
         <bpmn2:assignment id="_TON1BHbHEeGE3Yfy3fPHUw">
-          <bpmn2:from xsi:type="bpmn2:tFormalExpression" id="_TON1BXbHEeGE3Yfy3fPHUw">com.salaboy.jbpm5.dev.guide.callbacks.CompleteWorkItemCallback</bpmn2:from>
+          <bpmn2:from xsi:type="bpmn2:tFormalExpression" id="_TON1BXbHEeGE3Yfy3fPHUw">completeWorkItemCallback</bpmn2:from>
           <bpmn2:to xsi:type="bpmn2:tFormalExpression" id="_TON1BnbHEeGE3Yfy3fPHUw">_13D5A055-9964-42FA-88F6-0E768AA2D4F9_callbacksInput</bpmn2:to>
         </bpmn2:assignment>
       </bpmn2:dataInputAssociation>
@@ -280,7 +280,7 @@
       <bpmn2:dataInputAssociation id="_TON1C3bHEeGE3Yfy3fPHUw">
         <bpmn2:targetRef>_13D5A055-9964-42FA-88F6-0E768AA2D4F9_commandInput</bpmn2:targetRef>
         <bpmn2:assignment id="_TON1DHbHEeGE3Yfy3fPHUw">
-          <bpmn2:from xsi:type="bpmn2:tFormalExpression" id="_TON1DXbHEeGE3Yfy3fPHUw">CalculateHospitalRatesCommand</bpmn2:from>
+          <bpmn2:from xsi:type="bpmn2:tFormalExpression" id="_TON1DXbHEeGE3Yfy3fPHUw">calculateHospitalRatesCommand</bpmn2:from>
           <bpmn2:to xsi:type="bpmn2:tFormalExpression" id="_TON1DnbHEeGE3Yfy3fPHUw">_13D5A055-9964-42FA-88F6-0E768AA2D4F9_commandInput</bpmn2:to>
         </bpmn2:assignment>
       </bpmn2:dataInputAssociation>
@@ -350,7 +350,7 @@
       <bpmn2:dataInputAssociation id="_TOOb4HbHEeGE3Yfy3fPHUw">
         <bpmn2:targetRef>_B7664677-D018-42B8-80D3-BD5FF1CDC019_callbacksInput</bpmn2:targetRef>
         <bpmn2:assignment id="_TOOb4XbHEeGE3Yfy3fPHUw">
-          <bpmn2:from xsi:type="bpmn2:tFormalExpression" id="_TOOb4nbHEeGE3Yfy3fPHUw">com.salaboy.jbpm5.dev.guide.callbacks.CompleteWorkItemCallback</bpmn2:from>
+          <bpmn2:from xsi:type="bpmn2:tFormalExpression" id="_TOOb4nbHEeGE3Yfy3fPHUw">completeWorkItemCallback</bpmn2:from>
           <bpmn2:to xsi:type="bpmn2:tFormalExpression" id="_TOOb43bHEeGE3Yfy3fPHUw">_B7664677-D018-42B8-80D3-BD5FF1CDC019_callbacksInput</bpmn2:to>
         </bpmn2:assignment>
       </bpmn2:dataInputAssociation>
@@ -364,7 +364,7 @@
       <bpmn2:dataInputAssociation id="_TOOb6HbHEeGE3Yfy3fPHUw">
         <bpmn2:targetRef>_B7664677-D018-42B8-80D3-BD5FF1CDC019_commandInput</bpmn2:targetRef>
         <bpmn2:assignment id="_TOOb6XbHEeGE3Yfy3fPHUw">
-          <bpmn2:from xsi:type="bpmn2:tFormalExpression" id="_TOOb6nbHEeGE3Yfy3fPHUw">NotifyAndChargePatientCommand</bpmn2:from>
+          <bpmn2:from xsi:type="bpmn2:tFormalExpression" id="_TOOb6nbHEeGE3Yfy3fPHUw">notifyAndChargePatientCommand</bpmn2:from>
           <bpmn2:to xsi:type="bpmn2:tFormalExpression" id="_TOOb63bHEeGE3Yfy3fPHUw">_B7664677-D018-42B8-80D3-BD5FF1CDC019_commandInput</bpmn2:to>
         </bpmn2:assignment>
       </bpmn2:dataInputAssociation>

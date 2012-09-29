@@ -46,7 +46,7 @@
       <dataInputAssociation>
         <targetRef>_3_commandInput</targetRef>
         <assignment>
-          <from xsi:type="tFormalExpression">CheckInCommand</from>
+          <from xsi:type="tFormalExpression">checkInCommand</from>
           <to xsi:type="tFormalExpression">_3_commandInput</to>
         </assignment>
       </dataInputAssociation>

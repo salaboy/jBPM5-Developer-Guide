@@ -2,7 +2,7 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-package com.salaboy.jbpm5.dev.guide;
+package com.salaboy.jbpm5.dev.guide.util;
 
 import java.util.logging.Logger;
 import javax.enterprise.context.ApplicationScoped;

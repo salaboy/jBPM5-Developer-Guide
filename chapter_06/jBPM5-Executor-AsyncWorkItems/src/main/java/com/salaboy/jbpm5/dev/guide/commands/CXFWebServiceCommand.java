@@ -8,7 +8,7 @@ import org.jbpm.executor.api.Command;
 import org.jbpm.executor.api.CommandContext;
 import org.jbpm.executor.api.ExecutionResults;
 
-@Named
+@Named("cxfwebServiceCommand")
 public class CXFWebServiceCommand implements Command {
 
 	public ExecutionResults execute(CommandContext ctx) {

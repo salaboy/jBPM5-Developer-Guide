@@ -48,14 +48,14 @@
       <dataInputAssociation>
         <targetRef>_3_commandInput</targetRef>
         <assignment>
-          <from xsi:type="tFormalExpression">CheckInCommand</from>
+          <from xsi:type="tFormalExpression">checkInCommand</from>
           <to xsi:type="tFormalExpression">_3_commandInput</to>
         </assignment>
       </dataInputAssociation>
       <dataInputAssociation>
         <targetRef>_3_callbacksInput</targetRef>
         <assignment>
-          <from xsi:type="tFormalExpression">com.salaboy.jbpm5.dev.guide.callbacks.CompleteWorkItemCallback</from>
+          <from xsi:type="tFormalExpression">completeWorkItemCallback</from>
           <to xsi:type="tFormalExpression">_3_callbacksInput</to>
         </assignment>
       </dataInputAssociation>

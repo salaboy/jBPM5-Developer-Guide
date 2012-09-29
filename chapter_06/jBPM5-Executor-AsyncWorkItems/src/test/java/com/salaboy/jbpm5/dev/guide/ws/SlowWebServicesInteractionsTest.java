@@ -1,28 +1,21 @@
 package com.salaboy.jbpm5.dev.guide.ws;
 
-
-import com.salaboy.jbpm5.dev.guide.SessionStoreUtil;
+import com.salaboy.jbpm5.dev.guide.util.SessionStoreUtil;
 import com.salaboy.jbpm5.dev.guide.webservice.SlowService;
 import com.salaboy.jbpm5.dev.guide.webservice.SlowServiceImpl;
 import com.salaboy.jbpm5.dev.guide.workitems.AsyncGenericWorkItemHandler;
-import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.List;
 import javax.xml.ws.Endpoint;
 import org.drools.KnowledgeBase;
 import org.drools.KnowledgeBaseFactory;
-import org.drools.WorkingMemory;
 import org.drools.builder.*;
-import org.drools.event.RuleFlowGroupActivatedEvent;
-import org.drools.event.RuleFlowGroupDeactivatedEvent;
-import org.drools.impl.StatefulKnowledgeSessionImpl;
+import org.drools.event.rule.DefaultAgendaEventListener;
 import org.drools.io.impl.ClassPathResource;
 import org.drools.logger.KnowledgeRuntimeLoggerFactory;
 import org.drools.runtime.StatefulKnowledgeSession;
 import org.drools.runtime.process.ProcessInstance;
 import org.drools.runtime.process.WorkflowProcessInstance;
-import org.h2.tools.DeleteDbFiles;
-import org.h2.tools.Server;
 import org.jbpm.executor.ExecutorModule;
 import org.jbpm.executor.ExecutorServiceEntryPoint;
 import org.jbpm.executor.entities.RequestInfo;
@@ -31,36 +24,25 @@ import static org.junit.Assert.assertEquals;
 import org.junit.Before;
 import org.junit.Test;
 
-
 public class SlowWebServicesInteractionsTest {
 
     protected ExecutorServiceEntryPoint executor;
     protected StatefulKnowledgeSession session;
     private Endpoint endpoint;
     private SlowService service;
-    private Server server;
 
     public SlowWebServicesInteractionsTest() {
     }
 
     @Before
     public void setUp() throws Exception {
-        DeleteDbFiles.execute("~", "mydb", false);
-        try {
-            server = Server.createTcpServer(new String[]{"-tcp", "-tcpAllowOthers", "-tcpDaemon", "-trace"}).start();
-        } catch (SQLException ex) {
-            System.out.println("ex: " + ex);
-        }
         initializeExecutionEnvironment();
         initializeWebService();
-        
-        
     }
 
     @After
     public void tearDown() {
         executor.destroy();
-        server.stop();
         this.endpoint.stop();
     }
 
@@ -71,14 +53,12 @@ public class SlowWebServicesInteractionsTest {
                 service);
     }
 
-   
-
     protected void initializeExecutionEnvironment() throws Exception {
         executor = ExecutorModule.getInstance().getExecutorServiceEntryPoint();
+        executor.setThreadPoolSize(1);
+        executor.setInterval(3);
         executor.init();
     }
-
-    
 
     private void initializeSession(String processName) {
         KnowledgeBuilder kbuilder = KnowledgeBuilderFactory.newKnowledgeBuilder();
@@ -101,89 +81,62 @@ public class SlowWebServicesInteractionsTest {
         session = kbase.newStatefulKnowledgeSession();
         KnowledgeRuntimeLoggerFactory.newConsoleLogger(session);
 
-        ((StatefulKnowledgeSessionImpl) session).session.addEventListener(new org.drools.event.AgendaEventListener() {
-
-            public void activationCreated(org.drools.event.ActivationCreatedEvent event, WorkingMemory workingMemory) {
-            }
-
-            public void activationCancelled(org.drools.event.ActivationCancelledEvent event, WorkingMemory workingMemory) {
-            }
-
-            public void beforeActivationFired(org.drools.event.BeforeActivationFiredEvent event, WorkingMemory workingMemory) {
-            }
-
-            public void afterActivationFired(org.drools.event.AfterActivationFiredEvent event, WorkingMemory workingMemory) {
-            }
-
-            public void agendaGroupPopped(org.drools.event.AgendaGroupPoppedEvent event, WorkingMemory workingMemory) {
-            }
-
-            public void agendaGroupPushed(org.drools.event.AgendaGroupPushedEvent event, WorkingMemory workingMemory) {
-            }
-
-            public void beforeRuleFlowGroupActivated(RuleFlowGroupActivatedEvent event, WorkingMemory workingMemory) {
-            }
-
-            public void afterRuleFlowGroupActivated(RuleFlowGroupActivatedEvent event, WorkingMemory workingMemory) {
-                workingMemory.fireAllRules();
-            }
-
-            public void beforeRuleFlowGroupDeactivated(RuleFlowGroupDeactivatedEvent event, WorkingMemory workingMemory) {
-            }
-
-            public void afterRuleFlowGroupDeactivated(RuleFlowGroupDeactivatedEvent event, WorkingMemory workingMemory) {
+        session.addEventListener(new DefaultAgendaEventListener() {
+            @Override
+            public void afterRuleFlowGroupActivated(org.drools.event.rule.RuleFlowGroupActivatedEvent event) {
+                session.fireAllRules();
             }
         });
     }
 
     @Test
     public void testSlowWebServicesNoWait() throws InterruptedException {
-        
+
         initializeSession("three-systems-interactions-nowait.bpmn");
-        
+
         HashMap<String, Object> input = new HashMap<String, Object>();
 
         String patientName = "John Doe";
         input.put("bedrequest_patientname", patientName);
-       
-        
-        AsyncGenericWorkItemHandler webServiceHandler = new AsyncGenericWorkItemHandler(executor,session.getId());
+
+
+        AsyncGenericWorkItemHandler webServiceHandler = new AsyncGenericWorkItemHandler(executor, session.getId());
         session.getWorkItemManager().registerWorkItemHandler("Slow Web Service", webServiceHandler);
 
         WorkflowProcessInstance pI = (WorkflowProcessInstance) session.startProcess("Three Systems Interactions", input);
 
         assertEquals(ProcessInstance.STATE_COMPLETED, pI.getState());
-        
+
         Thread.sleep(25000);
-        
+
         List<RequestInfo> resultList = executor.getExecutedRequests();
         assertEquals(3, resultList.size());
     }
-    
-     @Test
+
+    @Test
     public void testSlowWebServicesWait() throws InterruptedException {
-         
-        initializeSession("three-systems-interactions-wait.bpmn"); 
-        
-        SessionStoreUtil.sessionCache.put("sessionId="+session.getId(), session);
+
+        initializeSession("three-systems-interactions-wait.bpmn");
+
+        SessionStoreUtil.sessionCache.put("sessionId=" + session.getId(), session);
         HashMap<String, Object> input = new HashMap<String, Object>();
-        
+
         String patientName = "John Doe";
         input.put("bedrequest_patientname", patientName);
-        
-        
-        AsyncGenericWorkItemHandler webServiceHandler = new AsyncGenericWorkItemHandler(executor,session.getId());
+
+
+        AsyncGenericWorkItemHandler webServiceHandler = new AsyncGenericWorkItemHandler(executor, session.getId());
         session.getWorkItemManager().registerWorkItemHandler("Slow Web Service", webServiceHandler);
 
         WorkflowProcessInstance pI = (WorkflowProcessInstance) session.startProcess("Three Systems Interactions", input);
 
         assertEquals(ProcessInstance.STATE_ACTIVE, pI.getState());
-        
+
         Thread.sleep(25000);
-        
+
         List<RequestInfo> resultList = executor.getExecutedRequests();
         assertEquals(3, resultList.size());
-        
+
         assertEquals(ProcessInstance.STATE_COMPLETED, pI.getState());
     }
 }
