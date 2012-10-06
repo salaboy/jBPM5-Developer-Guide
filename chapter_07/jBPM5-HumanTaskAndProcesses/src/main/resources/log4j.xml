@@ -7,8 +7,17 @@
             <param name="ConversionPattern" value="%-4r %-5p %x- %m%n"/>
         </layout>
     </appender>
+    <logger name="org.springframework.security.ldap">
+        <level value="FATAL"/>
+    </logger>
+    <logger name="org.hibernate">
+        <level value="FATAL"/>
+    </logger>
+    <logger name="org.apache.directory">
+        <level value="FATAL"/>
+    </logger>
     <logger name="com.salaboy.jbpm5.dev.guide">
-        <level value="DEBUG"/>
+        <level value="INFO"/>
     </logger>
     <root> 
         <priority value ="INFO" /> 

@@ -4,7 +4,8 @@ The Projects included in chapter 7 covers:
 
 - jBPM5-HumanTasksSimple: Simple example using the Human Task Services
 - jBPM5-HumanTaskUI-Swing: Simple example showing how to create a simple User Interface using Swing
-- jBPM5-Ldapcallback: Simple example that shows how to integrate an Identity Repository with the Human Task Service
+- jBPM5-HumanTaskAndProcesses: Simple example that shows the interaction of Business Process and the Human Task Service covering the usage of the GenericHTWorkItemHandler. This example also covers the integration with an existing LDAP identity repository using the UserGroupCallbacks.
+
 
 Configuration and usage of the jbpm-human-task services
 
