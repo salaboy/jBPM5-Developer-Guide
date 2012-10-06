@@ -1,5 +1,13 @@
 Chapter 7 - Human Tasks Interactions
 
+The Projects included in chapter 7 covers:
+
+- jBPM5-HumanTasksSimple: Simple example using the Human Task Services
+- jBPM5-HumanTaskUI-Swing: Simple example showing how to create a simple User Interface using Swing
+- jBPM5-Ldapcallback: Simple example that shows how to integrate an Identity Repository with the Human Task Service
+
+Configuration and usage of the jbpm-human-task services
+
 In order to use the jbpm-human-task service as a direct dependency to our application we need to include the following dependencies our project descriptor (pom.xml file).<dependency>  <groupId>org.jbpm</groupId>  <artifactId>jbpm-human-task-core</artifactId>  <version>${jbpm.version}</version></dependency>If you want to use the provided transports instead of using the embedded option you will need to add the transport dependency:<dependency>   <groupId>org.jbpm</groupId>   <artifactId>jbpm-human-task-mina</artifactId>   <version>${jbpm.version}</version></dependency>or for JMS/HornetQ:<dependency>  <groupId>org.jbpm</groupId>  <artifactId>jbpm-human-task-hornetq</artifactId>  <version>${jbpm.version}</version></dependency>
 
 Once we have this dependency inside our application, we will be able to use all the classes provided inside the Human Task component. The next step is to configure the persistence mechanism. Because this module is using JPA, we need to provide a persistence.xml file that defines our Persistence Unit. 
