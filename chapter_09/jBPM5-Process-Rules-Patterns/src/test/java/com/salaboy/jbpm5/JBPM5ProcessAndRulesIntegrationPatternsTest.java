@@ -17,7 +17,6 @@ import org.drools.event.rule.DefaultAgendaEventListener;
 import org.drools.event.rule.*;
 import org.drools.event.process.DefaultProcessEventListener;
 import org.drools.event.process.ProcessStartedEvent;
-import org.drools.impl.StatefulKnowledgeSessionImpl;
 import org.drools.io.impl.ClassPathResource;
 import org.drools.runtime.StatefulKnowledgeSession;
 import org.drools.runtime.process.ProcessInstance;
