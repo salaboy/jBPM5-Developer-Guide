@@ -7,6 +7,7 @@ package com.salaboy.jbpm5.dev.guide.taskform;
 import com.salaboy.jbpm5.dev.guide.tablemodel.TaskParametersTableModel;
 import java.util.LinkedHashMap;
 import java.util.Map;
+import org.jbpm.task.Content;
 import org.jbpm.task.Task;
 import org.jbpm.task.service.ContentData;
 import org.jbpm.task.service.local.LocalTaskService;
@@ -64,8 +65,7 @@ public class DynamicTaskForm extends javax.swing.JPanel {
         jScrollPane1 = new javax.swing.JScrollPane();
         tblParameters = new javax.swing.JTable();
         jLabel4 = new javax.swing.JLabel();
-        btnAddParamter = new javax.swing.JButton();
-        btnDeleteParameter = new javax.swing.JButton();
+        failjButton = new javax.swing.JButton();
 
         jLabel1.setText("Task Id:");
 
@@ -102,17 +102,10 @@ public class DynamicTaskForm extends javax.swing.JPanel {
 
         jLabel4.setText("Parameters:");
 
-        btnAddParamter.setText("+");
-        btnAddParamter.addActionListener(new java.awt.event.ActionListener() {
+        failjButton.setText("Fail");
+        failjButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnAddParamterActionPerformed(evt);
-            }
-        });
-
-        btnDeleteParameter.setText("-");
-        btnDeleteParameter.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnDeleteParameterActionPerformed(evt);
+                failjButtonActionPerformed(evt);
             }
         });
 
@@ -121,38 +114,35 @@ public class DynamicTaskForm extends javax.swing.JPanel {
         layout.setHorizontalGroup(
             layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
             .add(org.jdesktop.layout.GroupLayout.TRAILING, layout.createSequentialGroup()
-                .add(layout.createParallelGroup(org.jdesktop.layout.GroupLayout.TRAILING)
+                .add(36, 36, 36)
+                .add(layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
+                    .add(jScrollPane1)
                     .add(layout.createSequentialGroup()
-                        .addContainerGap(org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .add(startjButton)
-                        .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
-                        .add(completejButton))
-                    .add(org.jdesktop.layout.GroupLayout.LEADING, layout.createSequentialGroup()
-                        .add(36, 36, 36)
                         .add(layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
-                            .add(jScrollPane1)
-                            .add(layout.createSequentialGroup()
-                                .add(layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING, false)
-                                    .add(layout.createSequentialGroup()
-                                        .add(jLabel1)
-                                        .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
-                                        .add(taskIdjTextField, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 128, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE))
-                                    .add(layout.createSequentialGroup()
-                                        .add(layout.createParallelGroup(org.jdesktop.layout.GroupLayout.TRAILING)
-                                            .add(jLabel3)
-                                            .add(jLabel2))
-                                        .addPreferredGap(org.jdesktop.layout.LayoutStyle.UNRELATED)
-                                        .add(layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
-                                            .add(taskStatusjTextField)
-                                            .add(taskNamejTextField))))
-                                .add(0, 0, Short.MAX_VALUE))
-                            .add(layout.createSequentialGroup()
-                                .add(jLabel4)
-                                .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .add(btnAddParamter)
-                                .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
-                                .add(btnDeleteParameter)))))
+                            .add(layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING, false)
+                                .add(layout.createSequentialGroup()
+                                    .add(jLabel1)
+                                    .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
+                                    .add(taskIdjTextField, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 128, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE))
+                                .add(layout.createSequentialGroup()
+                                    .add(layout.createParallelGroup(org.jdesktop.layout.GroupLayout.TRAILING)
+                                        .add(jLabel3)
+                                        .add(jLabel2))
+                                    .addPreferredGap(org.jdesktop.layout.LayoutStyle.UNRELATED)
+                                    .add(layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
+                                        .add(taskStatusjTextField)
+                                        .add(taskNamejTextField))))
+                            .add(jLabel4))
+                        .add(0, 0, Short.MAX_VALUE)))
                 .add(29, 29, 29))
+            .add(org.jdesktop.layout.GroupLayout.TRAILING, layout.createSequentialGroup()
+                .addContainerGap(org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .add(startjButton)
+                .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
+                .add(completejButton)
+                .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
+                .add(failjButton)
+                .add(32, 32, 32))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
@@ -170,16 +160,14 @@ public class DynamicTaskForm extends javax.swing.JPanel {
                     .add(jLabel2)
                     .add(taskStatusjTextField, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE))
                 .add(10, 10, 10)
-                .add(layout.createParallelGroup(org.jdesktop.layout.GroupLayout.BASELINE)
-                    .add(jLabel4)
-                    .add(btnAddParamter, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
-                    .add(btnDeleteParameter, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE))
+                .add(jLabel4)
                 .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
                 .add(jScrollPane1, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 329, Short.MAX_VALUE)
                 .add(18, 18, 18)
                 .add(layout.createParallelGroup(org.jdesktop.layout.GroupLayout.BASELINE)
                     .add(completejButton)
-                    .add(startjButton))
+                    .add(startjButton)
+                    .add(failjButton))
                 .add(31, 31, 31))
         );
     }// </editor-fold>//GEN-END:initComponents
@@ -187,10 +175,10 @@ public class DynamicTaskForm extends javax.swing.JPanel {
     private void completejButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_completejButtonActionPerformed
         System.out.println(" Completing Task: " + task.getId() + " - userId: " + userId);
         
+        //Create content data.
         ContentData data = createContentData();
         
         localTaskService.complete(task.getId(), userId, data);
-        updateTask();
     }//GEN-LAST:event_completejButtonActionPerformed
 
     private void startjButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_startjButtonActionPerformed
@@ -199,21 +187,15 @@ public class DynamicTaskForm extends javax.swing.JPanel {
         updateTask();
     }//GEN-LAST:event_startjButtonActionPerformed
 
-    private void btnAddParamterActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAddParamterActionPerformed
-        this.taskParametersTableModel.addRow();
-    }//GEN-LAST:event_btnAddParamterActionPerformed
-
-    private void btnDeleteParameterActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDeleteParameterActionPerformed
-        int[] selectedRows = this.tblParameters.getSelectedRows();
-        for (int i = selectedRows.length - 1; i == 0; i--) {
-            this.taskParametersTableModel.deleteRowAt(selectedRows[i]);
-        }
-    }//GEN-LAST:event_btnDeleteParameterActionPerformed
+    private void failjButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_failjButtonActionPerformed
+        System.out.println(" Aborting Task: " + task.getId() + " - userId: " + userId);
+        
+        localTaskService.fail(task.getId(), userId, null);
+    }//GEN-LAST:event_failjButtonActionPerformed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton btnAddParamter;
-    private javax.swing.JButton btnDeleteParameter;
     private javax.swing.JButton completejButton;
+    private javax.swing.JButton failjButton;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
@@ -231,9 +213,17 @@ public class DynamicTaskForm extends javax.swing.JPanel {
         this.taskStatusjTextField.setText(task.getTaskData().getStatus().name());
         this.taskNamejTextField.setText(task.getNames().get(0).getText());
         
+        Content content = this.localTaskService.getContent(task.getTaskData().getDocumentContentId());
+        Map<String, Object> contentData = (Map<String, Object>) ContentMarshallerHelper.unmarshall(content.getContent(), null);
+
+        this.taskParametersTableModel.clear();
+        for (Map.Entry<String, Object> entry : contentData.entrySet()) {
+            this.taskParametersTableModel.addRow(entry.getKey(), (String)entry.getValue());
+        }
+        
         switch (task.getTaskData().getStatus()){
             case InProgress:
-                setParameterTableReadOnlyStatus(false);
+                setParameterTableReadOnlyStatus(false); 
                 break;
             default:
                 setParameterTableReadOnlyStatus(true);
@@ -245,8 +235,6 @@ public class DynamicTaskForm extends javax.swing.JPanel {
     
     private void setParameterTableReadOnlyStatus(boolean readonly){
         this.tblParameters.setEnabled(!readonly);
-        this.btnAddParamter.setEnabled(!readonly);
-        this.btnDeleteParameter.setEnabled(!readonly);
     }
     
     private void updateTaskActionButonStatus(){
@@ -255,14 +243,17 @@ public class DynamicTaskForm extends javax.swing.JPanel {
             case Reserved:
                 this.startjButton.setEnabled(true);
                 this.completejButton.setEnabled(false);
+                this.failjButton.setEnabled(false);
                 break;
             case InProgress:
                 this.startjButton.setEnabled(false);
                 this.completejButton.setEnabled(true);
+                this.failjButton.setEnabled(true);
                 break;
             default:
                 this.startjButton.setEnabled(false);
                 this.completejButton.setEnabled(false);
+                this.failjButton.setEnabled(false);
                 break;
                 
         }
