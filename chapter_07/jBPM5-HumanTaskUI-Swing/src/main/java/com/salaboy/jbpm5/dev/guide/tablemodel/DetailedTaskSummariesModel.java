@@ -2,7 +2,7 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-package com.salaboy.jbpm5.dev.guide;
+package com.salaboy.jbpm5.dev.guide.tablemodel;
 
 import java.util.List;
 import javax.swing.table.DefaultTableModel;
@@ -12,7 +12,7 @@ import org.jbpm.task.query.TaskSummary;
  *
  * @author salaboy
  */
-class DetailedTaskSummariesModel extends DefaultTableModel implements TaskSummariesModel{
+public class DetailedTaskSummariesModel extends DefaultTableModel implements TaskSummariesModel{
 
     private List<TaskSummary> taskSummaries;
     private String[] columnNames = {"id","name", "subject", "description", "status", 

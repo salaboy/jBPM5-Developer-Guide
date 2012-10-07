@@ -4,21 +4,30 @@
  */
 package com.salaboy.jbpm5.dev.guide;
 
+import com.salaboy.jbpm5.dev.guide.tablemodel.SimpleTaskSummariesModel;
+import com.salaboy.jbpm5.dev.guide.tablemodel.TaskSummariesModel;
+import com.salaboy.jbpm5.dev.guide.tablemodel.DetailedTaskSummariesModel;
+import com.salaboy.jbpm5.dev.guide.taskform.DynamicTaskForm;
+import com.salaboy.jbpm5.dev.guide.taskform.MySimpleTaskFormJPanel;
+import com.salaboy.jbpm5.dev.guide.taskform.OtherTaskForm;
 import java.io.StringReader;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTable;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
 import org.drools.SystemEventListenerFactory;
-import org.drools.persistence.jpa.JPAKnowledgeService;
 import org.jbpm.task.*;
 import org.jbpm.task.query.TaskSummary;
 import org.jbpm.task.service.TaskService;
@@ -37,7 +46,7 @@ public class TasksListUI extends javax.swing.JFrame {
     private Map<String, User> users = new HashMap<String, User>();
     private Map<String, Group> groups = new HashMap<String, Group>();
     private LocalTaskService localTaskService;
-    private Map<String, Class> taskForms = new HashMap<String, Class>();
+    private Map<String, Class> taskForms = new LinkedHashMap<String, Class>();
 
     /**
      * Creates new form TasksListUI
@@ -46,6 +55,17 @@ public class TasksListUI extends javax.swing.JFrame {
         initComponents();
         initTaskComponents();
         initTaskFormMappings();
+        refreshTaskList();
+        
+        //Refresh the task list every time tab1 is selected
+        this.tasklistsjTabbedPane.addChangeListener(new ChangeListener() {
+
+            public void stateChanged(ChangeEvent e) {
+                if (tasklistsjTabbedPane.getSelectedComponent() == jPanel1){
+                    refreshTaskList();
+                }
+            }
+        });
     }
 
     /**
@@ -113,7 +133,6 @@ public class TasksListUI extends javax.swing.JFrame {
                 "Title 1", "Title 2", "Title 3", "Title 4"
             }
         ));
-        taskSummariesjTable.setShowGrid(true);
         taskSummariesjTable.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 TasksListUI.this.mouseClicked(evt);
@@ -122,6 +141,11 @@ public class TasksListUI extends javax.swing.JFrame {
         jScrollPane2.setViewportView(taskSummariesjTable);
 
         perspectivejComboBox.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Simple", "Detailed" }));
+        perspectivejComboBox.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                perspectivejComboBoxActionPerformed(evt);
+            }
+        });
 
         jLabel3.setText("Perspective: ");
 
@@ -141,7 +165,7 @@ public class TasksListUI extends javax.swing.JFrame {
                         .add(perspectivejComboBox, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
                         .add(47, 47, 47)
                         .add(refreshjButton, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 114, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED, 212, Short.MAX_VALUE)
                         .add(jLabel1)
                         .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
                         .add(selectedUserjComboBox, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 108, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)))
@@ -159,7 +183,7 @@ public class TasksListUI extends javax.swing.JFrame {
                     .add(refreshjButton))
                 .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
                 .add(jScrollPane2, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(15, Short.MAX_VALUE))
+                .addContainerGap(org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         tasklistsjTabbedPane.addTab("Tasks List", jPanel1);
@@ -314,18 +338,7 @@ public class TasksListUI extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void refreshjButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_refreshjButtonActionPerformed
-        String selectedUser = (String) selectedUserjComboBox.getItemAt(selectedUserjComboBox.getSelectedIndex());
-        System.out.println("Selected User: " + selectedUser);
-        List<TaskSummary> tasks = localTaskService.getTasksAssignedAsPotentialOwner(selectedUser, "en-UK");
-        System.out.println("Tasks: " + tasks + " - size: " + tasks.size());
-        String selectedPerspective = (String) perspectivejComboBox.getItemAt(perspectivejComboBox.getSelectedIndex());
-        if (selectedPerspective.equals("Simple")) {
-            taskSummariesjTable.setModel(new SimpleTaskSummariesModel(tasks));
-        } else {
-            taskSummariesjTable.setModel(new DetailedTaskSummariesModel(tasks));
-        }
-
-
+        refreshTaskList();
     }//GEN-LAST:event_refreshjButtonActionPerformed
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
@@ -343,6 +356,16 @@ public class TasksListUI extends javax.swing.JFrame {
         String selectedUser = (String) selectedUserjComboBox.getItemAt(selectedUserjComboBox.getSelectedIndex());
         System.out.println("Selected User: " + selectedUser);
         Class clazz = taskForms.get(taskName);
+        
+        if (clazz == null){
+            //no custom form for this task. Let's see if there is a default
+            //form defined.
+            clazz = taskForms.get("*");
+            if (clazz == null){
+                JOptionPane.showMessageDialog(this, "No form defined for '"+taskName+" and not default (*) form is configured.", "Error", JOptionPane.ERROR_MESSAGE);
+            }
+        }
+        
         Constructor constructor = null;
         try {
             constructor = clazz.getConstructor(LocalTaskService.class, long.class, String.class);
@@ -369,11 +392,10 @@ public class TasksListUI extends javax.swing.JFrame {
     }
 
     private void selectedUserjComboBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_selectedUserjComboBoxActionPerformed
-        // TODO add your handling code here:
+        this.refreshTaskList();
     }//GEN-LAST:event_selectedUserjComboBoxActionPerformed
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-        // TODO add your handling code here:
         Map<String, Object> vars = new HashMap();
         vars.put("users", users);
         String taskDef = taskDefjTextPane.getText();
@@ -383,7 +405,6 @@ public class TasksListUI extends javax.swing.JFrame {
     }//GEN-LAST:event_jButton1ActionPerformed
 
     private void addUserjButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addUserjButtonActionPerformed
-        // TODO add your handling code here:
         if (userjTextField.getText() != null && !userjTextField.getText().equals("")) {
             User user = new User(userjTextField.getText());
             taskSession.addUser(user);
@@ -410,6 +431,10 @@ public class TasksListUI extends javax.swing.JFrame {
             selectTaskForm(target, row);
         }
     }//GEN-LAST:event_mouseClicked
+
+    private void perspectivejComboBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_perspectivejComboBoxActionPerformed
+        this.refreshTaskList();
+    }//GEN-LAST:event_perspectivejComboBoxActionPerformed
 
     private Task createSimpleTask(List<User> users, User administrator) {
         Task task = new Task();
@@ -541,12 +566,31 @@ public class TasksListUI extends javax.swing.JFrame {
     }
 
     private void initTaskFormMappings() {
-        taskForms.put("My Simple Task", MySimpleTaskFormJPanel.class);
+        taskForms.put("*", DynamicTaskForm.class );
         taskForms.put("Correct Flow Average!!!", OtherTaskForm.class);
+        taskForms.put("My Simple Task", MySimpleTaskFormJPanel.class);
         String mappings = "";
         for(String key : taskForms.keySet()){
             mappings += key + " -> " +taskForms.get(key) + "\n";
         }
         taskFormRegistryjTextArea.setText(mappings);
     }
+    
+    private void refreshTaskList(){
+        String selectedUser = (String) selectedUserjComboBox.getItemAt(selectedUserjComboBox.getSelectedIndex());
+        System.out.println("Selected User: " + selectedUser);
+        List<TaskSummary> tasks = localTaskService.getTasksAssignedAsPotentialOwner(selectedUser, "en-UK");
+        System.out.println("Tasks: " + tasks + " - size: " + tasks.size());
+        String selectedPerspective = (String) perspectivejComboBox.getItemAt(perspectivejComboBox.getSelectedIndex());
+        if (selectedPerspective.equals("Simple")) {
+            taskSummariesjTable.setModel(new SimpleTaskSummariesModel(tasks));
+        } else {
+            taskSummariesjTable.setModel(new DetailedTaskSummariesModel(tasks));
+        }
+    }
+
+
+    
+    
+    
 }

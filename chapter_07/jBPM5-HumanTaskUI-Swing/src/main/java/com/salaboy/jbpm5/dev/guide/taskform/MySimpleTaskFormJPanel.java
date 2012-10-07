@@ -2,8 +2,9 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-package com.salaboy.jbpm5.dev.guide;
+package com.salaboy.jbpm5.dev.guide.taskform;
 
+import javax.swing.JPanel;
 import org.jbpm.task.Task;
 import org.jbpm.task.service.local.LocalTaskService;
 
@@ -11,27 +12,26 @@ import org.jbpm.task.service.local.LocalTaskService;
  *
  * @author salaboy
  */
-public class OtherTaskForm extends javax.swing.JPanel {
+public class MySimpleTaskFormJPanel extends JPanel {
+
     protected long taskId;
     protected LocalTaskService localTaskService;
     protected String userId;
     protected Task task;
 
     /**
-     * Creates new form OtherTaskForm
+     * Creates new form MyTaskFormJPanel
      */
-    public OtherTaskForm(LocalTaskService localTaskService, long taskId, String userId) {
+    public MySimpleTaskFormJPanel(LocalTaskService localTaskService, long taskId, String userId) {
         this.taskId = taskId;
         this.localTaskService = localTaskService;
         this.userId = userId;
         initComponents();
-        this.setName("My Other Task Form - " + taskId);
+        this.setName("My Task Form - " + taskId);
         this.taskIdjTextField.setText(Long.toString(taskId));
 
         updateTask();
     }
-    
-    
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -42,20 +42,12 @@ public class OtherTaskForm extends javax.swing.JPanel {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        completejButton = new javax.swing.JButton();
+        startjButton = new javax.swing.JButton();
         jLabel1 = new javax.swing.JLabel();
         taskIdjTextField = new javax.swing.JTextField();
         jLabel2 = new javax.swing.JLabel();
-        taskStatusjTextField = new javax.swing.JTextField();
-        jLabel3 = new javax.swing.JLabel();
-        taskNamejTextField = new javax.swing.JTextField();
-        completejButton = new javax.swing.JButton();
-        startjButton = new javax.swing.JButton();
-
-        jLabel1.setText("Task Id:");
-
-        jLabel2.setText("Status:");
-
-        jLabel3.setText("Name:");
+        statusjTextField = new javax.swing.JTextField();
 
         completejButton.setText("Complete");
         completejButton.addActionListener(new java.awt.event.ActionListener() {
@@ -71,62 +63,49 @@ public class OtherTaskForm extends javax.swing.JPanel {
             }
         });
 
+        jLabel1.setText("TaskId:");
+
+        jLabel2.setText("Status:");
+
         org.jdesktop.layout.GroupLayout layout = new org.jdesktop.layout.GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
-            .add(layout.createSequentialGroup()
-                .add(36, 36, 36)
-                .add(layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING, false)
-                    .add(layout.createSequentialGroup()
-                        .add(jLabel1)
-                        .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
-                        .add(taskIdjTextField, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 128, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE))
-                    .add(layout.createSequentialGroup()
-                        .add(layout.createParallelGroup(org.jdesktop.layout.GroupLayout.TRAILING)
-                            .add(jLabel3)
-                            .add(jLabel2))
-                        .addPreferredGap(org.jdesktop.layout.LayoutStyle.UNRELATED)
-                        .add(layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
-                            .add(taskStatusjTextField)
-                            .add(taskNamejTextField))))
-                .addContainerGap(304, Short.MAX_VALUE))
             .add(org.jdesktop.layout.GroupLayout.TRAILING, layout.createSequentialGroup()
-                .addContainerGap(org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addContainerGap(303, Short.MAX_VALUE)
                 .add(startjButton)
                 .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
                 .add(completejButton)
-                .add(29, 29, 29))
+                .add(25, 25, 25))
+            .add(layout.createSequentialGroup()
+                .add(34, 34, 34)
+                .add(layout.createParallelGroup(org.jdesktop.layout.GroupLayout.TRAILING)
+                    .add(jLabel2)
+                    .add(jLabel1))
+                .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
+                .add(layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING, false)
+                    .add(taskIdjTextField)
+                    .add(statusjTextField, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 121, Short.MAX_VALUE))
+                .addContainerGap())
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
-            .add(layout.createSequentialGroup()
-                .add(31, 31, 31)
+            .add(org.jdesktop.layout.GroupLayout.TRAILING, layout.createSequentialGroup()
+                .add(23, 23, 23)
                 .add(layout.createParallelGroup(org.jdesktop.layout.GroupLayout.BASELINE)
                     .add(jLabel1)
                     .add(taskIdjTextField, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
-                .add(layout.createParallelGroup(org.jdesktop.layout.GroupLayout.BASELINE)
-                    .add(jLabel3)
-                    .add(taskNamejTextField, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
+                .add(18, 18, 18)
                 .add(layout.createParallelGroup(org.jdesktop.layout.GroupLayout.BASELINE)
                     .add(jLabel2)
-                    .add(taskStatusjTextField, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED, 206, Short.MAX_VALUE)
+                    .add(statusjTextField, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED, 224, Short.MAX_VALUE)
                 .add(layout.createParallelGroup(org.jdesktop.layout.GroupLayout.BASELINE)
                     .add(completejButton)
                     .add(startjButton))
-                .add(31, 31, 31))
+                .add(25, 25, 25))
         );
     }// </editor-fold>//GEN-END:initComponents
-
-    private void completejButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_completejButtonActionPerformed
-        // TODO add your handling code here:
-        System.out.println(" Completing Task: " + task.getId() + " - userId: " + userId);
-        localTaskService.complete(task.getId(), userId, null);
-        updateTask();
-    }//GEN-LAST:event_completejButtonActionPerformed
 
     private void startjButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_startjButtonActionPerformed
         // TODO add your handling code here:
@@ -135,20 +114,43 @@ public class OtherTaskForm extends javax.swing.JPanel {
         updateTask();
     }//GEN-LAST:event_startjButtonActionPerformed
 
+    private void completejButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_completejButtonActionPerformed
+        // TODO add your handling code here:
+        System.out.println(" Completing Task: " + task.getId() + " - userId: " + userId);
+        localTaskService.complete(task.getId(), userId, null);
+        updateTask();
+    }//GEN-LAST:event_completejButtonActionPerformed
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton completejButton;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
-    private javax.swing.JLabel jLabel3;
     private javax.swing.JButton startjButton;
+    private javax.swing.JTextField statusjTextField;
     private javax.swing.JTextField taskIdjTextField;
-    private javax.swing.JTextField taskNamejTextField;
-    private javax.swing.JTextField taskStatusjTextField;
     // End of variables declaration//GEN-END:variables
-
-    protected void updateTask() {
+    protected void updateTask(){
         this.task = localTaskService.getTask(taskId);
-        this.taskStatusjTextField.setText(task.getTaskData().getStatus().name());
-        this.taskNamejTextField.setText(task.getNames().get(0).getText());
+        this.statusjTextField.setText(task.getTaskData().getStatus().name());
+        
+        this.updateTaskActionButonStatus();
+    }
+    
+    private void updateTaskActionButonStatus(){
+        switch (task.getTaskData().getStatus()){
+            case Ready:
+            case Reserved:
+                this.startjButton.setEnabled(true);
+                this.completejButton.setEnabled(false);
+                break;
+            case InProgress:
+                this.startjButton.setEnabled(false);
+                this.completejButton.setEnabled(true);
+                break;
+            default:
+                this.startjButton.setEnabled(false);
+                this.completejButton.setEnabled(false);
+                break;
+                
+        }
     }
 }
