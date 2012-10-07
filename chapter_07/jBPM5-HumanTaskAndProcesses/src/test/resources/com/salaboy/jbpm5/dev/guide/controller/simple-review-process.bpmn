@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <bpmn2:definitions xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://www.omg.org/bpmn20" xmlns:bpmn2="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" xmlns:drools="http://www.jboss.org/drools" id="_z2IH4FSpEeG6RM8M8E8kUw" xsi:schemaLocation="http://www.omg.org/spec/BPMN/20100524/MODEL BPMN20.xsd" expressionLanguage="http://www.mvel.org/2.0" targetNamespace="http://www.omg.org/bpmn20" typeLanguage="http://www.java.com/javaTypes">
-  <bpmn2:itemDefinition id="_actorItem" structureRef="Object"/>
-  <bpmn2:process id="chapter_06_simple_review" drools:packageName="com.salaboy.jbpm5.dev.guide.controller" name="Simple Review" isExecutable="true">
-    <bpmn2:property id="actor" itemSubjectRef="_actorItem"/>
+  <bpmn2:itemDefinition id="_user_self_evaluationItem" structureRef="Object"/>
+  <bpmn2:process id="chapter_07_simple_review" drools:packageName="com.salaboy.jbpm5.dev.guide.controller" name="Simple Review" isExecutable="true">
+    <bpmn2:property id="user_self_evaluation" itemSubjectRef="_user_self_evaluationItem"/>
     <bpmn2:startEvent id="_2515F9F9-8AC7-456B-BB4B-37B8ABA3F739" drools:bgcolor="#ffffff" name="StartProcess">
       <bpmn2:outgoing>_B68352FB-A429-4B59-A88F-9D4F8B77B18E</bpmn2:outgoing>
     </bpmn2:startEvent>
@@ -70,7 +70,7 @@
       </bpmn2:dataInputAssociation>
       <bpmn2:potentialOwner id="_z2JWAVSpEeG6RM8M8E8kUw">
         <bpmn2:resourceAssignmentExpression id="_z2JWAlSpEeG6RM8M8E8kUw">
-          <bpmn2:formalExpression id="_z2JWA1SpEeG6RM8M8E8kUw">#{actor}</bpmn2:formalExpression>
+          <bpmn2:formalExpression id="_z2JWA1SpEeG6RM8M8E8kUw">#{user_self_evaluation}</bpmn2:formalExpression>
         </bpmn2:resourceAssignmentExpression>
       </bpmn2:potentialOwner>
     </bpmn2:userTask>
