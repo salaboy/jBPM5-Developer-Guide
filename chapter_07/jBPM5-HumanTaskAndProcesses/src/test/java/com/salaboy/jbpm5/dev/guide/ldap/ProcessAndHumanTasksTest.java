@@ -83,7 +83,7 @@ public class ProcessAndHumanTasksTest {
                 htHandler);
 
         Map<String, Object> initialParams = new HashMap<String, Object>();
-        initialParams.put("actor", "calcacuervo");
+        initialParams.put("user_self_evaluation", "calcacuervo");
         ProcessInstance processInstance = ksession.startProcess("chapter_07_simple_review", initialParams);
         assertEquals(ProcessInstance.STATE_ACTIVE, processInstance.getState());
         // first, calcacuervo will make its own review..
