@@ -58,9 +58,9 @@ public class ProcessAndHumanTasksTest {
         // back class full name, task service will use this to validate the
         // user/group exists and its permissions are ok.
         System.setProperty("jbpm.usergroup.callback",
-                "com.salaboy.jbpm5.dev.guide.ldap.LdapUserGroupCallback");
-        LdapUserGroupCallback callback = (LdapUserGroupCallback) UserGroupCallbackManager.getInstance().getCallback();
-        callback.setQuery(ldapQuery);
+                "org.jbpm.task.identity.LDAPUserGroupCallbackImpl");
+//        LdapUserGroupCallback callback = (LdapUserGroupCallback) UserGroupCallbackManager.getInstance().getCallback();
+//        callback.setQuery(ldapQuery);
     }
 
     @Test
