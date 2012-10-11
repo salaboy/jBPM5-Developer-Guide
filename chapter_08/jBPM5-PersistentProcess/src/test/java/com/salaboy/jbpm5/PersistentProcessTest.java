@@ -24,6 +24,7 @@ import org.drools.builder.KnowledgeBuilderFactory;
 import org.drools.builder.ResourceType;
 import org.drools.impl.EnvironmentFactory;
 import org.drools.io.impl.ClassPathResource;
+import org.drools.logger.KnowledgeRuntimeLoggerFactory;
 import org.drools.persistence.jpa.JPAKnowledgeService;
 import org.drools.runtime.*;
 import org.drools.runtime.process.ProcessInstance;
@@ -85,13 +86,15 @@ public class PersistentProcessTest {
 //        ds.getDriverProperties().put("driverClassName", "org.h2.Driver");
         
         ds.init();
+        
+        
     }
 
     @After
     public void tearDown() {
         ds.close();
     }
-
+    @Ignore
     @Test
     public void processInstancePersistentTest() throws Exception {
         KnowledgeBuilder kbuilder = KnowledgeBuilderFactory.newKnowledgeBuilder();
@@ -160,7 +163,7 @@ public class PersistentProcessTest {
         System.out.println(">>> Disposing Session");
         loadedKsession.dispose();
     }
-
+    @Ignore
     @Test
     public void processInstancePersistentAsyncTest() throws Exception {
         KnowledgeBuilder kbuilder = KnowledgeBuilderFactory.newKnowledgeBuilder();
@@ -220,7 +223,7 @@ public class PersistentProcessTest {
         ksession.dispose();
 
     }
-
+    @Ignore
     @Test
     public void processInstancesPersistenceFaultTest() throws Exception {
         KnowledgeBuilder kbuilder = KnowledgeBuilderFactory.newKnowledgeBuilder();
@@ -285,7 +288,7 @@ public class PersistentProcessTest {
 
 
     }
-
+    @Ignore
     @Test
     public void processInstancesPersistenceFaultRetryTest() throws Exception {
         KnowledgeBuilder kbuilder = KnowledgeBuilderFactory.newKnowledgeBuilder();
@@ -385,6 +388,9 @@ public class PersistentProcessTest {
         // Let's create a Persistence Knowledge Session
         System.out.println(" >>> Let's create a Persistent Knowledge Session");
         final StatefulKnowledgeSession ksession = JPAKnowledgeService.newStatefulKnowledgeSession(kbase, null, env);
+        
+        
+        
         int sessionId = ksession.getId();
         assertNotNull(sessionId);
         assertTrue(sessionId != 0);
@@ -407,7 +413,7 @@ public class PersistentProcessTest {
         ProcessInstance processInstance = ksession.createProcessInstance("com.salaboy.process.AsyncInteractions", params);
         System.out.println(">>> Let's Start the Process Instance");
 
-        ksession.startProcessInstance(processInstance.getId());
+        processInstance = ksession.startProcessInstance(processInstance.getId());
         System.out.println(" >>> Looking for Salaboy's Tasks");
         List<TaskSummary> salaboysTasks = client.getTasksAssignedAsPotentialOwner("salaboy", "en-UK");
         assertTrue(salaboysTasks.size() == 1);
@@ -420,17 +426,25 @@ public class PersistentProcessTest {
         
         System.out.println(" >>> Completing Salaboy's Task");
         client.complete(salaboyTask.getId(), "salaboy", null);
+        
+        List<TaskSummary> adminTasks = client.getTasksAssignedAsPotentialOwner("Administrator", "en-UK");
+        assertTrue(adminTasks.size() == 1);
+        TaskSummary adminTask = adminTasks.get(0);
+        
+        client.start(adminTask.getId(), "Administrator");
+        
+        client.complete(adminTask.getId(), "Administrator", null);
 
-
-     
-
+        processInstance = ksession.getProcessInstance(processInstance.getId());
+        //The process instance was completed and it should be out of the Ksession.
+        assertNull(processInstance);
 
         // We need to dispose the session, because the reference to this ksession object will no longer be valid
-        //  because another thread could load the same session and execute a different command.
+        // Another thread could load the same session and execute a different command.
         System.out.println(">>> Disposing Session");
         ksession.dispose();
     }
-
+    @Ignore
     @Test
     public void processInstancesAndLocalHTPlusFailTest() throws Exception {
         KnowledgeBuilder kbuilder = KnowledgeBuilderFactory.newKnowledgeBuilder();
