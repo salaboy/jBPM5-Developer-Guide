@@ -94,7 +94,6 @@ public class PersistentProcessTest {
     public void tearDown() {
         ds.close();
     }
-    @Ignore
     @Test
     public void processInstancePersistentTest() throws Exception {
         KnowledgeBuilder kbuilder = KnowledgeBuilderFactory.newKnowledgeBuilder();
@@ -138,8 +137,8 @@ public class PersistentProcessTest {
         System.out.println(">>> Let's Create Process Instance");
         ProcessInstance processInstance = ksession.createProcessInstance("com.salaboy.process.AsyncInteractions", params);
         System.out.println(">>> Let's Start the Process Instance");
-
-        ksession.startProcessInstance(processInstance.getId());
+        long processInstanceOne = processInstance.getId();
+        ksession.startProcessInstance(processInstanceOne);
 
 
         // We need to dispose the session, because the reference to this ksession object will no longer be valid
@@ -159,11 +158,19 @@ public class PersistentProcessTest {
         System.out.println(">>> Let's Create Process Instance");
         processInstance = loadedKsession.createProcessInstance("com.salaboy.process.AsyncInteractions", params);
         System.out.println(">>> Let's Start the Process Instance");
-        loadedKsession.startProcessInstance(processInstance.getId());
+        long processInstanceTwo = processInstance.getId();
+        loadedKsession.startProcessInstance(processInstanceTwo);
         System.out.println(">>> Disposing Session");
         loadedKsession.dispose();
+        
+        StatefulKnowledgeSession checkKsession = JPAKnowledgeService.loadStatefulKnowledgeSession(sessionId, kbase, null, env);
+        assertEquals(0, checkKsession.getProcessInstances().size());
+        checkKsession.dispose();
+        
+        
+        
     }
-    @Ignore
+    
     @Test
     public void processInstancePersistentAsyncTest() throws Exception {
         KnowledgeBuilder kbuilder = KnowledgeBuilderFactory.newKnowledgeBuilder();
@@ -223,7 +230,7 @@ public class PersistentProcessTest {
         ksession.dispose();
 
     }
-    @Ignore
+    
     @Test
     public void processInstancesPersistenceFaultTest() throws Exception {
         KnowledgeBuilder kbuilder = KnowledgeBuilderFactory.newKnowledgeBuilder();
@@ -251,8 +258,8 @@ public class PersistentProcessTest {
         assertNotNull(sessionId);
         assertTrue(sessionId != 0);
         // We need to register the WorkItems and Listeners that the session will use
-        MockFaultWorkItemHandler mockFaultWorkItemHandler = new MockFaultWorkItemHandler();
         MockHTWorkItemHandler mockHTWorkItemHandler = new MockHTWorkItemHandler();
+        MockFaultWorkItemHandler mockFaultWorkItemHandler = new MockFaultWorkItemHandler();
         ksession.getWorkItemManager().registerWorkItemHandler("Human Task", mockHTWorkItemHandler);
         ksession.getWorkItemManager().registerWorkItemHandler("External Service Call", mockFaultWorkItemHandler);
         //KnowledgeRuntimeLoggerFactory.newConsoleLogger(ksession);
@@ -271,26 +278,28 @@ public class PersistentProcessTest {
             ksession.startProcessInstance(processInstance.getId());
         } catch (Exception e) {
             assertTrue(e instanceof WorkflowRuntimeException);
+            System.out.println(">>> Disposing Session");
+            // We need to dispose the session, because the reference to this ksession object will no longer be valid
+        //  because another thread could load the same session and execute a different command.
+            ksession.dispose();
+            
+            // The startProcess transaction never gets commited.
             EntityManager em = emf.createEntityManager();
+            // The ProcessInstance is in the same state as when it was created
             List resultList = em.createQuery("select p from ProcessInstanceInfo p").getResultList();
             assertEquals(1, resultList.size());
             assertEquals(0, ((WorkflowProcessInstanceImpl) processInstance).getNodeInstances().size());
-
+            // No WorkItemInfo was commited.
             resultList = em.createQuery("select w from WorkItemInfo w").getResultList();
             assertEquals(0, resultList.size());
 
 
         }
-        // We need to dispose the session, because the reference to this ksession object will no longer be valid
-        //  because another thread could load the same session and execute a different command.
-        System.out.println(">>> Disposing Session");
-        ksession.dispose();
-
 
     }
-    @Ignore
+    
     @Test
-    public void processInstancesPersistenceFaultRetryTest() throws Exception {
+    public void processInstancesPersistenceFaultRecoveryTest() throws Exception {
         KnowledgeBuilder kbuilder = KnowledgeBuilderFactory.newKnowledgeBuilder();
         kbuilder.add(new ClassPathResource("process-async-interactions.bpmn"), ResourceType.BPMN2);
 
@@ -316,11 +325,10 @@ public class PersistentProcessTest {
         assertNotNull(sessionId);
         assertTrue(sessionId != 0);
         // We need to register the WorkItems and Listeners that the session will use
-        MockFaultWorkItemHandler mockFaultHTWorkItemHandler = new MockFaultWorkItemHandler();
-        MockExternalServiceWorkItemHandler mockExternalServiceWorkItemHandler = new MockExternalServiceWorkItemHandler();
-        ksession.getWorkItemManager().registerWorkItemHandler("Human Task", mockExternalServiceWorkItemHandler);
-        //This will make the process fail in the second activity
-        ksession.getWorkItemManager().registerWorkItemHandler("External Service Call", mockFaultHTWorkItemHandler);
+        MockAsyncHTWorkItemHandler mockAsyncHTWorkItemHandler = new MockAsyncHTWorkItemHandler();
+        MockFaultWorkItemHandler mockFaultWorkItemHandler = new MockFaultWorkItemHandler();
+        ksession.getWorkItemManager().registerWorkItemHandler("Human Task", mockAsyncHTWorkItemHandler);
+        ksession.getWorkItemManager().registerWorkItemHandler("External Service Call", mockFaultWorkItemHandler);
         //KnowledgeRuntimeLoggerFactory.newConsoleLogger(ksession);
 
 
@@ -335,32 +343,33 @@ public class PersistentProcessTest {
         System.out.println(">>> Let's Start the Process Instance");
         try {
             ksession.startProcessInstance(processInstance.getId());
+            System.out.println(">>> Completing the first Human Interaction");
+            ksession.getWorkItemManager().completeWorkItem(mockAsyncHTWorkItemHandler.getId(), null);
+            
         } catch (Exception e) {
-
-
             assertTrue(e instanceof WorkflowRuntimeException);
+            System.out.println(">>> Disposing Session");
+            // We need to dispose the session, because the reference to this ksession object will no longer be valid
+        //  because another thread could load the same session and execute a different command.
+            ksession.dispose();
+            
+            // The startProcess transaction never gets commited.
             EntityManager em = emf.createEntityManager();
-            List resultList = em.createQuery("select w from WorkItemInfo w").getResultList();
-            assertEquals(0, resultList.size());
+            // The ProcessInstance is in the same state as when it was created
+            List resultList = em.createQuery("select p from ProcessInstanceInfo p").getResultList();
+            assertEquals(1, resultList.size());
+            assertEquals(0, ((WorkflowProcessInstanceImpl) processInstance).getNodeInstances().size());
+            // No WorkItemInfo was commited.
+            resultList = em.createQuery("select w from WorkItemInfo w").getResultList();
+            assertEquals(1, resultList.size());
 
-            try {
-                ksession.startProcessInstance(processInstance.getId());
-            } catch (Exception ex) {
-
-                assertTrue(e instanceof WorkflowRuntimeException);
-                resultList = em.createQuery("select w from WorkItemInfo w").getResultList();
-                assertEquals(0, resultList.size());
-
-            }
 
         }
-        // We need to dispose the session, because the reference to this ksession object will no longer be valid
-        //  because another thread could load the same session and execute a different command.
-        System.out.println(">>> Disposing Session");
-        ksession.dispose();
-
 
     }
+    
+    
+    
 
     @Test
     public void processInstancesAndLocalHTTest() throws Exception {
@@ -444,7 +453,7 @@ public class PersistentProcessTest {
         System.out.println(">>> Disposing Session");
         ksession.dispose();
     }
-    @Ignore
+    
     @Test
     public void processInstancesAndLocalHTPlusFailTest() throws Exception {
         KnowledgeBuilder kbuilder = KnowledgeBuilderFactory.newKnowledgeBuilder();
@@ -457,8 +466,6 @@ public class PersistentProcessTest {
             }
             fail(">>> Knowledge couldn't be parsed! ");
         }
-
-
 
         KnowledgeBase kbase = KnowledgeBaseFactory.newKnowledgeBase();
 
@@ -578,8 +585,8 @@ public class PersistentProcessTest {
     private class MockFaultWorkItemHandler implements WorkItemHandler {
 
         public void executeWorkItem(WorkItem wi, WorkItemManager wim) {
-            System.out.println(">>> Human Task Interaction Fault!");
-            throw new IllegalStateException(" An Internal Fault Arise, the Task cannot be created!");
+            System.out.println(">>> External Interaction Fault!");
+            throw new IllegalStateException(" An External Fault Arise, the Service Cannot be Contacted!");
         }
 
         public void abortWorkItem(WorkItem wi, WorkItemManager wim) {

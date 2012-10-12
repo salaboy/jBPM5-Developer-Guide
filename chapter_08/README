@@ -1,0 +1,56 @@
+Chapter 8 - Persistence & Transactions
+
+The Project included in chapter 8 cover:
+
+- jBPM5-PersistentProcess: this project contains tests and different configurations to execute persistent business processes that contain human interactions. 
+
+Some important things to notice from the tests: 
+1) setUp() method, that configures a Bitronix PoolingDatasource 
+2) The process definition called: process-async-interactions.bpmn
+3) The persistence.xml file that contains two persistence Units defined inside it:
+  a) org.jbpm.runtime -> Only the Session Entities
+  b) org.jbpm.runtime.ht -> Session and Human Task Entities
+
+This project contains a Test Class called PersistentProcessTest with 6 Tests to analyze different situations:
+
+1) processInstancePersistentTest: this test configures the persistence mechanisms and creates a session using the JPAKnowledgeService. This test simulate the human interactions and the external services interactions by registering two mocks implementations: MockHTWorkItemHandler (Human Task Mock) and MockExternalServiceWorkItemHandler (System Interaction). Two process instances are created, Both Mock WorkItems Works are Synchronous, and for that reason both the process start and ends in the same call. If you debug the test, you will notice that a row in the SessionInfo table is added. A row in the  ProcessInstanceInfo is added, because we use the createProcessInstance() method, which doesn't start the process. When we call the startProcessInstance() method three WorkItemInfo rows are inserted and deleted when the process instance is finished. The ProcessInstanceInfo row is also deleted at process completion.
+
+2) processInstancePersistentAsyncTest: this test shows a similar scenario to the previous test, but in this case the Mock WorkItemHandler which simulates the Human Interaction provides an Async implementation. This represents the real behavior for Human Interactions. If you debug this test, you will find that when we start a process instance, the process state is persisted after executing the MockAsyncHTWorkItemHandler, which does not complete the interaction. Now it's up to our application (or to an external component) to complete the pending workItem. In the logs you will see that the ProcessInstanceInfo row is updated and also a WorkItemInfo row is added and updated. 
+The test uses the following line to complete the pending workItem:
+
+ksession.getWorkItemManager().completeWorkItem(mockAsyncHTWorkItemHandler.getId(), null)
+
+Notice that in real life scenarios we will not have the pending WorkItem ID handy to be able to complete it. For that reason, a common technique is to store the workItemId from inside the WorkItemHandler code to be able to retrieve it later, when the asynchronous work has been completed.
+
+When the Human Interaction is completed, the WorkItemInfo row is deleted, the Synchronous External Interaction is executed (a new WorkItemInfo row is added and deleted) and a new User Task is reached, following the same behavior that was explained before.
+
+3) processInstancesPersistenceFaultTest: this test uses the Sync MockHTWorkItemHandler plus a faulty External System WorkItemHandler. The main idea of this test is to simulate what happens if one of our WorkItemHandlers throws an exception. 
+Notice that the test calls the startProcess() method inside a try/catch block and checks for the Exception type: WorkflowRuntimeException . This exception wraps the original exception that is thrown by our workItem or by the external service that we are trying to contact. 
+
+An extremely important thing to notice is that, because until that point the process didn't have any safe state to persist the state, all the process state is lost. Notice that the test, checks for the process instances and the workItemInfo rows and 0 results are expected. This is caused by the fact that before committing the current transaction, the exception was thrown causing the lost of the information. Don't be confused by the logs that shows:
+Hibernate: insert into WorkItemInfo ..
+>>> Completing a Human Interaction
+Hibernate: insert into WorkItemInfo ..
+>>> External Interaction Fault!
+
+This insertions are never flushed to the database.
+Notice also that we can retrieve a ProcessInstanceInfo row, which is basically in the same state as when it was created using the createProcessInstance() method.
+
+4) processInstancesPersistenceFaultRecoveryTest: this test shows a similar scenario that the one discussed in the previous test, but in this case the Human Interactions are asynchronous. This causes that we can recover the process state, because we have one safe-state that was stored successfully when the Human Interaction was created. If you debug this test you will find that the startProcessInstance() method is successfully invoked and the state of the session is persisted (SessionInfo & ProcessInstanceInfo, updated and WorkItemInfo inserted). Now when we want to complete the Human Interaction by calling: 
+
+ksession.getWorkItemManager().completeWorkItem(mockAsyncHTWorkItemHandler.getId(), null)
+
+The workItem gets completed successfully, but the external interaction that comes next throws an exception. In such case, because the startProcess() method was executed successfully and the process state was stored when the first User Task was reached, we will now have a pending WorkItemInfo row. Using this workItemInfo row, we can find out which workItems were not successfully finished and retry the operation later on. 
+Based on this query we can implement a retrying mechanism or we can notify the System Administrator about the failure. 
+
+5) processInstancesAndLocalHTTest: this test runs the same process definition, but using the Real Task Service. We use the LocalHTWorkItemHandler implementation to interact with an embedded instance of the Task Service. Notice that this test is using the Persistence Unit that contains the Human Tasks Service Tables -> org.jbpm.runtime.ht
+
+Because the Human Interactions handled by the task service are asynchronous you must expect the same behavior that was demonstrated before. 
+
+6) processInstancesAndLocalHTPlusFailTest: this test shows how to get hold of the user Transaction from the DataSource and handle the exception thrown by the MockFaultWorkItemHandler.
+
+
+For updates about the book visit: http://salaboy.com 
+or follow me on twitter: http://www.twitter.com/salaboy
+- Salaboy 2012
+
