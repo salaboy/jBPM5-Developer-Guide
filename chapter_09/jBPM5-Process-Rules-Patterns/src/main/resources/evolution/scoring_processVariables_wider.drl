@@ -14,7 +14,7 @@ rule "Calculate Todays Score - Based on Plan"
        System.out.println(" ### Person inside the rule: "+$p);
 end
 
-rule "For Each Process of Type Person - Validate the Name and the Agent"
+rule "For Each Process of Type Person - Validate the Name and the Age"
     when
         ProcessVariable( name == "person", $name: value.name == "Salaboy", $age: value.age > 18) 
         

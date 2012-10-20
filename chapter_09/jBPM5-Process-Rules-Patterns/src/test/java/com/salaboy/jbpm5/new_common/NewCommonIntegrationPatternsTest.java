@@ -1,4 +1,4 @@
-package com.salaboy.jbpm5;
+package com.salaboy.jbpm5.new_common;
 
 import com.salaboy.model.Person;
 import com.salaboy.model.RatesToday;
@@ -18,18 +18,28 @@ import org.drools.event.rule.*;
 import org.drools.event.process.DefaultProcessEventListener;
 import org.drools.event.process.ProcessStartedEvent;
 import org.drools.io.impl.ClassPathResource;
+import org.drools.logger.KnowledgeRuntimeLoggerFactory;
 import org.drools.runtime.StatefulKnowledgeSession;
 import org.drools.runtime.process.ProcessInstance;
+import org.junit.Ignore;
 import org.junit.Test;
 
-public class JBPM5ProcessAndRulesIntegrationPatternsTest {
+/*
+ * For a more detailed description about these example look at: 
+ *  http://salaboy.com/2012/07/19/processes-rules-or-rules-processes-1x/
+ *  http://salaboy.com/2012/07/28/processes-rules-or-rules-processes-2x/
+ *  http://salaboy.com/2012/07/29/processes-rules-or-rules-processes-3x/
+ */
+
+public class NewCommonIntegrationPatternsTest {
 
     @Test
+    
     public void testSimpleRulesDecision() {
 
         KnowledgeBuilder kbuilder = KnowledgeBuilderFactory.newKnowledgeBuilder();
 
-        kbuilder.add(new ClassPathResource("process-drl-decision.bpmn"), ResourceType.BPMN2);
+        kbuilder.add(new ClassPathResource("new_common/process-drl-decision.bpmn"), ResourceType.BPMN2);
         if (kbuilder.hasErrors()) {
             for (KnowledgeBuilderError error : kbuilder.getErrors()) {
                 System.out.println(">>> Error:" + error.getMessage());
@@ -43,8 +53,9 @@ public class JBPM5ProcessAndRulesIntegrationPatternsTest {
         kbase.addKnowledgePackages(kbuilder.getKnowledgePackages());
 
         StatefulKnowledgeSession ksession = kbase.newStatefulKnowledgeSession();
+        
         // Uncomment to see all the logs
-        // KnowledgeRuntimeLoggerFactory.newConsoleLogger(ksession);
+        KnowledgeRuntimeLoggerFactory.newConsoleLogger(ksession);
 
         Person person = new Person("Salaboy", 28);
 
@@ -67,8 +78,8 @@ public class JBPM5ProcessAndRulesIntegrationPatternsTest {
     public void testSimpleDecisionWithRules() {
 
         KnowledgeBuilder kbuilder = KnowledgeBuilderFactory.newKnowledgeBuilder();
-        kbuilder.add(new ClassPathResource("scoring.drl"), ResourceType.DRL);
-        kbuilder.add(new ClassPathResource("process-drl-decision.bpmn"), ResourceType.BPMN2);
+        kbuilder.add(new ClassPathResource("new_common/scoring.drl"), ResourceType.DRL);
+        kbuilder.add(new ClassPathResource("new_common/process-drl-decision.bpmn"), ResourceType.BPMN2);
 
         if (kbuilder.hasErrors()) {
             for (KnowledgeBuilderError error : kbuilder.getErrors()) {
@@ -84,8 +95,9 @@ public class JBPM5ProcessAndRulesIntegrationPatternsTest {
 
         StatefulKnowledgeSession ksession = kbase.newStatefulKnowledgeSession();
         // Uncomment to see all the logs
-        // KnowledgeRuntimeLoggerFactory.newConsoleLogger(ksession);
-
+        KnowledgeRuntimeLoggerFactory.newConsoleLogger(ksession);
+        
+        
         Person person = new Person("Salaboy", 28);
 
         Map<String, Object> params = new HashMap<String, Object>();
@@ -100,6 +112,7 @@ public class JBPM5ProcessAndRulesIntegrationPatternsTest {
         assertEquals(processInstance.getState(), ProcessInstance.STATE_PENDING);
 
         ksession.startProcessInstance(processInstance.getId());
+        
         // We need to fire all the rules in order to execute the activated rules
         ksession.fireAllRules();
         
@@ -109,11 +122,12 @@ public class JBPM5ProcessAndRulesIntegrationPatternsTest {
     }
     
     @Test
+    
     public void testSimpleDecisionWithReactiveRules() throws InterruptedException {
 
         KnowledgeBuilder kbuilder = KnowledgeBuilderFactory.newKnowledgeBuilder();
-        kbuilder.add(new ClassPathResource("scoring.drl"), ResourceType.DRL);
-        kbuilder.add(new ClassPathResource("process-drl-decision.bpmn"), ResourceType.BPMN2);
+        kbuilder.add(new ClassPathResource("new_common/scoring.drl"), ResourceType.DRL);
+        kbuilder.add(new ClassPathResource("new_common/process-drl-decision.bpmn"), ResourceType.BPMN2);
 
         if (kbuilder.hasErrors()) {
             for (KnowledgeBuilderError error : kbuilder.getErrors()) {
@@ -128,8 +142,9 @@ public class JBPM5ProcessAndRulesIntegrationPatternsTest {
         kbase.addKnowledgePackages(kbuilder.getKnowledgePackages());
 
         final StatefulKnowledgeSession ksession = kbase.newStatefulKnowledgeSession();
+       
         // Uncomment to see all the logs
-        // KnowledgeRuntimeLoggerFactory.newConsoleLogger(ksession);
+        KnowledgeRuntimeLoggerFactory.newConsoleLogger(ksession);
         new Thread(new Runnable() {
 
             public void run() {
@@ -163,8 +178,8 @@ public class JBPM5ProcessAndRulesIntegrationPatternsTest {
     public void testSimpleDecisionWithReactiveRulesUsingListener()  {
 
         KnowledgeBuilder kbuilder = KnowledgeBuilderFactory.newKnowledgeBuilder();
-        kbuilder.add(new ClassPathResource("scoring.drl"), ResourceType.DRL);
-        kbuilder.add(new ClassPathResource("process-drl-decision.bpmn"), ResourceType.BPMN2);
+        kbuilder.add(new ClassPathResource("new_common/scoring.drl"), ResourceType.DRL);
+        kbuilder.add(new ClassPathResource("new_common/process-drl-decision.bpmn"), ResourceType.BPMN2);
 
         if (kbuilder.hasErrors()) {
             for (KnowledgeBuilderError error : kbuilder.getErrors()) {
@@ -179,6 +194,7 @@ public class JBPM5ProcessAndRulesIntegrationPatternsTest {
         kbase.addKnowledgePackages(kbuilder.getKnowledgePackages());
 
         final StatefulKnowledgeSession ksession = kbase.newStatefulKnowledgeSession();
+        
         // Uncomment to see all the logs
         // KnowledgeRuntimeLoggerFactory.newConsoleLogger(ksession);
         ksession.addEventListener(

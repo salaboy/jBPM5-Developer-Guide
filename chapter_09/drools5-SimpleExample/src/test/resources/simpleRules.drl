@@ -22,6 +22,7 @@ end
 rule " enabled to drive, so you must have a car"
     when
         $p: Person(  enabledToDrive == true )
+        not(Car( person == $p))
     then
         insert( new Car ( $p ) );
 end

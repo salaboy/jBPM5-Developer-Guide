@@ -1,32 +1,29 @@
 <?xml version="1.0" encoding="UTF-8"?> 
 <definitions id="Definition"
-             targetNamespace="http://www.jboss.org/drools"
-             typeLanguage="http://www.java.com/javaTypes"
-             expressionLanguage="http://www.mvel.org/2.0"
-             xmlns="http://www.omg.org/spec/BPMN/20100524/MODEL"
-             xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-             xsi:schemaLocation="http://www.omg.org/spec/BPMN/20100524/MODEL BPMN20.xsd"
-             xmlns:g="http://www.jboss.org/drools/flow/gpd"
-             xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI"
-             xmlns:dc="http://www.omg.org/spec/DD/20100524/DC"
-             xmlns:di="http://www.omg.org/spec/DD/20100524/DI"
-             xmlns:tns="http://www.jboss.org/drools">
+             xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+             xmlns="http://www.omg.org/spec/BPMN/20100524/MODEL" 
+             xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" 
+             xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" 
+             xmlns:di="http://www.omg.org/spec/DD/20100524/DI" 
+             xmlns:drools="http://www.jboss.org/drools" 
+             xsi:schemaLocation="http://www.omg.org/spec/BPMN/20100524/MODEL BPMN20.xsd" 
+             targetNamespace="http://www.omg.org/bpmn20">
 
   <itemDefinition id="_personItem" structureRef="com.salaboy.model.Person" />
   <itemDefinition id="_ratesItem" structureRef="com.salaboy.model.RatesToday" />
 
-  <process processType="Private" isExecutable="true" id="com.salaboy.process.SimpleDecision" name="Simple Decision Process" tns:packageName="defaultPackage" >
+  <process processType="Private" isExecutable="true" id="com.salaboy.process.SimpleDecision" name="Simple Decision Process" drools:packageName="defaultPackage" >
 
     <extensionElements>
-     <tns:import name="com.salaboy.model.Person" />
-     <tns:import name="com.salaboy.model.RatesToday" />   
-     <tns:import name="org.jbpm.workflow.instance.impl.WorkflowProcessInstanceImpl" />
-     <tns:import name="org.drools.runtime.rule.FactHandle" />
-     <tns:import name="com.salaboy.jbpm5.ProcessVariable" />
-     <tns:import name="org.drools.runtime.rule.QueryResults" />
-     <tns:import name="org.drools.runtime.rule.QueryResultsRow" />
-     <tns:import name="java.util.Iterator" />
-     <tns:import name="org.drools.runtime.KnowledgeRuntime" />
+     <drools:import name="com.salaboy.model.Person" />
+     <drools:import name="com.salaboy.model.RatesToday" />   
+     <drools:import name="org.jbpm.workflow.instance.impl.WorkflowProcessInstanceImpl" />
+     <drools:import name="org.drools.runtime.rule.FactHandle" />
+     <drools:import name="com.salaboy.jbpm5.ProcessVariable" />
+     <drools:import name="org.drools.runtime.rule.QueryResults" />
+     <drools:import name="org.drools.runtime.rule.QueryResultsRow" />
+     <drools:import name="java.util.Iterator" />
+     <drools:import name="org.drools.runtime.KnowledgeRuntime" />
     </extensionElements>
     <!-- process variables -->
     <property id="person" itemSubjectRef="_personItem"/>
@@ -76,13 +73,13 @@
     <!-- connections -->
     <sequenceFlow id="_1-_2" sourceRef="_1" targetRef="_2" />
     <sequenceFlow id="_2-_3" sourceRef="_2" targetRef="_3" />
-    <sequenceFlow id="_3-_4" sourceRef="_3" targetRef="_4" name="between 18 and 25" tns:priority="1" >
+    <sequenceFlow id="_3-_4" sourceRef="_3" targetRef="_4" name="between 18 and 25" drools:priority="1" >
       <conditionExpression xsi:type="tFormalExpression" language="http://www.jboss.org/drools/rule" >ProcessVariable(name == "person", $value: value) Person( age &gt; 18 &amp;&amp; &lt; 25) from $value</conditionExpression>
     </sequenceFlow>
-    <sequenceFlow id="_3-_5" sourceRef="_3" targetRef="_5" name="between 25 and 40" tns:priority="1" >
+    <sequenceFlow id="_3-_5" sourceRef="_3" targetRef="_5" name="between 25 and 40" drools:priority="1" >
       <conditionExpression xsi:type="tFormalExpression" language="http://www.jboss.org/drools/rule" >ProcessVariable(name == "person", $value: value) Person( age &gt; 25 &amp;&amp; &lt; 40 ) from $value</conditionExpression>
     </sequenceFlow>
-    <sequenceFlow id="_3-_6" sourceRef="_3" targetRef="_6" name="under 18" tns:priority="1" >
+    <sequenceFlow id="_3-_6" sourceRef="_3" targetRef="_6" name="under 18" drools:priority="1" >
       <conditionExpression xsi:type="tFormalExpression" language="http://www.jboss.org/drools/rule" >ProcessVariable(name == "person", $value: value) Person( age &lt; 18 ) from $value </conditionExpression>
     </sequenceFlow>
     <sequenceFlow id="_4-_7" sourceRef="_4" targetRef="_7" />

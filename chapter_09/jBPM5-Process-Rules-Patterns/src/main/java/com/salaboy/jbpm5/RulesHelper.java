@@ -31,7 +31,7 @@ public class RulesHelper {
             return cachedResults.get(car.getName());
         }
         
-        StatelessKnowledgeSession session = createStatelessSession("car-sell-or-drop-complex-decision.drl");
+        StatelessKnowledgeSession session = createStatelessSession("good_old_patterns/car-sell-or-drop-complex-decision.drl");
         List list = new ArrayList();
         list.add(car);
         // Get external information that you don't want to keep in the process, for example:

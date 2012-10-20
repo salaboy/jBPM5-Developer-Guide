@@ -2,8 +2,9 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-package com.salaboy.jbpm5;
+package com.salaboy.jbpm5.evolution;
 
+import com.salaboy.jbpm5.ProcessVariable;
 import com.salaboy.model.Person;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -27,9 +28,11 @@ import org.jbpm.workflow.instance.impl.WorkflowProcessInstanceImpl;
 import org.junit.*;
 import static org.junit.Assert.*;
 
-/**
- *
- * @author salaboy
+/*
+ * For a more detailed description about these example look at: 
+ *  http://salaboy.com/2012/07/19/processes-rules-or-rules-processes-1x/
+ *  http://salaboy.com/2012/07/28/processes-rules-or-rules-processes-2x/
+ *  http://salaboy.com/2012/07/29/processes-rules-or-rules-processes-3x/
  */
 public class AutoMappingVariablesTest {
 
@@ -55,9 +58,9 @@ public class AutoMappingVariablesTest {
     @Test
     public void processVariablesAutoMappingTest() throws InterruptedException {
         KnowledgeBuilder kbuilder = KnowledgeBuilderFactory.newKnowledgeBuilder();
-        kbuilder.add(new ClassPathResource("mapping.drl"), ResourceType.DRL);
-        kbuilder.add(new ClassPathResource("scoring_processVariables.drl"), ResourceType.DRL);
-        kbuilder.add(new ClassPathResource("process-automapping-decision.bpmn"), ResourceType.BPMN2);
+        kbuilder.add(new ClassPathResource("evolution/mapping.drl"), ResourceType.DRL);
+        kbuilder.add(new ClassPathResource("evolution/scoring_processVariables.drl"), ResourceType.DRL);
+        kbuilder.add(new ClassPathResource("evolution/process-automapping-decision.bpmn"), ResourceType.BPMN2);
 
         if (kbuilder.hasErrors()) {
             for (KnowledgeBuilderError error : kbuilder.getErrors()) {
@@ -107,9 +110,9 @@ public class AutoMappingVariablesTest {
     @Ignore // Add data mappings and finish example
     public void processVariablesAutoMappingWithListenerTest() throws InterruptedException {
         KnowledgeBuilder kbuilder = KnowledgeBuilderFactory.newKnowledgeBuilder();
-        kbuilder.add(new ClassPathResource("mapping.drl"), ResourceType.DRL);
-        kbuilder.add(new ClassPathResource("scoring_processVariables.drl"), ResourceType.DRL);
-        kbuilder.add(new ClassPathResource("process-automapping-change-decision.bpmn"), ResourceType.BPMN2);
+        kbuilder.add(new ClassPathResource("evolution/mapping.drl"), ResourceType.DRL);
+        kbuilder.add(new ClassPathResource("evolution/scoring_processVariables.drl"), ResourceType.DRL);
+        kbuilder.add(new ClassPathResource("evolution/process-automapping-change-decision.bpmn"), ResourceType.BPMN2);
 
         if (kbuilder.hasErrors()) {
             for (KnowledgeBuilderError error : kbuilder.getErrors()) {

@@ -4,6 +4,7 @@ import com.salaboy.model.*;
 import org.jbpm.workflow.instance.impl.WorkflowProcessInstanceImpl;
 
 rule "Calculate Todays Score - Based on Plan"
+    no-loop
     when
         $pi: WorkflowProcessInstanceImpl($person: variables['person'])
         $t: RatesToday($a: rateA, $b: rateB)

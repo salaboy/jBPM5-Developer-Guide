@@ -1,0 +1,70 @@
+package com.wordpress.salaboy.humantasks;
+
+import org.jbpm.task.Task;
+import org.jbpm.task.User;
+import com.wordpress.salaboy.*;
+import com.wordpress.salaboy.model.events.*;
+
+
+declare WaterFlowingEvent
+    @role( event)
+    @expires (10m)
+end
+
+query "getAverage" ()
+    $currentAverage: Average()
+end
+
+rule "Update the Average"
+    no-loop true
+    when
+     $currentAverage: Average()
+     $average: Double() from accumulate(
+            WaterFlowingEvent($value: value) over window:time(5s) from entry-point "water-events", 
+            average($value))
+    then
+        $currentAverage.setValue($average);
+        update($currentAverage);    
+end
+
+rule "Meausure WaterFlowing Event Average and react if threshold is breached"
+    no-loop true
+    when
+        not(ThresholdBreached())
+        $threshold: Threshold(name == "AverageThreshold", $valueUpperThreshold:valueUpperThreshold, $valueLowerThreshold: valueLowerThreshold)
+        $average: Double( doubleValue > $valueUpperThreshold || < $valueLowerThreshold ) from accumulate(
+            $acc: WaterFlowingEvent($value: value) over window:time(5s) from entry-point "water-events", 
+             average($value))
+        $task: Task()
+        $user: User()
+        
+    then
+        Task task = TaskClientHelper.getInstance().addTask($task, null);
+        $task.setId(task.getId());
+        update($task);
+        insert(new ThresholdBreached(task.getId()));
+end
+
+
+rule "If the threshold was breached buy now the average returns to normal cancel the task that was created"
+    no-loop true
+    when
+    	
+        $threshold: Threshold(name == "AverageThreshold",  $valueUpperThreshold: valueUpperThreshold,  $valueLowerThreshold: valueLowerThreshold )
+        $average: Double(doubleValue < $valueUpperThreshold && > $valueLowerThreshold) from accumulate(
+            $acc: WaterFlowingEvent($value: value) over window:time(5s) from entry-point "water-events" ,
+             average($value))
+        $task: Task()
+        $thresholdBreached: ThresholdBreached(taskId == $task.id)
+        
+        $user: User()
+       
+        
+    then
+        
+        TaskClientHelper.getInstance().forward($task, $user);
+        retract($thresholdBreached);
+        retract($task);
+end
+
+

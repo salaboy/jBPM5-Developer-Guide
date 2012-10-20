@@ -43,7 +43,7 @@ public class RankCarWorkItemHandler implements WorkItemHandler {
     
     private StatelessKnowledgeSession createStatelessSession(){
         KnowledgeBuilder kbuilder = KnowledgeBuilderFactory.newKnowledgeBuilder();
-        kbuilder.add(new ClassPathResource("car-ranking-rules.drl"), ResourceType.DRL);
+        kbuilder.add(new ClassPathResource("good_old_patterns/car-ranking-rules.drl"), ResourceType.DRL);
         
         if (kbuilder.hasErrors()) {
             for (KnowledgeBuilderError error : kbuilder.getErrors()) {

@@ -1,4 +1,4 @@
-package com.salaboy.jbpm5;
+package com.salaboy.jbpm5.multi_process_evaluation;
 
 import com.salaboy.model.Customer;
 import com.salaboy.model.Resources;
@@ -17,9 +17,7 @@ import org.drools.builder.ResourceType;
 import org.drools.event.process.DefaultProcessEventListener;
 import org.drools.event.process.ProcessNodeLeftEvent;
 import org.drools.event.process.ProcessNodeTriggeredEvent;
-import org.drools.event.process.ProcessStartedEvent;
 import org.drools.event.rule.*;
-import org.drools.impl.StatefulKnowledgeSessionImpl;
 import org.drools.io.impl.ClassPathResource;
 import org.drools.logger.KnowledgeRuntimeLoggerFactory;
 import org.drools.runtime.StatefulKnowledgeSession;
@@ -30,14 +28,21 @@ import org.jbpm.workflow.instance.WorkflowRuntimeException;
 
 import org.junit.Test;
 
-public class MultiEvaluationProcessAndRulesTest {
+/*
+ * For a more detailed description about these example look at: 
+ *  http://salaboy.com/2012/07/19/processes-rules-or-rules-processes-1x/
+ *  http://salaboy.com/2012/07/28/processes-rules-or-rules-processes-2x/
+ *  http://salaboy.com/2012/07/29/processes-rules-or-rules-processes-3x/
+ */
+
+public class MultiProcessEvaluationTest {
 
     @Test
     public void testMultiProcessEvaluation() {
 
         KnowledgeBuilder kbuilder = KnowledgeBuilderFactory.newKnowledgeBuilder();
-        kbuilder.add(new ClassPathResource("resources.drl"), ResourceType.DRL);
-        kbuilder.add(new ClassPathResource("multi-process-decision.bpmn"), ResourceType.BPMN2);
+        kbuilder.add(new ClassPathResource("multi_process_evaluation/resources.drl"), ResourceType.DRL);
+        kbuilder.add(new ClassPathResource("multi_process_evaluation/multi-process-decision.bpmn"), ResourceType.BPMN2);
         if (kbuilder.hasErrors()) {
             for (KnowledgeBuilderError error : kbuilder.getErrors()) {
                 System.out.println(">>> Error:" + error.getMessage());
@@ -110,9 +115,9 @@ public class MultiEvaluationProcessAndRulesTest {
     public void testProcessCreationDelegation() {
 
         KnowledgeBuilder kbuilder = KnowledgeBuilderFactory.newKnowledgeBuilder();
-        kbuilder.add(new ClassPathResource("resources.drl"), ResourceType.DRL);
-        kbuilder.add(new ClassPathResource("simple-process-trigger.drl"), ResourceType.DRL);
-        kbuilder.add(new ClassPathResource("multi-process-decision-customer.bpmn"), ResourceType.BPMN2);
+        kbuilder.add(new ClassPathResource("multi_process_evaluation/resources.drl"), ResourceType.DRL);
+        kbuilder.add(new ClassPathResource("multi_process_evaluation/simple-process-trigger.drl"), ResourceType.DRL);
+        kbuilder.add(new ClassPathResource("multi_process_evaluation/multi-process-decision-customer.bpmn"), ResourceType.BPMN2);
         if (kbuilder.hasErrors()) {
             for (KnowledgeBuilderError error : kbuilder.getErrors()) {
                 System.out.println(">>> Error:" + error.getMessage());

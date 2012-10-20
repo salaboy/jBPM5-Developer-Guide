@@ -1,0 +1,26 @@
+Chapter 9 - Business Rules and Business Process
+
+The Projects included in chapter 9 cover:
+
+- drools5-SimpleExample: this is a simple project using just Drools. It shows how to use the Rule Engine, by using the same APIs that we already learnt from jBPM5. Some important things to notice are:
+ 1) Inside the pom.xml notice the Drools dependencies
+ 2) Look for the simpleRules.drl file which contains the business rules that will analyze the facts
+ 3) Open & Debug the test class called: MyFirstDrools5RulesTest to gain understanding about how the rules behave. 
+
+ 
+- jBPM5-Process-Rules-Patterns: This project shows different uses for mixing the Rule Engine and the Process Engine to model more advanced scenarios. The main focus of these examples is to show you what can be done. After understanding how these examples work, you should decide what's the best fit for your business scenario. 
+
+
+
+  
+For more information about these examples you can take a look at the following blog posts that describes these Tests and their behavior:
+ *  http://salaboy.com/2012/07/19/processes-rules-or-rules-processes-1x/
+ *  http://salaboy.com/2012/07/28/processes-rules-or-rules-processes-2x/
+ *  http://salaboy.com/2012/07/29/processes-rules-or-rules-processes-3x/
+ 
+- jBPM5-HumanTasksAndRulesExample:
+
+For updates about the book visit: http://salaboy.com 
+or follow me on twitter: http://www.twitter.com/salaboy
+- Salaboy 2012
+

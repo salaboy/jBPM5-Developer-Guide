@@ -2,8 +2,10 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-package com.salaboy.jbpm5;
+package com.salaboy.jbpm5.good_old_patterns;
 
+import com.salaboy.jbpm5.DefineCarPriceWorkItemHandler;
+import com.salaboy.jbpm5.RankCarWorkItemHandler;
 import com.salaboy.model.Car;
 import com.salaboy.model.MarketMetric;
 import com.salaboy.model.Person;
@@ -22,13 +24,15 @@ import org.drools.runtime.process.ProcessInstance;
 import org.junit.*;
 import static org.junit.Assert.*;
 
-/**
- *
- * @author salaboy
+/*
+ * For a more detailed description about these example look at: 
+ *  http://salaboy.com/2012/07/19/processes-rules-or-rules-processes-1x/
+ *  http://salaboy.com/2012/07/28/processes-rules-or-rules-processes-2x/
+ *  http://salaboy.com/2012/07/29/processes-rules-or-rules-processes-3x/
  */
-public class OldIntegrationPatterns {
+public class GoodOldIntegrationPatterns {
     
-    public OldIntegrationPatterns() {
+    public GoodOldIntegrationPatterns() {
     }
 
     @Test
@@ -37,7 +41,7 @@ public class OldIntegrationPatterns {
 
         KnowledgeBuilder kbuilder = KnowledgeBuilderFactory.newKnowledgeBuilder();
 
-        kbuilder.add(new ClassPathResource("process-java-decision.bpmn"), ResourceType.BPMN2);
+        kbuilder.add(new ClassPathResource("good_old_patterns/process-java-decision.bpmn"), ResourceType.BPMN2);
         if (kbuilder.hasErrors()) {
             for (KnowledgeBuilderError error : kbuilder.getErrors()) {
                 System.out.println(">>> Error:" + error.getMessage());
@@ -74,7 +78,7 @@ public class OldIntegrationPatterns {
     public void statelessDecorationTest() {
         KnowledgeBuilder kbuilder = KnowledgeBuilderFactory.newKnowledgeBuilder();
 
-        kbuilder.add(new ClassPathResource("process-stateless-rule-evaluation.bpmn"), ResourceType.BPMN2);
+        kbuilder.add(new ClassPathResource("good_old_patterns/process-stateless-rule-evaluation.bpmn"), ResourceType.BPMN2);
         if (kbuilder.hasErrors()) {
             for (KnowledgeBuilderError error : kbuilder.getErrors()) {
                 System.out.println(">>> Error:" + error.getMessage());
@@ -114,7 +118,7 @@ public class OldIntegrationPatterns {
     public void statelessDecisionTest() {
         KnowledgeBuilder kbuilder = KnowledgeBuilderFactory.newKnowledgeBuilder();
 
-        kbuilder.add(new ClassPathResource("process-stateless-rule-evaluation-java-gateway.bpmn"), ResourceType.BPMN2);
+        kbuilder.add(new ClassPathResource("good_old_patterns/process-stateless-rule-evaluation-java-gateway.bpmn"), ResourceType.BPMN2);
         if (kbuilder.hasErrors()) {
             for (KnowledgeBuilderError error : kbuilder.getErrors()) {
                 System.out.println(">>> Error:" + error.getMessage());
@@ -155,7 +159,7 @@ public class OldIntegrationPatterns {
     public void statelessGatewayCallTest() {
         KnowledgeBuilder kbuilder = KnowledgeBuilderFactory.newKnowledgeBuilder();
 
-        kbuilder.add(new ClassPathResource("process-stateless-rule-evaluation-rules-gateway.bpmn"), ResourceType.BPMN2);
+        kbuilder.add(new ClassPathResource("good_old_patterns/process-stateless-rule-evaluation-rules-gateway.bpmn"), ResourceType.BPMN2);
         if (kbuilder.hasErrors()) {
             for (KnowledgeBuilderError error : kbuilder.getErrors()) {
                 System.out.println(">>> Error:" + error.getMessage());
@@ -195,7 +199,7 @@ public class OldIntegrationPatterns {
     public void theRuleEngineWay(){
         KnowledgeBuilder kbuilder = KnowledgeBuilderFactory.newKnowledgeBuilder();
 
-        kbuilder.add(new ClassPathResource("car-evaluations.drl"), ResourceType.DRL);
+        kbuilder.add(new ClassPathResource("good_old_patterns/car-evaluations.drl"), ResourceType.DRL);
         
         
         if (kbuilder.hasErrors()) {

@@ -1,4 +1,4 @@
-package com.salaboy.jbpm5;
+package com.salaboy.jbpm5.rule_based_process_selection;
 
 import com.salaboy.model.Customer;
 import com.salaboy.model.Resources;
@@ -24,15 +24,22 @@ import org.jbpm.workflow.instance.impl.WorkflowProcessInstanceImpl;
 
 import org.junit.Test;
 
-public class ProcessRuleBasedSelectionTest {
+/*
+ * For a more detailed description about these example look at: 
+ *  http://salaboy.com/2012/07/19/processes-rules-or-rules-processes-1x/
+ *  http://salaboy.com/2012/07/28/processes-rules-or-rules-processes-2x/
+ *  http://salaboy.com/2012/07/29/processes-rules-or-rules-processes-3x/
+ */
+
+public class RuleBasedProcessSelectionTest {
 
     @Test
     public void processSelectionForPlatinumCustomersWithResources() {
 
         KnowledgeBuilder kbuilder = KnowledgeBuilderFactory.newKnowledgeBuilder();
-        kbuilder.add(new ClassPathResource("smart-process-selection.drl"), ResourceType.DRL);
-        kbuilder.add(new ClassPathResource("platinum-customer-process.bpmn"), ResourceType.BPMN2);
-        kbuilder.add(new ClassPathResource("regular-customer-process.bpmn"), ResourceType.BPMN2);
+        kbuilder.add(new ClassPathResource("rule_based_process_selection/smart-process-selection.drl"), ResourceType.DRL);
+        kbuilder.add(new ClassPathResource("rule_based_process_selection/platinum-customer-process.bpmn"), ResourceType.BPMN2);
+        kbuilder.add(new ClassPathResource("rule_based_process_selection/regular-customer-process.bpmn"), ResourceType.BPMN2);
         if (kbuilder.hasErrors()) {
             for (KnowledgeBuilderError error : kbuilder.getErrors()) {
                 System.out.println(">>> Error:" + error.getMessage());
@@ -107,9 +114,9 @@ public class ProcessRuleBasedSelectionTest {
     public void processSelectionForPlatinumCustomersNotEnoughResources() {
 
         KnowledgeBuilder kbuilder = KnowledgeBuilderFactory.newKnowledgeBuilder();
-        kbuilder.add(new ClassPathResource("smart-process-selection.drl"), ResourceType.DRL);
-        kbuilder.add(new ClassPathResource("platinum-customer-process.bpmn"), ResourceType.BPMN2);
-        kbuilder.add(new ClassPathResource("regular-customer-process.bpmn"), ResourceType.BPMN2);
+        kbuilder.add(new ClassPathResource("rule_based_process_selection/smart-process-selection.drl"), ResourceType.DRL);
+        kbuilder.add(new ClassPathResource("rule_based_process_selection/platinum-customer-process.bpmn"), ResourceType.BPMN2);
+        kbuilder.add(new ClassPathResource("rule_based_process_selection/regular-customer-process.bpmn"), ResourceType.BPMN2);
         if (kbuilder.hasErrors()) {
             for (KnowledgeBuilderError error : kbuilder.getErrors()) {
                 System.out.println(">>> Error:" + error.getMessage());
@@ -181,9 +188,9 @@ public class ProcessRuleBasedSelectionTest {
     public void processSelectionNotEnoughResources() {
 
         KnowledgeBuilder kbuilder = KnowledgeBuilderFactory.newKnowledgeBuilder();
-        kbuilder.add(new ClassPathResource("smart-process-selection.drl"), ResourceType.DRL);
-        kbuilder.add(new ClassPathResource("platinum-customer-process.bpmn"), ResourceType.BPMN2);
-        kbuilder.add(new ClassPathResource("regular-customer-process.bpmn"), ResourceType.BPMN2);
+        kbuilder.add(new ClassPathResource("rule_based_process_selection/smart-process-selection.drl"), ResourceType.DRL);
+        kbuilder.add(new ClassPathResource("rule_based_process_selection/platinum-customer-process.bpmn"), ResourceType.BPMN2);
+        kbuilder.add(new ClassPathResource("rule_based_process_selection/regular-customer-process.bpmn"), ResourceType.BPMN2);
         if (kbuilder.hasErrors()) {
             for (KnowledgeBuilderError error : kbuilder.getErrors()) {
                 System.out.println(">>> Error:" + error.getMessage());
@@ -257,9 +264,9 @@ public class ProcessRuleBasedSelectionTest {
     public void processSelectionNotEnoughResourcesPlusResourceInjection() {
 
         KnowledgeBuilder kbuilder = KnowledgeBuilderFactory.newKnowledgeBuilder();
-        kbuilder.add(new ClassPathResource("smart-process-selection.drl"), ResourceType.DRL);
-        kbuilder.add(new ClassPathResource("platinum-customer-process.bpmn"), ResourceType.BPMN2);
-        kbuilder.add(new ClassPathResource("regular-customer-process.bpmn"), ResourceType.BPMN2);
+        kbuilder.add(new ClassPathResource("rule_based_process_selection/smart-process-selection.drl"), ResourceType.DRL);
+        kbuilder.add(new ClassPathResource("rule_based_process_selection/platinum-customer-process.bpmn"), ResourceType.BPMN2);
+        kbuilder.add(new ClassPathResource("rule_based_process_selection/regular-customer-process.bpmn"), ResourceType.BPMN2);
         if (kbuilder.hasErrors()) {
             for (KnowledgeBuilderError error : kbuilder.getErrors()) {
                 System.out.println(">>> Error:" + error.getMessage());

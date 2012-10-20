@@ -2,7 +2,7 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-package com.salaboy.jbpm5;
+package com.salaboy.jbpm5.evolution;
 
 import com.salaboy.model.Person;
 import com.salaboy.model.RatesToday;
@@ -17,6 +17,7 @@ import org.drools.builder.KnowledgeBuilderError;
 import org.drools.builder.KnowledgeBuilderFactory;
 import org.drools.builder.ResourceType;
 import org.drools.event.process.DefaultProcessEventListener;
+import org.drools.event.process.ProcessCompletedEvent;
 import org.drools.event.process.ProcessStartedEvent;
 import org.drools.event.rule.ActivationCreatedEvent;
 import org.drools.event.rule.DefaultAgendaEventListener;
@@ -36,45 +37,23 @@ import org.jbpm.workflow.instance.impl.WorkflowProcessInstanceImpl;
 import org.junit.*;
 import static org.junit.Assert.*;
 
-/**
- *
- * @author salaboy
+/*
+ * For a more detailed description about these example look at: 
+ *  http://salaboy.com/2012/07/19/processes-rules-or-rules-processes-1x/
+ *  http://salaboy.com/2012/07/28/processes-rules-or-rules-processes-2x/
+ *  http://salaboy.com/2012/07/29/processes-rules-or-rules-processes-3x/
  */
 public class AdvancedProcessAndRulesIntegrationTest {
 
     public AdvancedProcessAndRulesIntegrationTest() {
     }
 
-    @BeforeClass
-    public static void setUpClass() throws Exception {
-    }
-
-    @AfterClass
-    public static void tearDownClass() throws Exception {
-    }
-
-    @Before
-    public void setUp() {
-    }
-
-    @After
-    public void tearDown() {
-    }
-
-    @Test
-    public void processVariableCreationTest() {
-        Person person = new Person("salaboy", 28);
-        ProcessVariable<Person> var = new ProcessVariable<Person>(1, "", person);
-        Person person2 = var.getValue();
-
-    }
-
     @Test
     public void processVariablesAutoMappingPlusCastNoSafeCheckTest() throws InterruptedException {
         KnowledgeBuilder kbuilder = KnowledgeBuilderFactory.newKnowledgeBuilder();
-        kbuilder.add(new ClassPathResource("mapping.drl"), ResourceType.DRL);
-        kbuilder.add(new ClassPathResource("scoring_processVariables_wider.drl"), ResourceType.DRL);
-        kbuilder.add(new ClassPathResource("process-variables-decision.bpmn"), ResourceType.BPMN2);
+        kbuilder.add(new ClassPathResource("evolution/mapping.drl"), ResourceType.DRL);
+        kbuilder.add(new ClassPathResource("evolution/scoring_processVariables_wider.drl"), ResourceType.DRL);
+        kbuilder.add(new ClassPathResource("evolution/process-variables-decision.bpmn"), ResourceType.BPMN2);
 
         if (kbuilder.hasErrors()) {
             for (KnowledgeBuilderError error : kbuilder.getErrors()) {
@@ -91,9 +70,19 @@ public class AdvancedProcessAndRulesIntegrationTest {
         final StatefulKnowledgeSession ksession = kbase.newStatefulKnowledgeSession();
         KnowledgeRuntimeLoggerFactory.newConsoleLogger(ksession);
 
+        Person person = new Person("Salaboy", 28);
+        RatesToday ratesToday = new RatesToday(1, 100);
+        Map<String, Object> params = new HashMap<String, Object>();
+        params.put("person", person);
+        params.put("ratesToday", ratesToday);
+
+        ProcessInstance processInstance = ksession.createProcessInstance("com.salaboy.process.SimpleDecision", params);
+        System.out.println("Variables: " + ((WorkflowProcessInstanceImpl) processInstance).getVariables());
+        assertEquals(processInstance.getState(), ProcessInstance.STATE_PENDING);
+        final FactHandle processHandle = ksession.insert(processInstance);
+
         ksession.addEventListener(
                 new DefaultAgendaEventListener() {
-
                     @Override
                     public void activationCreated(ActivationCreatedEvent event) {
                         System.out.println("Firing All the Rules! " + event);
@@ -112,37 +101,36 @@ public class AdvancedProcessAndRulesIntegrationTest {
             public void beforeProcessStarted(ProcessStartedEvent event) {
                 ((StatefulKnowledgeSession) event.getKnowledgeRuntime()).fireAllRules();
             }
+
             @Override
             public void afterProcessStarted(ProcessStartedEvent event) {
                 ((StatefulKnowledgeSession) event.getKnowledgeRuntime()).fireAllRules();
             }
+
+            @Override
+            public void afterProcessCompleted(ProcessCompletedEvent event) {
+                ((StatefulKnowledgeSession) event.getKnowledgeRuntime()).retract(processHandle);
+            }
         });
 
 
-        Person person = new Person("Salaboy", 28);
-        RatesToday ratesToday = new RatesToday(1, 100);
-        Map<String, Object> params = new HashMap<String, Object>();
-        params.put("person", person);
-        params.put("ratesToday", ratesToday);
-
-        ProcessInstance processInstance = ksession.createProcessInstance("com.salaboy.process.SimpleDecision", params);
-        System.out.println("Variables: " + ((WorkflowProcessInstanceImpl) processInstance).getVariables());
-        assertEquals(processInstance.getState(), ProcessInstance.STATE_PENDING);
-        FactHandle processtHandle = ksession.insert(processInstance);
-
         ksession.startProcessInstance(processInstance.getId());
 
+//        // If you want to query the process variables while the process Instance is running you can do: 
+//        //  But remember that the activities inside the process are all sync. 
+//        QueryResults queryResults = ksession.getQueryResults("allProcessVariables", new Object[]{});
+//        Iterator<QueryResultsRow> iterator = queryResults.iterator();
+//
+//        QueryResultsRow ratesRow = iterator.next();
+//        assertEquals(ratesToday, ((ProcessVariable) ratesRow.get("$pv")).getValue());
+//
+//        QueryResultsRow personRow = iterator.next();
+//        assertEquals(person, ((ProcessVariable) personRow.get("$pv")).getValue());
+        
         assertEquals(processInstance.getState(), ProcessInstance.STATE_COMPLETED);
         QueryResults queryResults = ksession.getQueryResults("allProcessVariables", new Object[]{});
-        Iterator<QueryResultsRow> iterator = queryResults.iterator();
-
-        QueryResultsRow ratesRow = iterator.next();
-        assertEquals(ratesToday, ((ProcessVariable) ratesRow.get("$pv")).getValue());
-
-        QueryResultsRow personRow = iterator.next();
-        assertEquals(person, ((ProcessVariable) personRow.get("$pv")).getValue());
-
-        ksession.retract(processtHandle);
+        // The Process Variables are automatically retracted when the Process Instance is Completed
+        assertEquals(0, queryResults.size());
 
 
     }
@@ -150,9 +138,9 @@ public class AdvancedProcessAndRulesIntegrationTest {
     @Test
     public void processEventsTest() throws InterruptedException {
         KnowledgeBuilder kbuilder = KnowledgeBuilderFactory.newKnowledgeBuilder();
-        kbuilder.add(new ClassPathResource("mapping.drl"), ResourceType.DRL);
-        kbuilder.add(new ClassPathResource("scoring_processVariables_wider.drl"), ResourceType.DRL);
-        kbuilder.add(new ClassPathResource("process-events-decision.bpmn"), ResourceType.BPMN2);
+        kbuilder.add(new ClassPathResource("evolution/mapping.drl"), ResourceType.DRL);
+        kbuilder.add(new ClassPathResource("evolution/scoring_processVariables_wider.drl"), ResourceType.DRL);
+        kbuilder.add(new ClassPathResource("evolution/process-events-decision.bpmn"), ResourceType.BPMN2);
 
         if (kbuilder.hasErrors()) {
             for (KnowledgeBuilderError error : kbuilder.getErrors()) {
@@ -168,7 +156,6 @@ public class AdvancedProcessAndRulesIntegrationTest {
 
         final StatefulKnowledgeSession ksession = kbase.newStatefulKnowledgeSession();
         ksession.getWorkItemManager().registerWorkItemHandler("Human Task", new WorkItemHandler() {
-
             public void executeWorkItem(WorkItem wi, WorkItemManager wim) {
                 System.out.println(" >>> Completing Task! -> " + wi.getName() + " - id: " + wi.getId());
                 wim.completeWorkItem(wi.getId(), null);
@@ -178,22 +165,12 @@ public class AdvancedProcessAndRulesIntegrationTest {
                 throw new UnsupportedOperationException("Not supported yet.");
             }
         });
-        ((StatefulKnowledgeSessionImpl) ksession).addEventListener(new DefaultProcessEventListener() {
-            @Override
-            public void beforeProcessStarted(ProcessStartedEvent event) {
-                ((StatefulKnowledgeSession) event.getKnowledgeRuntime()).fireAllRules();
-            }
-            @Override
-            public void afterProcessStarted(ProcessStartedEvent event) {
-                ((StatefulKnowledgeSession) event.getKnowledgeRuntime()).fireAllRules();
-            }
-        });
+
         KnowledgeRuntimeLoggerFactory.newConsoleLogger(ksession);
 
 
         ksession.addEventListener(
                 new DefaultAgendaEventListener() {
-
                     @Override
                     public void activationCreated(ActivationCreatedEvent event) {
                         ((StatefulKnowledgeSession) event.getKnowledgeRuntime()).fireAllRules();
@@ -215,23 +192,42 @@ public class AdvancedProcessAndRulesIntegrationTest {
         ProcessInstance processInstance = ksession.createProcessInstance("com.salaboy.process.SimpleDecision", params);
         System.out.println("Variables: " + ((WorkflowProcessInstanceImpl) processInstance).getVariables());
         assertEquals(processInstance.getState(), ProcessInstance.STATE_PENDING);
-        FactHandle processtHandle = ksession.insert(processInstance);
+        final FactHandle processHandle = ksession.insert(processInstance);
 
+        ((StatefulKnowledgeSessionImpl) ksession).addEventListener(new DefaultProcessEventListener() {
+            @Override
+            public void beforeProcessStarted(ProcessStartedEvent event) {
+                ((StatefulKnowledgeSession) event.getKnowledgeRuntime()).fireAllRules();
+            }
+
+            @Override
+            public void afterProcessStarted(ProcessStartedEvent event) {
+                ((StatefulKnowledgeSession) event.getKnowledgeRuntime()).fireAllRules();
+            }
+
+            @Override
+            public void afterProcessCompleted(ProcessCompletedEvent event) {
+                ((StatefulKnowledgeSession) event.getKnowledgeRuntime()).retract(processHandle);
+            }
+        });
         ksession.startProcessInstance(processInstance.getId());
 
         Thread.sleep(1000);
 
+//        // If you want to query the process variables while the process Instance is running you can do: 
+//        QueryResults queryResults = ksession.getQueryResults("allProcessVariables", new Object[]{});
+//        Iterator<QueryResultsRow> iterator = queryResults.iterator();
+//
+//        QueryResultsRow ratesRow = iterator.next();
+//        assertEquals(ratesToday, ((ProcessVariable) ratesRow.get("$pv")).getValue());
+//
+//        QueryResultsRow personRow = iterator.next();
+//        assertEquals(person, ((ProcessVariable) personRow.get("$pv")).getValue());
+
         assertEquals(processInstance.getState(), ProcessInstance.STATE_COMPLETED);
         QueryResults queryResults = ksession.getQueryResults("allProcessVariables", new Object[]{});
-        Iterator<QueryResultsRow> iterator = queryResults.iterator();
-
-        QueryResultsRow ratesRow = iterator.next();
-        assertEquals(ratesToday, ((ProcessVariable) ratesRow.get("$pv")).getValue());
-
-        QueryResultsRow personRow = iterator.next();
-        assertEquals(person, ((ProcessVariable) personRow.get("$pv")).getValue());
-
-        ksession.retract(processtHandle);
+        // The Process Variables are automatically retracted when the Process Instance is Completed
+        assertEquals(0, queryResults.size());
 
 
     }
