@@ -10,8 +10,44 @@ The Projects included in chapter 9 cover:
  
 - jBPM5-Process-Rules-Patterns: This project shows different uses for mixing the Rule Engine and the Process Engine to model more advanced scenarios. The main focus of these examples is to show you what can be done. After understanding how these examples work, you should decide what's the best fit for your business scenario. 
 
+This project is divided into different packages which can be analyzed in order from complexity:
+1) com.salaboy.jbpm5.good_old_patterns: 
+This package contains tests showing how the integration between processes and rules has been done in the last 20 years.  All the tests covers an example from a Car Selling Company that based on a Car Specification it decides to advertise and sell a car or reject it. The class called GoodOldIntegrationPatterns contains 5 tests:
+  a) javaBasedDecisionTest(): No rules, just plain java expressions placed in outgoing sequence flows of an exclusive gateway to decide which path to take into a process. 
+  b) statelessDecorationTest(): Two WorkItemHandlers are defined to do stateless rules evaluations. Each of these work item create a stateless session inside with a set of rules to evaluate. The process will need to move the information from the process scope to the rule engine scope to be evaluated. The rule evaluation is being done in a separate context from the process instance execution.
+  c) statelessDecisionTest(): Once again a Stateless Knowledge Session is used to generate a value that will be used to decide which path to take in a process. As you can see in this example, an extra step is required if we want to delegate the decision to a set of rules located in a different session. 
+  d) statelessGatewayCallTest(): In this case a helper class is defined called: RulesHelper to make a the rule engine stateless session from the sequence flows.
+  f) theRuleEngineWay(): this tests doesn't use any business process to solve the same scenario. The aim of this test is to show that sometimes we can solve a business scenario using the Rule Engine without specifying a sequence of steps to execute. You need to be aware of this possibility, because sometimes we tend to overcomplicate the designs because we thing that Business Processes are the only way to go.
+
+2) com.salaboy.jbpm5.new_common: 
+This package contains examples that shows the new integration patterns derived from having the Process Engine and the Rule Engine running in the same context. The test class called: NewCommonIntegrationPatternsTest contains 4 tests that shows different usages of rules and processes:
+  a) testSimpleRulesDecision(): this test uses rules expressions inside the sequence flow of an exclusive gateway. The main difference between using Java expressions and Rules is that the evaluation is done agains Facts inside the Rule Engine in the case of Rules. Java expressions will do evaluation on the process variables information only, which are far way more limited. 
+
+  b) testSimpleDecisionWithRules(): this example shows how we can create rules that make inference over the Process Instance. Take a look at the rule file called: scoring.drl which contains a rule that evaluates the ProcessInstance fact which was inserted into the session by the test.
+
+  c) testSimpleDecisionWithReactiveRules(): this example shows one of the possible ways of setting the process engine into what we call "the reactive mode". This test shows the fireUntilHalt() usage. Which is not usually recommended, because it requires a different thread of execution. 
+
+  d) testSimpleDecisionWithReactiveRulesUsingListener(): this test shows the other approach of using an AgendaEventListener to fireAllRules() as soon as an Activation gets created. This option avoid the need of using a different thread of execution.
+
+3) com.salaboy.jbpm5.multi_process_evaluation:
+This package contains two different examples which evaluates different ProcessInstances which are running in the same session. Now the analysis is not only on one ProcessInstance execution, showing that Business Rules can be written to react on a set of ProcessInstance that can be of the same type or completely different. The second example show how we can delegate to the Rule Engine the creation of new Process Instance based on the available information. 
+The test class called MultiProcessEvaluationTest contains two test showing these scenarios. 
+
+  a) testMultiProcessEvaluation(): this test shows a business process which contains two paths for dealing with different types of Customers. Each path requires a different amount of resources to be executed. A rule is defined to stop the process execution when there is no more Resources available to deal with a new Customer. The sequence flows in charge of deciding which path to take into the process, uses Rules Expressions to see how much resources are available. 
+  b) testProcessCreationDelegation(): this test delegates the process instance creation to  a Rule which is contained inside the file called: simple-process-trigger.drl. This rule will be triggered every time that we insert a new Customer into our session. There is no need to start the process from our Application, because this rule warranty one process creation per customer.
 
 
+4) com.salaboy.jbpm5.rule_based_process_selection:
+This package shows how we can refactor our previous example into a more focused processes that will be selected based on a set of rules. The test class called RuleBasedProcessSelectionTest contains 3 tests which exemplify these changes:
+
+  a) processSelectionForPlatinumCustomersWithResources(): Instead of having a process with two different paths for different types of customers, this example shows how we can refactor the proposed process definition into two simplified processes and then let the Rule Engine decide which of them instantiate based on the current Customer. Look at the rules file called: smart-process-selection.drl that describe in which situations the platinum-customer-process will be selected against the regular-customer-process.
+
+  b) processSelectionForPlatinumCustomersNotEnoughResources(): this test shows the scenario where we don't have enough resources to deal with a Platinum Customer.
+
+  c) processSelectionNotEnoughResources(): this test shows the scenario when we don't have enough Resources to deal with any type of Customers. 
+
+5) com.salaboy.jbpm5.evolution:
+ //TODO
   
 For more information about these examples you can take a look at the following blog posts that describes these Tests and their behavior:
  *  http://salaboy.com/2012/07/19/processes-rules-or-rules-processes-1x/

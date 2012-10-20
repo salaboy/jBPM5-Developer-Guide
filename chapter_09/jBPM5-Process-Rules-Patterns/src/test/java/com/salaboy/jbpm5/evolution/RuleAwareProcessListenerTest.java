@@ -14,6 +14,8 @@ import static org.junit.Assert.*;
 /**
  *
  * @author salaboy
+ * For More Information about this tests take a look at: 
+ * https://github.com/Salaboy/jBPM5-Developer-Guide/blob/master/chapter_09/README
  */
 public class RuleAwareProcessListenerTest {
     

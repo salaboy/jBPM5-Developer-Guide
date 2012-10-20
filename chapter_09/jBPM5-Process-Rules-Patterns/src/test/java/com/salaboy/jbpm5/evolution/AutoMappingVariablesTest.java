@@ -30,9 +30,7 @@ import static org.junit.Assert.*;
 
 /*
  * For a more detailed description about these example look at: 
- *  http://salaboy.com/2012/07/19/processes-rules-or-rules-processes-1x/
- *  http://salaboy.com/2012/07/28/processes-rules-or-rules-processes-2x/
- *  http://salaboy.com/2012/07/29/processes-rules-or-rules-processes-3x/
+ * https://github.com/Salaboy/jBPM5-Developer-Guide/blob/master/chapter_09/README
  */
 public class AutoMappingVariablesTest {
 
