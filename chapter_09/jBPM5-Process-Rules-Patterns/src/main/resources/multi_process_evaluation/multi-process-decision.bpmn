@@ -30,29 +30,29 @@
     <!-- nodes -->
     <startEvent id="_1" name="StartProcess" />
     <scriptTask id="_2" name="Script 0" scriptFormat="http://www.java.com/java" >
-      <script>QueryResults queryResults = kcontext.getKnowledgeRuntime().getQueryResults("getResources", new Object[]{});
+      <script><![CDATA[QueryResults queryResults = kcontext.getKnowledgeRuntime().getQueryResults("getResources", new Object[]{});
               QueryResultsRow row = queryResults.iterator().next();
               Resources resources = (Resources)row.get("$r");
               System.out.println(" ### Script 0 (before): "+resources);
               resources.setAvailable(resources.getAvailable() - 1);
               System.out.println(" ### Script 0 (after): "+resources);
               FactHandle handle = kcontext.getKnowledgeRuntime().getFactHandle(resources);
-              kcontext.getKnowledgeRuntime().update(handle, resources);</script>
+              kcontext.getKnowledgeRuntime().update(handle, resources);]]></script>
     </scriptTask>
-    <inclusiveGateway id="_3" name="Gateway" gatewayDirection="Diverging" />
+    <exclusiveGateway id="_3" name="Gateway" gatewayDirection="Diverging" />
     <scriptTask id="_4" name="Script 1" scriptFormat="http://www.java.com/java" >
-      <script>QueryResults queryResults = kcontext.getKnowledgeRuntime().getQueryResults("getResources", new Object[]{});
+      <script><![CDATA[QueryResults queryResults = kcontext.getKnowledgeRuntime().getQueryResults("getResources", new Object[]{});
               QueryResultsRow row = queryResults.iterator().next();
               Resources resources = (Resources)row.get("$r");
               System.out.println(" ### Script 1 (before): "+resources);
               resources.setAvailable(resources.getAvailable() - 1);
               System.out.println(" ### Script 1 (after): "+resources);
               FactHandle handle = kcontext.getKnowledgeRuntime().getFactHandle(resources);
-              kcontext.getKnowledgeRuntime().update(handle, resources);
+              kcontext.getKnowledgeRuntime().update(handle, resources);]]>
     </script>
     </scriptTask>
     <scriptTask id="_5" name="Script 4" scriptFormat="http://www.java.com/java" >
-      <script>
+      <script><![CDATA[
               QueryResults queryResults = kcontext.getKnowledgeRuntime().getQueryResults("getResources", new Object[]{});
               QueryResultsRow row = queryResults.iterator().next();
               Resources resources = (Resources)row.get("$r");
@@ -60,7 +60,7 @@
               resources.setAvailable(resources.getAvailable() - 1);
               System.out.println(" ### Script 4 (after): "+resources);
               FactHandle handle = kcontext.getKnowledgeRuntime().getFactHandle(resources);
-              kcontext.getKnowledgeRuntime().update(handle, resources);
+              kcontext.getKnowledgeRuntime().update(handle, resources);]]>
               
     </script>
     </scriptTask>
@@ -69,34 +69,34 @@
         <terminateEventDefinition/>
     </endEvent>
     <scriptTask id="_9" name="Script 5" scriptFormat="http://www.java.com/java" >
-      <script>QueryResults queryResults = kcontext.getKnowledgeRuntime().getQueryResults("getResources", new Object[]{});
+      <script><![CDATA[QueryResults queryResults = kcontext.getKnowledgeRuntime().getQueryResults("getResources", new Object[]{});
               QueryResultsRow row = queryResults.iterator().next();
               Resources resources = (Resources)row.get("$r");
               System.out.println(" ### Script 5 (before): "+resources);
               resources.setAvailable(resources.getAvailable() - 1);
               System.out.println(" ### Script 5 (after): "+resources);
               FactHandle handle = kcontext.getKnowledgeRuntime().getFactHandle(resources);
-              kcontext.getKnowledgeRuntime().update(handle, resources);</script>
+              kcontext.getKnowledgeRuntime().update(handle, resources);]]></script>
     </scriptTask>
     <scriptTask id="_10" name="Script 2" scriptFormat="http://www.java.com/java">
-      <script>QueryResults queryResults = kcontext.getKnowledgeRuntime().getQueryResults("getResources", new Object[]{});
+      <script><![CDATA[QueryResults queryResults = kcontext.getKnowledgeRuntime().getQueryResults("getResources", new Object[]{});
               QueryResultsRow row = queryResults.iterator().next();
               Resources resources = (Resources)row.get("$r");
               System.out.println(" ### Script 2 (before): "+resources);
               resources.setAvailable(resources.getAvailable() - 1);
               System.out.println(" ### Script 2 (after): "+resources);
               FactHandle handle = kcontext.getKnowledgeRuntime().getFactHandle(resources);
-              kcontext.getKnowledgeRuntime().update(handle, resources);</script>
+              kcontext.getKnowledgeRuntime().update(handle, resources);]]></script>
     </scriptTask>
     <scriptTask id="_11" name="Script 3" scriptFormat="http://www.java.com/java">
-      <script>QueryResults queryResults = kcontext.getKnowledgeRuntime().getQueryResults("getResources", new Object[]{});
+      <script><![CDATA[QueryResults queryResults = kcontext.getKnowledgeRuntime().getQueryResults("getResources", new Object[]{});
               QueryResultsRow row = queryResults.iterator().next();
               Resources resources = (Resources)row.get("$r");
               System.out.println(" ### Script 3 (before): "+resources);
               resources.setAvailable(resources.getAvailable() - 1);
               System.out.println(" ### Script 3 (after): "+resources);
               FactHandle handle = kcontext.getKnowledgeRuntime().getFactHandle(resources);
-              kcontext.getKnowledgeRuntime().update(handle, resources);</script>
+              kcontext.getKnowledgeRuntime().update(handle, resources);]]></script>
     </scriptTask>
 
     <!-- connections -->

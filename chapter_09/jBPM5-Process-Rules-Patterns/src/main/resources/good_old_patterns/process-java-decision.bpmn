@@ -29,7 +29,7 @@
     <scriptTask id="_2" name="Script 0" >
       <script>System.out.println(" ### Script 0: "+kcontext.getVariable("person"));</script>
     </scriptTask>
-    <inclusiveGateway id="_3" name="Gateway" gatewayDirection="Diverging" />
+    <exclusiveGateway id="_3" name="Gateway" gatewayDirection="Diverging" />
     <scriptTask id="_4" name="Script 1" scriptFormat="http://www.java.com/java" >
       <script>System.out.println(" ### Script 1: "+kcontext.getVariable("person"));
       </script>
