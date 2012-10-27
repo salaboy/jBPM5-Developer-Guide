@@ -11,6 +11,9 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
+import java.io.IOException;
+import java.io.OutputStream;
+import java.io.PrintStream;
 import javax.swing.UIManager;
 import org.drools.KnowledgeBase;
 import org.drools.KnowledgeBaseConfiguration;
@@ -49,6 +52,8 @@ public class EventsTesterJFrame extends javax.swing.JFrame implements KeyListene
         keyDjButton.addKeyListener(this);
         keyWjButton.addKeyListener(this);
         
+        redirectOutput();
+        
         ksession = createKnowledgeSession();
     }
 
@@ -70,23 +75,13 @@ public class EventsTesterJFrame extends javax.swing.JFrame implements KeyListene
         jPanel3 = new javax.swing.JPanel();
         jScrollPane1 = new javax.swing.JScrollPane();
         outjTextPane = new javax.swing.JTextPane();
+        jLabel1 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("EventsTester");
 
         keyAjButton.setMnemonic('A');
         keyAjButton.setText("Key A");
-        keyAjButton.addKeyListener(new java.awt.event.KeyAdapter() {
-            public void keyTyped(java.awt.event.KeyEvent evt) {
-                keyAjButtonKeyTyped(evt);
-            }
-            public void keyPressed(java.awt.event.KeyEvent evt) {
-                keyAjButtonKeyPressed(evt);
-            }
-            public void keyReleased(java.awt.event.KeyEvent evt) {
-                keyAjButtonKeyReleased(evt);
-            }
-        });
 
         keySjButton.setMnemonic('S');
         keySjButton.setText("Key S");
@@ -95,36 +90,12 @@ public class EventsTesterJFrame extends javax.swing.JFrame implements KeyListene
                 keySjButtonActionPerformed(evt);
             }
         });
-        keySjButton.addKeyListener(new java.awt.event.KeyAdapter() {
-            public void keyPressed(java.awt.event.KeyEvent evt) {
-                keySjButtonKeyPressed(evt);
-            }
-            public void keyReleased(java.awt.event.KeyEvent evt) {
-                keySjButtonKeyReleased(evt);
-            }
-        });
 
         keyWjButton.setMnemonic('W');
         keyWjButton.setText("Key W");
-        keyWjButton.addKeyListener(new java.awt.event.KeyAdapter() {
-            public void keyPressed(java.awt.event.KeyEvent evt) {
-                keyWjButtonKeyPressed(evt);
-            }
-            public void keyReleased(java.awt.event.KeyEvent evt) {
-                keyWjButtonKeyReleased(evt);
-            }
-        });
 
         keyDjButton.setMnemonic('D');
         keyDjButton.setText("Key D");
-        keyDjButton.addKeyListener(new java.awt.event.KeyAdapter() {
-            public void keyPressed(java.awt.event.KeyEvent evt) {
-                keyDjButtonKeyPressed(evt);
-            }
-            public void keyReleased(java.awt.event.KeyEvent evt) {
-                keyDjButtonKeyReleased(evt);
-            }
-        });
 
         org.jdesktop.layout.GroupLayout jPanel2Layout = new org.jdesktop.layout.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
@@ -156,19 +127,27 @@ public class EventsTesterJFrame extends javax.swing.JFrame implements KeyListene
 
         jScrollPane1.setViewportView(outjTextPane);
 
+        jLabel1.setText("Log:");
+        jLabel1.setToolTipText("Ctrl+l to clean");
+
         org.jdesktop.layout.GroupLayout jPanel3Layout = new org.jdesktop.layout.GroupLayout(jPanel3);
         jPanel3.setLayout(jPanel3Layout);
         jPanel3Layout.setHorizontalGroup(
             jPanel3Layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
             .add(jPanel3Layout.createSequentialGroup()
                 .addContainerGap()
-                .add(jScrollPane1)
+                .add(jPanel3Layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
+                    .add(jScrollPane1)
+                    .add(jPanel3Layout.createSequentialGroup()
+                        .add(jLabel1)
+                        .add(0, 0, Short.MAX_VALUE)))
                 .addContainerGap())
         );
         jPanel3Layout.setVerticalGroup(
             jPanel3Layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
             .add(org.jdesktop.layout.GroupLayout.TRAILING, jPanel3Layout.createSequentialGroup()
-                .addContainerGap(27, Short.MAX_VALUE)
+                .add(jLabel1)
+                .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED, 9, Short.MAX_VALUE)
                 .add(jScrollPane1, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 106, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap())
         );
@@ -214,8 +193,11 @@ public class EventsTesterJFrame extends javax.swing.JFrame implements KeyListene
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void keyAjButtonKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_keyAjButtonKeyPressed
+    private void keySjButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_keySjButtonActionPerformed
         // TODO add your handling code here:
+    }//GEN-LAST:event_keySjButtonActionPerformed
+
+    private void onKeyAjButtonKeyPressed(java.awt.event.KeyEvent evt) {                                       
         if (evt.getKeyCode() == KeyEvent.VK_A) {
             ksession.insert(new KeyA());
             ksession.fireAllRules();
@@ -224,30 +206,20 @@ public class EventsTesterJFrame extends javax.swing.JFrame implements KeyListene
             keyAjButton.setForeground(new java.awt.Color(51, 204, 0));
             keyAjButton.setText("[ Key A ]");
             keyAjButton.setOpaque(true);
+            evt.consume();
         }
-    }//GEN-LAST:event_keyAjButtonKeyPressed
+    }                                      
 
-    private void keySjButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_keySjButtonActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_keySjButtonActionPerformed
-
-    private void keyAjButtonKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_keyAjButtonKeyReleased
-        // TODO add your handling code here:
+    private void onKeyAjButtonKeyReleased(java.awt.event.KeyEvent evt) {                                        
         if (evt.getKeyCode() == KeyEvent.VK_A) {
             keyAjButton.setBackground(new java.awt.Color(238, 238, 238));
             keyAjButton.setForeground(new java.awt.Color(0, 0, 0));
             keyAjButton.setText(" Key A ");
             keyAjButton.setOpaque(false);
         }
-    }//GEN-LAST:event_keyAjButtonKeyReleased
+    }                                       
 
-    private void keyAjButtonKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_keyAjButtonKeyTyped
-        // TODO add your handling code here:
-       
-    }//GEN-LAST:event_keyAjButtonKeyTyped
-
-    private void keySjButtonKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_keySjButtonKeyPressed
-        // TODO add your handling code here:
+    private void onKeySjButtonKeyPressed(java.awt.event.KeyEvent evt) {                                       
         if (evt.getKeyCode() == KeyEvent.VK_S) {
             ksession.insert(new KeyS());
             ksession.fireAllRules();
@@ -257,30 +229,27 @@ public class EventsTesterJFrame extends javax.swing.JFrame implements KeyListene
             keySjButton.setText("[ Key S ]");
             keySjButton.setOpaque(true);
         }
-    }//GEN-LAST:event_keySjButtonKeyPressed
+    }                                      
 
-    private void keySjButtonKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_keySjButtonKeyReleased
-        // TODO add your handling code here:
+    private void onKeySjButtonKeyReleased(java.awt.event.KeyEvent evt) {                                        
         if (evt.getKeyCode() == KeyEvent.VK_S) {
             keySjButton.setBackground(new java.awt.Color(238, 238, 238));
             keySjButton.setForeground(new java.awt.Color(0, 0, 0));
             keySjButton.setText(" Key S ");
             keySjButton.setOpaque(false);
         }
-    }//GEN-LAST:event_keySjButtonKeyReleased
+    }                                       
 
-    private void keyDjButtonKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_keyDjButtonKeyReleased
-        // TODO add your handling code here:
+    private void onKeyDjButtonKeyReleased(java.awt.event.KeyEvent evt) {                                        
         if (evt.getKeyCode() == KeyEvent.VK_D) {
             keyDjButton.setBackground(new java.awt.Color(238, 238, 238));
             keyDjButton.setForeground(new java.awt.Color(0, 0, 0));
             keyDjButton.setText(" Key D ");
             keyDjButton.setOpaque(false);
         }
-    }//GEN-LAST:event_keyDjButtonKeyReleased
+    }                                       
 
-    private void keyDjButtonKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_keyDjButtonKeyPressed
-        // TODO add your handling code here:
+    private void onKeyDjButtonKeyPressed(java.awt.event.KeyEvent evt) {                                       
         if (evt.getKeyCode() == KeyEvent.VK_D) {
             ksession.insert(new KeyD());
             ksession.fireAllRules();
@@ -290,10 +259,9 @@ public class EventsTesterJFrame extends javax.swing.JFrame implements KeyListene
             keyDjButton.setText("[ Key D ]");
             keyDjButton.setOpaque(true);
         }
-    }//GEN-LAST:event_keyDjButtonKeyPressed
+    }                                      
 
-    private void keyWjButtonKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_keyWjButtonKeyPressed
-        // TODO add your handling code here:
+    private void onKeyWjButtonKeyPressed(java.awt.event.KeyEvent evt) {                                       
         if (evt.getKeyCode() == KeyEvent.VK_W) {
             outjTextPane.setText(outjTextPane.getText() + "\n >>> Key W Pressed!");
             keyWjButton.setBackground(new java.awt.Color(51, 255, 0));
@@ -301,18 +269,18 @@ public class EventsTesterJFrame extends javax.swing.JFrame implements KeyListene
             keyWjButton.setText("[ Key W ]");
             keyWjButton.setOpaque(true);
         }
-    }//GEN-LAST:event_keyWjButtonKeyPressed
+    }                                      
 
-    private void keyWjButtonKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_keyWjButtonKeyReleased
-        // TODO add your handling code here:
+    private void onKeyWjButtonKeyReleased(java.awt.event.KeyEvent evt) {                                        
         if (evt.getKeyCode() == KeyEvent.VK_W) {
             keyWjButton.setBackground(new java.awt.Color(238, 238, 238));
             keyWjButton.setForeground(new java.awt.Color(0, 0, 0));
             keyWjButton.setText(" Key W ");
             keyWjButton.setOpaque(false);
         }
-    }//GEN-LAST:event_keyWjButtonKeyReleased
-
+    } 
+    
+    
     /**
      * @param args the command line arguments
      */
@@ -355,6 +323,7 @@ public class EventsTesterJFrame extends javax.swing.JFrame implements KeyListene
         });
     }
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JLabel jLabel1;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel3;
@@ -373,39 +342,34 @@ public class EventsTesterJFrame extends javax.swing.JFrame implements KeyListene
     public void keyPressed(KeyEvent ke) {
         
         if(ke.getKeyCode() == KeyEvent.VK_A){
-            keyAjButton.requestFocus();
-            keyAjButtonKeyPressed(ke);
+            onKeyAjButtonKeyPressed(ke);
         }
         if(ke.getKeyCode() == KeyEvent.VK_S){
-            keySjButton.requestFocus();
-            keySjButtonKeyPressed(ke);
+            onKeySjButtonKeyPressed(ke);
         }
         if(ke.getKeyCode() == KeyEvent.VK_D){
-            keyDjButton.requestFocus();
-            keyDjButtonKeyPressed(ke);
+            onKeyDjButtonKeyPressed(ke);
         }
         if(ke.getKeyCode() == KeyEvent.VK_W){
-            keyWjButton.requestFocus();
-            keyWjButtonKeyPressed(ke);
+            onKeyWjButtonKeyPressed(ke);
+        }
+        if (ke.getKeyCode() == KeyEvent.VK_L && ke.isControlDown()){
+            outjTextPane.setText("");
         }
     }
 
     public void keyReleased(KeyEvent ke) {
         if(ke.getKeyCode() == KeyEvent.VK_A){
-            keyAjButton.requestFocus();
-            keyAjButtonKeyReleased(ke);
+            onKeyAjButtonKeyReleased(ke);
         }
         if(ke.getKeyCode() == KeyEvent.VK_S){
-            keySjButton.requestFocus();
-            keySjButtonKeyReleased(ke);
+            onKeySjButtonKeyReleased(ke);
         }
         if(ke.getKeyCode() == KeyEvent.VK_D){
-            keyDjButton.requestFocus();
-            keyDjButtonKeyReleased(ke);
+            onKeyDjButtonKeyReleased(ke);
         }
         if(ke.getKeyCode() == KeyEvent.VK_W){
-            keyWjButton.requestFocus();
-            keyWjButtonKeyReleased(ke);
+            onKeyWjButtonKeyReleased(ke);
         }
     }
 
@@ -435,5 +399,17 @@ public class EventsTesterJFrame extends javax.swing.JFrame implements KeyListene
         KnowledgeSessionConfiguration sessionConfig = KnowledgeBaseFactory.newKnowledgeSessionConfiguration();
         sessionConfig.setOption( ClockTypeOption.get("realtime") );
         return kbase.newStatefulKnowledgeSession(sessionConfig, null);
+    }
+
+    private void redirectOutput() {
+        final PrintStream console = System.out;
+        System.setOut(new PrintStream(new OutputStream() {
+
+            @Override
+            public void write(int b) throws IOException {
+                console.write(b);
+                outjTextPane.setText(outjTextPane.getText()+new String(new byte[]{(byte)b}));
+            }
+        }));
     }
 }

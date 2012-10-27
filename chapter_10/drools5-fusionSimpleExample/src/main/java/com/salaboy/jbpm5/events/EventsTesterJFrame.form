@@ -7,6 +7,7 @@
   </Properties>
   <SyntheticProperties>
     <SyntheticProperty name="formSizePolicy" type="int" value="1"/>
+    <SyntheticProperty name="generateCenter" type="boolean" value="false"/>
   </SyntheticProperties>
   <AuxValues>
     <AuxValue name="FormSettings_autoResourcing" type="java.lang.Integer" value="0"/>
@@ -110,11 +111,6 @@
                 <Property name="mnemonic" type="int" value="65"/>
                 <Property name="text" type="java.lang.String" value="Key A"/>
               </Properties>
-              <Events>
-                <EventHandler event="keyTyped" listener="java.awt.event.KeyListener" parameters="java.awt.event.KeyEvent" handler="keyAjButtonKeyTyped"/>
-                <EventHandler event="keyPressed" listener="java.awt.event.KeyListener" parameters="java.awt.event.KeyEvent" handler="keyAjButtonKeyPressed"/>
-                <EventHandler event="keyReleased" listener="java.awt.event.KeyListener" parameters="java.awt.event.KeyEvent" handler="keyAjButtonKeyReleased"/>
-              </Events>
             </Component>
             <Component class="javax.swing.JButton" name="keySjButton">
               <Properties>
@@ -123,8 +119,6 @@
               </Properties>
               <Events>
                 <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="keySjButtonActionPerformed"/>
-                <EventHandler event="keyPressed" listener="java.awt.event.KeyListener" parameters="java.awt.event.KeyEvent" handler="keySjButtonKeyPressed"/>
-                <EventHandler event="keyReleased" listener="java.awt.event.KeyListener" parameters="java.awt.event.KeyEvent" handler="keySjButtonKeyReleased"/>
               </Events>
             </Component>
             <Component class="javax.swing.JButton" name="keyWjButton">
@@ -132,20 +126,12 @@
                 <Property name="mnemonic" type="int" value="87"/>
                 <Property name="text" type="java.lang.String" value="Key W"/>
               </Properties>
-              <Events>
-                <EventHandler event="keyPressed" listener="java.awt.event.KeyListener" parameters="java.awt.event.KeyEvent" handler="keyWjButtonKeyPressed"/>
-                <EventHandler event="keyReleased" listener="java.awt.event.KeyListener" parameters="java.awt.event.KeyEvent" handler="keyWjButtonKeyReleased"/>
-              </Events>
             </Component>
             <Component class="javax.swing.JButton" name="keyDjButton">
               <Properties>
                 <Property name="mnemonic" type="int" value="68"/>
                 <Property name="text" type="java.lang.String" value="Key D"/>
               </Properties>
-              <Events>
-                <EventHandler event="keyPressed" listener="java.awt.event.KeyListener" parameters="java.awt.event.KeyEvent" handler="keyDjButtonKeyPressed"/>
-                <EventHandler event="keyReleased" listener="java.awt.event.KeyListener" parameters="java.awt.event.KeyEvent" handler="keyDjButtonKeyReleased"/>
-              </Events>
             </Component>
           </SubComponents>
         </Container>
@@ -154,9 +140,15 @@
           <Layout>
             <DimensionLayout dim="0">
               <Group type="103" groupAlignment="0" attributes="0">
-                  <Group type="102" alignment="0" attributes="0">
+                  <Group type="102" attributes="0">
                       <EmptySpace max="-2" attributes="0"/>
-                      <Component id="jScrollPane1" max="32767" attributes="0"/>
+                      <Group type="103" groupAlignment="0" attributes="0">
+                          <Component id="jScrollPane1" alignment="0" max="32767" attributes="0"/>
+                          <Group type="102" alignment="0" attributes="0">
+                              <Component id="jLabel1" min="-2" max="-2" attributes="0"/>
+                              <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
+                          </Group>
+                      </Group>
                       <EmptySpace max="-2" attributes="0"/>
                   </Group>
               </Group>
@@ -164,7 +156,8 @@
             <DimensionLayout dim="1">
               <Group type="103" groupAlignment="0" attributes="0">
                   <Group type="102" alignment="1" attributes="0">
-                      <EmptySpace pref="27" max="32767" attributes="0"/>
+                      <Component id="jLabel1" min="-2" max="-2" attributes="0"/>
+                      <EmptySpace pref="9" max="32767" attributes="0"/>
                       <Component id="jScrollPane1" min="-2" pref="106" max="-2" attributes="0"/>
                       <EmptySpace max="-2" attributes="0"/>
                   </Group>
@@ -183,6 +176,12 @@
                 </Component>
               </SubComponents>
             </Container>
+            <Component class="javax.swing.JLabel" name="jLabel1">
+              <Properties>
+                <Property name="text" type="java.lang.String" value="Log:"/>
+                <Property name="toolTipText" type="java.lang.String" value="Ctrl+l to clean"/>
+              </Properties>
+            </Component>
           </SubComponents>
         </Container>
       </SubComponents>
