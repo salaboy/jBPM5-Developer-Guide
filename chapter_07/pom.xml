@@ -12,8 +12,9 @@
     <packaging>pom</packaging>
     <url>http://salaboy.com</url>
     <modules>
-    <module>jBPM5-Ldapcallback</module>
+    <!--module>jBPM5-Ldapcallback</module-->
     <module>jBPM5-HumanTasksSimple</module>
+    <module>jBPM5-HumanTaskAndProcesses</module>
     <module>jBPM5-HumanTaskUI-Swing</module>
   </modules>
     
