@@ -1,0 +1,16 @@
+Chapter 5 - The Process Designer
+
+The Project included in Chapter 5 covers:
+- Process definitions examples for scenarios introduced in Chapter 3.
+- Simple tests for those scenarios.
+
+The idea behind this project is that readers start using jBPM5 Web Designer to model some of the processes introduced in Chapter 3.
+The current project already contains implementations and tests for those projects. The reader could use this tests to check whether the process he is modeling in jBPM5 Web Designer runs as expected.
+The usage of this project should be:
+1) Execute the current tests and import the .bpmn2 files into jBPM5 Web Designer.
+2) Using jBPM5 Web Designer, try to re-create the processes by following the instructions in Chapter 5.
+3) Once a process definition is done replace the content of the corresponing .bpmn2 file in the test with user's defined proces (or modify the test to use a different .bpmn2 file)
+4) The test should be green no matter which process definition is being used: the original or the user created one.
+
+Each test contains inline comments explaining what is going on and what is the expected behavior at that point.
+This project contains simple tests that could be extended to cover different scenarios the user would like to try. 

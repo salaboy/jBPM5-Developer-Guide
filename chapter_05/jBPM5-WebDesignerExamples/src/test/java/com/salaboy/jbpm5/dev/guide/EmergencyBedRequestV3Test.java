@@ -24,6 +24,7 @@ public class EmergencyBedRequestV3Test extends EmergencyBedRequestBaseTest{
     
     @Override
     protected Map<Resource, ResourceType> getResources() {
+        //return the resources used by this test.
         Map<Resource, ResourceType> resources = new HashMap<Resource, ResourceType>();
         resources.put(ResourceFactory.newClassPathResource("V3/EmergencyBedRequestV3.bpmn"), ResourceType.BPMN2);
         resources.put(ResourceFactory.newClassPathResource("V3/bedAssignmentV3.drl"), ResourceType.DRL);

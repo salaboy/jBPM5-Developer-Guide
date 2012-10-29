@@ -23,11 +23,14 @@ import org.junit.After;
 import org.junit.Before;
 
 /**
- *
+ * Base test class used by the rest of the tests in this project.
  * @author esteban.aliverti
  */
 public abstract class EmergencyBedRequestBaseTest {
 
+    /**
+     * The internal ksession where the processes will run.
+     */
     protected StatefulKnowledgeSession session;
 
     public EmergencyBedRequestBaseTest() {
@@ -42,6 +45,20 @@ public abstract class EmergencyBedRequestBaseTest {
     public void tearDown() {
     }
 
+    /**
+     * Compiles the resources indicated by the concrete implementation of 
+     * this class (using {@link #getResources()} abstract method.
+     * If there is any compilation error an {@link IllegalStateException} is
+     * thrown.
+     * After the resources are compiled, a kbase is created and populated with
+     * the resulting knowledge package/s.
+     * From this kbase, a new StatefulKnowledgeSession is created. The session
+     * is configured with 2 listeners:
+     * 1.- An Agenda event listener that will fireAllRules() every time an
+     * activation happens
+     * 2.- A Process event listener that will insert the process instance as
+     * a Fact once a process is started.
+     */
     private void initializeSession() {
         KnowledgeBuilder kbuilder = KnowledgeBuilderFactory.newKnowledgeBuilder();
 
