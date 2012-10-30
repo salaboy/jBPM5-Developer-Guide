@@ -131,7 +131,7 @@
   </process>
 
   <bpmndi:BPMNDiagram>
-    <bpmndi:BPMNPlane bpmnElement="com.salaboy.process.SimpleDecision" >
+    <bpmndi:BPMNPlane bpmnElement="com.salaboy.process.SimpleProcess" >
       <bpmndi:BPMNShape bpmnElement="_1" >
         <dc:Bounds x="16" y="56" width="48" height="48" />
       </bpmndi:BPMNShape>

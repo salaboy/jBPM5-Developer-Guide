@@ -201,7 +201,7 @@ public class EventsTesterJFrame extends javax.swing.JFrame implements KeyListene
         if (evt.getKeyCode() == KeyEvent.VK_A) {
             ksession.insert(new KeyA());
             ksession.fireAllRules();
-            outjTextPane.setText(outjTextPane.getText() + "\n >>> Key A Pressed!");
+            outjTextPane.setText(outjTextPane.getText() + " >>> Key A Pressed!\n");
             keyAjButton.setBackground(new java.awt.Color(51, 255, 0));
             keyAjButton.setForeground(new java.awt.Color(51, 204, 0));
             keyAjButton.setText("[ Key A ]");
@@ -223,7 +223,7 @@ public class EventsTesterJFrame extends javax.swing.JFrame implements KeyListene
         if (evt.getKeyCode() == KeyEvent.VK_S) {
             ksession.insert(new KeyS());
             ksession.fireAllRules();
-            outjTextPane.setText(outjTextPane.getText() + "\n >>> Key S Pressed!");
+            outjTextPane.setText(outjTextPane.getText() + " >>> Key S Pressed!\n");
             keySjButton.setBackground(new java.awt.Color(51, 255, 0));
             keySjButton.setForeground(new java.awt.Color(51, 204, 0));
             keySjButton.setText("[ Key S ]");
@@ -253,7 +253,7 @@ public class EventsTesterJFrame extends javax.swing.JFrame implements KeyListene
         if (evt.getKeyCode() == KeyEvent.VK_D) {
             ksession.insert(new KeyD());
             ksession.fireAllRules();
-            outjTextPane.setText(outjTextPane.getText() + "\n >>> Key D Pressed!");
+            outjTextPane.setText(outjTextPane.getText() + " >>> Key D Pressed!\n");
             keyDjButton.setBackground(new java.awt.Color(51, 255, 0));
             keyDjButton.setForeground(new java.awt.Color(51, 204, 0));
             keyDjButton.setText("[ Key D ]");
@@ -263,7 +263,7 @@ public class EventsTesterJFrame extends javax.swing.JFrame implements KeyListene
 
     private void onKeyWjButtonKeyPressed(java.awt.event.KeyEvent evt) {                                       
         if (evt.getKeyCode() == KeyEvent.VK_W) {
-            outjTextPane.setText(outjTextPane.getText() + "\n >>> Key W Pressed!");
+            outjTextPane.setText(outjTextPane.getText() + " >>> Key W Pressed!\n");
             keyWjButton.setBackground(new java.awt.Color(51, 255, 0));
             keyWjButton.setForeground(new java.awt.Color(51, 204, 0));
             keyWjButton.setText("[ Key W ]");
@@ -383,7 +383,7 @@ public class EventsTesterJFrame extends javax.swing.JFrame implements KeyListene
         kbuilder.add(new ClassPathResource("simpleEventAnalysis.drl"), ResourceType.DRL);
         if (kbuilder.hasErrors()) {
             for (KnowledgeBuilderError error : kbuilder.getErrors()) {
-                System.out.println(">>> Error:" + error.getMessage());
+                System.out.println(" >>> Error:" + error.getMessage()+"\n");
 
             }
             throw new IllegalStateException(">>> Knowledge couldn't be parsed! ");
