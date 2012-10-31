@@ -7,10 +7,11 @@ package com.salaboy.patterns;
 import bitronix.tm.TransactionManagerServices;
 import bitronix.tm.resource.jdbc.PoolingDataSource;
 import com.salaboy.model.Person;
+import com.salaboy.patterns.handler.MockAsyncExternalServiceWorkItemHandler;
 import com.salaboy.sessions.patterns.BusinessEntity;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
-import java.util.UUID;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
@@ -27,10 +28,6 @@ import org.drools.persistence.jpa.*;
 import org.drools.runtime.Environment;
 import org.drools.runtime.EnvironmentName;
 import org.drools.runtime.StatefulKnowledgeSession;
-import org.drools.runtime.process.ProcessInstance;
-import org.drools.runtime.process.WorkItem;
-import org.drools.runtime.process.WorkItemHandler;
-import org.drools.runtime.process.WorkItemManager;
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
@@ -84,75 +81,104 @@ public class SingleSessionPatternsTest {
 
     @Test
     public void singleSessionPerProcessInstance() {
+        
+        //Initial parameters for process instance #1
         Person person = new Person("Salaboy", 29);
-        Map<String, Object> params = new HashMap<String, Object>();
-        params.put("person", person);
+        Map<String, Object> params1 = new HashMap<String, Object>();
+        params1.put("person", person);
         
-        StatefulKnowledgeSession ksession = createProcessOneKnowledgeSession(person.getId());
-
-        registerWorkItemHandlers(ksession, person.getId());
-         // Let's create a Process Instance
+        //Creates the ksession for process instance #1
+        StatefulKnowledgeSession ksession1 = createProcessOneKnowledgeSession(person.getId());
+        registerWorkItemHandlers(ksession1, person.getId());
+        int ksession1Id = ksession1.getId();
         
-        ksession.startProcess("com.salaboy.process.AsyncInteractions", params);
+        //Starts process instance #1
+        ksession1.startProcess("com.salaboy.process.AsyncInteractions", params1);
         
-        ksession.dispose();
+        //We don't want to use the ksession anymore so we will dispose it.
+        //At this point MockAsyncExternalServiceWorkItemHandler has persisted
+        //a business key that we can use later to retireve the session from
+        //the database and continue with the execution of the process.
+        ksession1.dispose();
         
+        
+        
+        //Initial parameters for process instance #2
         Person person2 = new Person("Salaboy2", 29);
         Map<String, Object> params2 = new HashMap<String, Object>();
         params2.put("person", person2);
         
+        //Creates a new ksession for process instance #2
         StatefulKnowledgeSession ksession2 = createProcessTwoKnowledgeSession(person2.getId());
-        
         registerWorkItemHandlers(ksession2, person2.getId());
+        int ksession2Id = ksession2.getId();
+        
+        //Starts process instance #2
         ksession2.startProcess("com.salaboy.process.AsyncInteractions", params2);
         
+        //Dispose ksession2 as we don't want to use it anymore. Just like with
+        //process instance #1, the work item handler associated to the task nodes
+        //of the process has persisted a business key that we can use to continue
+        //with the execution of this session later.
         ksession2.dispose();
         
-        EntityManager em = emf.createEntityManager();
-        BusinessEntity businessEntity = (BusinessEntity)em.createQuery("select be from BusinessEntity be where be.businessKey = :key "
-                                                                            + "and be.active = true")
-                .setParameter("key", person2.getId())
-                .getSingleResult();
         
-        em.close();
         
-        /*
-         * We need:
-         *  the sessionId
-         *  the kbase which can be recreated using the same knowledge resources / packages or stored locally
-         *  the environment which can be recreated or reused as well
-         */ 
+        
+        //Let's find the BusinessEntity persisted by process instance #2.
+        //The key of the BusinessEntity is the the persnon's id.
+        BusinessEntity businessEntity = getBusinessEntity(person2.getId());
+        assertNotNull(businessEntity);
+        //the BusinessEntity must be of session #2
+        assertEquals(businessEntity.getSessionId(), ksession2Id);
+        
+        
+        //Let' restore the session #2 using the information present in the BusinessEntity
+        //Since we keep one kbase per ksession we also need to get it using
+        //the information present in the BusinessEntity.
         ksession2 = JPAKnowledgeService.loadStatefulKnowledgeSession(businessEntity.getSessionId(), kbases.get(businessEntity.getBusinessKey()), null, env);
         registerWorkItemHandlers(ksession2, businessEntity.getBusinessKey());
         assertNotNull(ksession2);
         
+        //Now that we have session #2 back we can complete the pending work item 
+        //handler with the information present in BusinessEntity we can 
         ksession2.getWorkItemManager().completeWorkItem(businessEntity.getWorkItemId(), null);
-        em = emf.createEntityManager();
-        businessEntity.setActive(false);
-        em.merge(businessEntity);
-        em.close();
+        
+        //The BusinessEntity is no longer needed so we can marked as completed
+        //in the database.
+        markBusinessEntityAsCompleted(businessEntity.getId());
+        
+        //We are done with ksession #2
         ksession2.dispose();
         
-        em = emf.createEntityManager();
-        businessEntity = (BusinessEntity)em.createQuery("select be from BusinessEntity be where be.businessKey = :key "
-                                                            + "and be.active = true")
-                .setParameter("key", person.getId())
-                .getSingleResult();
-        em.close();
         
         
-        ksession = JPAKnowledgeService.loadStatefulKnowledgeSession(businessEntity.getSessionId(), kbases.get(businessEntity.getBusinessKey()), null, env);
-        registerWorkItemHandlers(ksession, businessEntity.getBusinessKey());
-        assertNotNull(ksession);
+        //Now we are going to complete the pending work item handler of 
+        //the process instance #1, but first we need to restore the session from
+        //the database.
+        businessEntity = getBusinessEntity(person.getId());
+        assertNotNull(businessEntity);
         
-        ksession.getWorkItemManager().completeWorkItem(businessEntity.getWorkItemId(), null);
-        em = emf.createEntityManager();
-        businessEntity.setActive(false);
-        em.merge(businessEntity);
-        em.close();
+        //the BusinessEntity must be of session #1
+        assertEquals(businessEntity.getSessionId(), ksession1Id);
         
-        ksession.dispose();
+        //load the ksession using the information present in BusinessEntity
+        ksession1 = JPAKnowledgeService.loadStatefulKnowledgeSession(businessEntity.getSessionId(), kbases.get(businessEntity.getBusinessKey()), null, env);
+        registerWorkItemHandlers(ksession1, businessEntity.getBusinessKey());
+        assertNotNull(ksession1);
+        
+        //complete the pending work item handler
+        ksession1.getWorkItemManager().completeWorkItem(businessEntity.getWorkItemId(), null);
 
+        //mark the BusinessEntity as completed
+        markBusinessEntityAsCompleted(businessEntity.getId());
+        
+        //dispose ksession #1
+        ksession1.dispose();
+        
+        //We shouldn't have more active business entities in the database.
+        List<BusinessEntity> activeBusinessEntities = getActiveBusinessEntities();
+        assertTrue(activeBusinessEntities.isEmpty());
         
     }
     
@@ -324,6 +350,69 @@ public class SingleSessionPatternsTest {
         
     }
     
+    
+    /**
+     * Returns the list of all active BusinessEntities in the database.
+     * @return the list of all active BusinessEntities in the database
+     */
+    private List<BusinessEntity> getActiveBusinessEntities(){
+        EntityManager em = emf.createEntityManager();
+        List<BusinessEntity> businessEntities = em.createQuery("select be from BusinessEntity be where be.active = true")
+            .getResultList();
+        em.close();
+        
+        return businessEntities;
+    }
+    
+    /**
+     * Queries the database to retrieve a {@link BusinessEntity} given its key.
+     * Only active BusinessEntities are returned.
+     * @param key the key of the BusinessEntity.
+     * @return the BusinessEntity with the given key.
+     */
+    private BusinessEntity getBusinessEntity(String key){
+        EntityManager em = emf.createEntityManager();
+        BusinessEntity businessEntity = (BusinessEntity)em.createQuery("select be from BusinessEntity be where be.businessKey = :key "
+                                                            + "and be.active = true")
+                .setParameter("key", key)
+                .getSingleResult();
+        em.close();
+        return businessEntity;
+    }
+    
+    /**
+     * Queries the database to retrieve a {@link BusinessEntity} given its key
+     * and processId.
+     * Only active BusinessEntities are returned.
+     * @param key the key of the BusinessEntity.
+     * @param processId the process id
+     * @return the BusinessEntity with the given key.
+     */
+    private BusinessEntity getBusinessEntity(String key, long processId){
+        EntityManager em = emf.createEntityManager();
+        BusinessEntity businessEntity = (BusinessEntity)em.createQuery("select be from BusinessEntity be where be.businessKey = :key "
+                                                        + " and be.processId = :processId"
+                                                        + " and be.active = true")
+            .setParameter("key", key)
+            .setParameter("processId", processId)
+            .getSingleResult();
+        em.close();
+        return businessEntity;
+    }
+    
+    /**
+     * Sets the 'active' property of the businessEntity as 'false' and persists
+     * it into the database.
+     * @param businessEntity 
+     */
+    private void markBusinessEntityAsCompleted(Long businessEntityId){
+        EntityManager em = emf.createEntityManager();
+        BusinessEntity businessEntity = em.find(BusinessEntity.class, businessEntityId);
+        businessEntity.setActive(false);
+        em.merge(businessEntity);
+        em.close();
+    }
+    
     private StatefulKnowledgeSession createProcessOneKnowledgeSession(String key){
         KnowledgeBuilder kbuilder = KnowledgeBuilderFactory.newKnowledgeBuilder();
         kbuilder.add(new ClassPathResource("process-async-interactions.bpmn"), ResourceType.BPMN2);
@@ -412,82 +501,9 @@ public class SingleSessionPatternsTest {
     }
     
     private void registerWorkItemHandlers(StatefulKnowledgeSession ksession, String key){
-        MockAsyncHTWorkItemHandler mockHTWorkItemHandler = new MockAsyncHTWorkItemHandler(ksession.getId(), key);
-        MockAsyncExternalServiceWorkItemHandler mockExternalServiceWorkItemHandler = new MockAsyncExternalServiceWorkItemHandler(ksession.getId(), key);
-        ksession.getWorkItemManager().registerWorkItemHandler("Human Task", mockHTWorkItemHandler);
+        MockAsyncExternalServiceWorkItemHandler mockExternalServiceWorkItemHandler = new MockAsyncExternalServiceWorkItemHandler(emf, ksession.getId(), key);
+        ksession.getWorkItemManager().registerWorkItemHandler("Human Task", mockExternalServiceWorkItemHandler);
         ksession.getWorkItemManager().registerWorkItemHandler("External Service Call", mockExternalServiceWorkItemHandler);
-    }
-    
-    private class MockAsyncHTWorkItemHandler implements WorkItemHandler {
-
-        private int sessionId;
-        private String businessKey;
-
-        public MockAsyncHTWorkItemHandler(int sessionId, String businessKey) {
-            this.sessionId = sessionId;
-            this.businessKey = businessKey;
-        }
-
-        
-        public void executeWorkItem(WorkItem wi, WorkItemManager wim) {
-            System.out.println(">>> Working on a Human Interaction");
-            long workItemId = wi.getId();
-            long processInstanceId = wi.getProcessInstanceId();
-            EntityManager em = emf.createEntityManager();
-            if(businessKey == null || businessKey.equals("")){
-                //If we don't want to set the business key, the external system can 
-                // give us an interaction reference that can be used later to 
-                // complete this work item
-                businessKey = UUID.randomUUID().toString();
-            }
-            BusinessEntity businessEntity = new BusinessEntity(sessionId, processInstanceId, workItemId, businessKey);
-            System.out.println(" ### : Persisting: "+businessEntity.toString());
-            em.persist(businessEntity);
-            em.close();
-            
-        }
-
-        public void abortWorkItem(WorkItem wi, WorkItemManager wim) {
-            throw new UnsupportedOperationException("Not supported yet.");
-        }
-
-    }
-
-   
-    private class MockAsyncExternalServiceWorkItemHandler implements WorkItemHandler {
-        
-        private int sessionId;
-        private String businessKey;
-
-        public MockAsyncExternalServiceWorkItemHandler(int sessionId, String businessKey) {
-            this.sessionId = sessionId;
-            this.businessKey = businessKey;
-        }
-
-       
-        public void executeWorkItem(WorkItem wi, WorkItemManager wim) {
-            System.out.println(">>> Working in an External Interaction");
-            long workItemId = wi.getId();
-            long processInstanceId = wi.getProcessInstanceId();
-            EntityManager em = emf.createEntityManager();
-            if(businessKey == null || businessKey.equals("")){
-                //If we don't want to set the business key, the external system can 
-                // give us an interaction reference that can be used later to 
-                // complete this work item
-                businessKey = UUID.randomUUID().toString();
-            }
-            BusinessEntity businessEntity = new BusinessEntity(sessionId, processInstanceId, workItemId, businessKey);
-            System.out.println(" ### : Persisting: "+businessEntity.toString());
-            em.persist(businessEntity);
-            em.close();
-            
-        }
-
-        public void abortWorkItem(WorkItem wi, WorkItemManager wim) {
-            throw new UnsupportedOperationException("Not supported yet.");
-        }
-        
-       
     }
     
 }
