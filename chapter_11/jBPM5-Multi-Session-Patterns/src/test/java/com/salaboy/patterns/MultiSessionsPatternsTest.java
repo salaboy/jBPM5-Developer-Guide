@@ -13,6 +13,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
 import javax.naming.InitialContext;
+import javax.naming.NamingException;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
@@ -93,17 +94,29 @@ public class MultiSessionsPatternsTest {
     @Test
     public void multiSessionsCollaboration() throws Exception {
 
-        StatefulKnowledgeSession interactionSession = createProcessInteractionKnowledgeSession("InteractionSession");
-        UserTransaction ut = (UserTransaction) new InitialContext().lookup("java:comp/UserTransaction");
         EntityManager em = emf.createEntityManager();
-        BusinessEntity interactionSessionEntity = new BusinessEntity(interactionSession.getId(), 0, 0, "InteractionSession");
-        interactionSession.dispose();
-        ut.begin();
-        em.joinTransaction();
-        em.persist(interactionSessionEntity);
-        ut.commit();
-        em.close();
+        UserTransaction ut = (UserTransaction) new InitialContext().lookup("java:comp/UserTransaction");
+        StatefulKnowledgeSession interactionSession = null;
+        BusinessEntity interactionSessionEntity = null;
+        try {
+            // This needs to happen in the same transaction if I want to keep it consistent
+            ut.begin();
+            interactionSession = createProcessInteractionKnowledgeSession("InteractionSession");
+
+            interactionSessionEntity = new BusinessEntity(interactionSession.getId(), 0, 0, "InteractionSession");
+            em.joinTransaction(); // I need to join the Drools/jBPM transaction 
+            em.persist(interactionSessionEntity);
+
+            ut.commit();
+
+
+        } catch (Exception e) {
+            System.out.println("Rolling Back because of: " + e.getMessage());
+            ut.rollback();
+        }
+        assertNotNull(interactionSessionEntity);
         assertNotNull(interactionSessionEntity.getId());
+        interactionSession.dispose();
 
 
         Person person = new Person("Salaboy", 29);
@@ -112,20 +125,21 @@ public class MultiSessionsPatternsTest {
 
         StatefulKnowledgeSession ksession = createProcessOneKnowledgeSession(person.getId());
 
-        registerWorkItemHandlers(ksession, person.getId());
+        registerWorkItemHandlers(ksession, person.getId(), em);
         // Let's create a Process Instance
 
         ksession.startProcess("com.salaboy.process.AsyncInteractions", params);
 
         ksession.dispose();
 
-        em = emf.createEntityManager();
+
         BusinessEntity sessionInteractionKey = (BusinessEntity) em.createQuery("select be from BusinessEntity be where be.businessKey = :key "
                 + "and be.active = true").setParameter("key", "InteractionSession").getSingleResult();
-        em.close();
+
+
 
         interactionSession = JPAKnowledgeService.loadStatefulKnowledgeSession(sessionInteractionKey.getSessionId(), kbases.get("InteractionSession"), null, env);
-        interactionSession.setGlobal("emf", emf);
+        interactionSession.setGlobal("em", em);
         interactionSession.insert(new Data());
         interactionSession.fireAllRules();
 
@@ -161,7 +175,7 @@ public class MultiSessionsPatternsTest {
         // Let's create a Persistence Knowledge Session
         System.out.println(" >>> Let's create a Persistent Knowledge Session");
         final StatefulKnowledgeSession ksession = JPAKnowledgeService.newStatefulKnowledgeSession(kbase, null, env);
-        
+
 
         return ksession;
     }
@@ -193,9 +207,9 @@ public class MultiSessionsPatternsTest {
         return ksession;
     }
 
-    public static void registerWorkItemHandlers(StatefulKnowledgeSession ksession,  String key) {
+    public static void registerWorkItemHandlers(StatefulKnowledgeSession ksession, String key, EntityManager em) {
         ksession.getWorkItemManager().registerWorkItemHandler("Human Task", new MockAsyncHTWorkItemHandler(ksession.getId(), key));
-        ksession.getWorkItemManager().registerWorkItemHandler("External Service Call", new MockAsyncExternalServiceWorkItemHandler(ksession.getId(), key));
+        ksession.getWorkItemManager().registerWorkItemHandler("External Service Call", new MockAsyncExternalServiceWorkItemHandler(em, ksession.getId(), key));
     }
 
     private static class MockAsyncHTWorkItemHandler implements WorkItemHandler {
@@ -223,17 +237,18 @@ public class MultiSessionsPatternsTest {
 
         private int sessionId;
         private String businessKey;
+        private EntityManager em;
 
-        public MockAsyncExternalServiceWorkItemHandler(int sessionId, String businessKey) {
+        public MockAsyncExternalServiceWorkItemHandler(EntityManager em, int sessionId, String businessKey) {
             this.sessionId = sessionId;
             this.businessKey = businessKey;
+            this.em = em;
         }
 
         public void executeWorkItem(WorkItem wi, WorkItemManager wim) {
             System.out.println(">>> Working in an External Interaction");
             long workItemId = wi.getId();
             long processInstanceId = wi.getProcessInstanceId();
-            EntityManager em = emf.createEntityManager();
             if (businessKey == null || businessKey.equals("")) {
                 //If we don't want to set the business key, the external system can 
                 // give us an interaction reference that can be used later to 
@@ -243,17 +258,15 @@ public class MultiSessionsPatternsTest {
             BusinessEntity businessEntity = new BusinessEntity(sessionId, processInstanceId, workItemId, businessKey);
             System.out.println(" ### : Persisting: " + businessEntity.toString());
             em.persist(businessEntity);
-            em.close();
 
-            em = emf.createEntityManager();
             BusinessEntity sessionInteractionKey = (BusinessEntity) em.createQuery("select be from BusinessEntity be where be.businessKey = :key "
                     + "and be.active = true").setParameter("key", "InteractionSession").getSingleResult();
-            em.close();
+
 
             StatefulKnowledgeSession ksession = JPAKnowledgeService.loadStatefulKnowledgeSession(sessionInteractionKey.getSessionId(), kbases.get("InteractionSession"), null, env);
             ksession.insert(businessEntity);
             ksession.fireAllRules();
-            //ksession.dispose();
+
 
 
         }
@@ -261,5 +274,19 @@ public class MultiSessionsPatternsTest {
         public void abortWorkItem(WorkItem wi, WorkItemManager wim) {
             throw new UnsupportedOperationException("Not supported yet.");
         }
+    }
+
+    public static void completeInteraction(StatefulKnowledgeSession ksession, EntityManager em, BusinessEntity entity, Data data) throws Exception {
+            Map<String, Object> results = data.getDataMap();
+            ksession.getWorkItemManager().completeWorkItem(entity.getWorkItemId(), results);
+            markBusinessEntityAsCompleted(entity, em);
+
+    }
+    
+    private static void markBusinessEntityAsCompleted(BusinessEntity entity, EntityManager em) {
+        em.joinTransaction();
+        entity.setActive(false);
+        System.out.println("Merging Business Entity: " + entity);
+        em.merge(entity);
     }
 }

@@ -11,7 +11,8 @@ import org.drools.persistence.jpa.*;
 import org.drools.runtime.*;
 import com.salaboy.patterns.MultiSessionsPatternsTest;
 
-global EntityManagerFactory emf;
+global EntityManager em;
+
 
 rule "Log"
     when
@@ -22,7 +23,7 @@ end
 
 rule "Complete Interaction When We Receive Data"
   when
-    $be: BusinessEntity()
+    $be: BusinessEntity(active == true)
     $data: Data()
   then
     StatefulKnowledgeSession ksession = 
@@ -31,12 +32,7 @@ rule "Complete Interaction When We Receive Data"
             MultiSessionsPatternsTest.kbases.get($be.getBusinessKey()), 
             null, MultiSessionsPatternsTest.env);
     MultiSessionsPatternsTest
-             .registerWorkItemHandlers(ksession, $be.getBusinessKey());
-    System.out.println(">>> Completing an External Interaction");
-    ksession.getWorkItemManager()
-                .completeWorkItem($be.getWorkItemId(), null);
-    EntityManager em = emf.createEntityManager();
-    $be.setActive(false);
-    em.merge($be);
-    em.close();
+             .registerWorkItemHandlers(ksession, $be.getBusinessKey(), em);
+    MultiSessionsPatternsTest.completeInteraction(ksession,em, $be, $data);
+    
 end
