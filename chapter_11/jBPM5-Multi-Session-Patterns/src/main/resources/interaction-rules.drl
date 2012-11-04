@@ -1,7 +1,7 @@
 package com.salaboy.jbpm5.dev.guide;
 
 import com.salaboy.model.*;
-import com.salaboy.sessions.patterns.BusinessEntity;
+import com.salaboy.sessions.patterns.*;
 import java.util.HashMap;
 import java.util.Map;
 import org.drools.runtime.process.ProcessInstance;
@@ -10,15 +10,29 @@ import javax.persistence.EntityManager;
 import org.drools.persistence.jpa.*;
 import org.drools.runtime.*;
 import com.salaboy.patterns.MultiSessionsPatternsTest;
-
+import org.drools.runtime.process.ProcessInstance;
 global EntityManager em;
 
+declare ProcessForPerson
+    person: Person
+    pi: ProcessInstance 
+    sl: SessionLocator
+end
 
 rule "Log"
+    salience 10
     when
       $be:  BusinessEntity()
     then
         System.out.println(" ### Log: "+$be);
+end
+
+rule "Log ProcessForPerson"
+    salience 10
+    when
+      $pfp:  ProcessForPerson()
+    then
+        System.out.println(" ### Log: "+$pfp);
 end
 
 rule "Complete Interaction When We Receive Data"
@@ -35,4 +49,54 @@ rule "Complete Interaction When We Receive Data"
              .registerWorkItemHandlers(ksession, $be.getBusinessKey(), em);
     MultiSessionsPatternsTest.completeInteraction(ksession,em, $be, $data);
     
+end
+
+
+rule "Session Locator Log"
+    salience 10
+    when
+        $sl: SessionLocator()
+    then
+        System.out.println(" ### Log: "+$sl);
+end
+
+
+rule "Choose Session and Start Process for a Person"
+    when
+        $sl: SessionLocator($process: props['process'] == "com.salaboy.process.AsyncInteractions")
+        $p: Person()
+        not(ProcessForPerson(person == $p))
+    then
+         StatefulKnowledgeSession ksession = 
+            JPAKnowledgeService
+              .loadStatefulKnowledgeSession($sl.getSessionId(), 
+                MultiSessionsPatternsTest.kbases.get($sl.getSessionName()), 
+                null, MultiSessionsPatternsTest.env);
+        
+        MultiSessionsPatternsTest
+             .registerWorkItemHandlers(ksession, $sl.getSessionName(), em);
+        Map<String, Object> params = new HashMap<String, Object>();
+        params.put("person", $p);    
+        
+        ProcessInstance pi = ksession.createProcessInstance($process, params );
+        insert(new ProcessForPerson($p, pi, $sl));
+        System.out.println("1 #####################################");
+end
+
+rule "Start Process when we have all the information"
+    
+    when
+        $pfp: ProcessForPerson()
+    then
+        
+        StatefulKnowledgeSession ksession = 
+            JPAKnowledgeService
+              .loadStatefulKnowledgeSession($pfp.getSl().getSessionId(), 
+                MultiSessionsPatternsTest.kbases.get($pfp.getSl().getSessionName()), 
+                null, MultiSessionsPatternsTest.env);
+        
+        MultiSessionsPatternsTest
+             .registerWorkItemHandlers(ksession, $pfp.getSl().getSessionName(), em);
+        ksession.startProcessInstance($pfp.getPi().getId());
+        
 end
