@@ -1,7 +1,3 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 package com.salaboy.patterns.handler;
 
 import com.salaboy.sessions.patterns.BusinessEntity;

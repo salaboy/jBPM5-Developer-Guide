@@ -1,7 +1,5 @@
 package com.salaboy.patterns;
 
-import bitronix.tm.TransactionManagerServices;
-import bitronix.tm.resource.jdbc.PoolingDataSource;
 import com.salaboy.model.Person;
 import com.salaboy.patterns.handler.MockAsyncExternalServiceWorkItemHandler;
 import com.salaboy.sessions.patterns.BusinessEntity;
@@ -10,25 +8,13 @@ import java.util.List;
 import java.util.Map;
 import javax.naming.InitialContext;
 import javax.persistence.EntityManager;
-import javax.persistence.EntityManagerFactory;
-import javax.persistence.Persistence;
 import javax.transaction.UserTransaction;
 import junit.framework.Assert;
 import org.drools.KnowledgeBase;
-import org.drools.KnowledgeBaseFactory;
-import org.drools.builder.KnowledgeBuilder;
-import org.drools.builder.KnowledgeBuilderError;
-import org.drools.builder.KnowledgeBuilderFactory;
 import org.drools.builder.ResourceType;
-import org.drools.impl.EnvironmentFactory;
 import org.drools.io.Resource;
 import org.drools.io.ResourceFactory;
-import org.drools.persistence.jpa.*;
-import org.drools.runtime.Environment;
-import org.drools.runtime.EnvironmentName;
 import org.drools.runtime.StatefulKnowledgeSession;
-import org.junit.After;
-import org.junit.Before;
 import org.junit.Test;
 import static org.junit.Assert.*;
 
@@ -37,40 +23,9 @@ import static org.junit.Assert.*;
  * process instances.
  * @author salaboy
  */
-public class SingleSessionPatternsTest {
-
-    private PoolingDataSource ds = new PoolingDataSource();
-    private Map<String, KnowledgeBase> kbases;
-    private EntityManagerFactory emf;
+public class SingleSessionPatternsTest extends SessionsPatternsTestsBase {
 
     public SingleSessionPatternsTest() {
-    }
-
-    /**
-     * Configure the data source used to persist the sessions used in these
-     * tests.
-     */
-    @Before
-    public void setUp() {
-        ds.setUniqueName("jdbc/testDS1");
-
-        ds.setClassName("org.h2.jdbcx.JdbcDataSource");
-        ds.setMaxPoolSize(3);
-        ds.setAllowLocalTransactions(true);
-        ds.getDriverProperties().put("user", "sa");
-        ds.getDriverProperties().put("password", "sasa");
-        ds.getDriverProperties().put("URL", "jdbc:h2:mem:mydb");
-
-        ds.init();
-
-
-        emf = Persistence.createEntityManagerFactory("org.jbpm.runtime");
-        kbases = new HashMap<String, KnowledgeBase>();
-    }
-
-    @After
-    public void tearDown() {
-        ds.close();
     }
 
     /**
@@ -83,7 +38,7 @@ public class SingleSessionPatternsTest {
         //Creates an entity manager and get the user transaction. We are going
         //to need them later to interact with the business entities persisted
         //by the work item handlers we have configured in our session.
-        EntityManager em = emf.createEntityManager();
+        EntityManager em = getEmf().createEntityManager();
         UserTransaction ut = (UserTransaction) new InitialContext().lookup("java:comp/UserTransaction");
 
         //Initial parameters for process instance #1
@@ -92,7 +47,7 @@ public class SingleSessionPatternsTest {
         params1.put("person", person);
 
         //Creates the ksession for process instance #1
-        StatefulKnowledgeSession ksession1 = createProcessOneKnowledgeSession(person.getId());
+        StatefulKnowledgeSession ksession1 = createProcessKnowledgeSession(person.getId());
         registerWorkItemHandlers(ksession1, person.getId(), em);
         int ksession1Id = ksession1.getId();
 
@@ -113,7 +68,7 @@ public class SingleSessionPatternsTest {
         params2.put("person", person2);
 
         //Creates a new ksession for process instance #2
-        StatefulKnowledgeSession ksession2 = createProcessTwoKnowledgeSession(person2.getId());
+        StatefulKnowledgeSession ksession2 = createProcessKnowledgeSession(person2.getId());
         registerWorkItemHandlers(ksession2, person2.getId(), em);
         int ksession2Id = ksession2.getId();
 
@@ -144,7 +99,7 @@ public class SingleSessionPatternsTest {
         //Let' restore the session #2 using the information present in the BusinessEntity
         //Since we keep one kbase per ksession we also need to get it using
         //the information present in the BusinessEntity.
-        ksession2 = JPAKnowledgeService.loadStatefulKnowledgeSession(businessEntity.getSessionId(), kbases.get(businessEntity.getBusinessKey()), null, createEnvironment());
+        ksession2 = loadKnowldgeSession(businessEntity.getSessionId(), businessEntity.getBusinessKey(), em);
         registerWorkItemHandlers(ksession2, businessEntity.getBusinessKey(), em);
         assertNotNull(ksession2);
 
@@ -178,8 +133,7 @@ public class SingleSessionPatternsTest {
         assertEquals(businessEntity.getSessionId(), ksession1Id);
 
         //load the ksession using the information present in BusinessEntity
-        ksession1 = JPAKnowledgeService.loadStatefulKnowledgeSession(businessEntity.getSessionId(), kbases.get(businessEntity.getBusinessKey()), null, createEnvironment());
-        registerWorkItemHandlers(ksession1, businessEntity.getBusinessKey(), em);
+        ksession1 = loadKnowldgeSession(businessEntity.getSessionId(), businessEntity.getBusinessKey(), em);
         assertNotNull(ksession1);
 
         try {
@@ -219,7 +173,7 @@ public class SingleSessionPatternsTest {
         //Creates an entity manager and get the user transaction. We are going
         //to need them later to interact with the business entities persisted
         //by the work item handlers we have configured in our session.
-        EntityManager em = emf.createEntityManager();
+        EntityManager em = getEmf().createEntityManager();
         UserTransaction ut = (UserTransaction) new InitialContext().lookup("java:comp/UserTransaction");
 
         //Initial parameters for process instance #1
@@ -228,7 +182,7 @@ public class SingleSessionPatternsTest {
         params.put("person", person);
 
         //Creates the ksession for process instance #1
-        StatefulKnowledgeSession ksession1 = createProcessOneKnowledgeSession("myProcessDefinitionSession");
+        StatefulKnowledgeSession ksession1 = createProcessKnowledgeSession("myProcessDefinitionSession");
         registerWorkItemHandlers(ksession1, null, em);
 
         
@@ -257,8 +211,7 @@ public class SingleSessionPatternsTest {
         //In this case we want to start the new process instance in the same 
         //ksession we used before. That is why we first need to retrieve it from
         //the database.
-        ksession1 = JPAKnowledgeService.loadStatefulKnowledgeSession(ksession1Id, kbases.get("myProcessDefinitionSession"), null, createEnvironment());
-        registerWorkItemHandlers(ksession1, null, em);
+        ksession1 = loadKnowldgeSession(ksession1Id, "myProcessDefinitionSession", null, em);
         assertNotNull(ksession1);
 
         //Let's prepare a new set of data to start a new process instance of 
@@ -286,8 +239,7 @@ public class SingleSessionPatternsTest {
         BusinessEntity businessEntityByWorkItemId = getBusinessEntityByWorkItemId(1L, em);
 
         //Before completing the work item we need to reload the session once again.
-        ksession1 = JPAKnowledgeService.loadStatefulKnowledgeSession(businessEntityByWorkItemId.getSessionId(), kbases.get("myProcessDefinitionSession"), null, createEnvironment());
-        registerWorkItemHandlers(ksession1, null, em);
+        ksession1 = loadKnowldgeSession(businessEntityByWorkItemId.getSessionId(), "myProcessDefinitionSession", null, em);
         assertNotNull(ksession1);
 
         try {
@@ -329,7 +281,7 @@ public class SingleSessionPatternsTest {
         //Creates an entity manager and get the user transaction. We are going
         //to need them later to interact with the business entities persisted
         //by the work item handlers we have configured in our session.
-        EntityManager em = emf.createEntityManager();
+        EntityManager em = getEmf().createEntityManager();
         UserTransaction ut = (UserTransaction) new InitialContext().lookup("java:comp/UserTransaction");
         
         //Creates the ksession. In this case the ksession
@@ -362,8 +314,7 @@ public class SingleSessionPatternsTest {
         //see what happens. In order to restore the session we are using the
         //sessionId present in the business entity we have retrieved from the 
         //database.
-        ksession = JPAKnowledgeService.loadStatefulKnowledgeSession(businessEntity.getSessionId(), kbases.get("myProcessDefinitionSession"), null, createEnvironment());
-        registerWorkItemHandlers(ksession, "myProcessDefinitionSession", em);
+        ksession = loadKnowldgeSession(businessEntity.getSessionId(), "myProcessDefinitionSession", em);
         assertNotNull(ksession);
 
         //Let's create a new Person and insert it in the sesssion. This will
@@ -387,8 +338,7 @@ public class SingleSessionPatternsTest {
         BusinessEntity businessEntityByWorkItemId = getBusinessEntityByWorkItemId(1L, em);
 
         //Before completing the work item we need to reload the session once again.
-        ksession = JPAKnowledgeService.loadStatefulKnowledgeSession(businessEntityByWorkItemId.getSessionId(), kbases.get("myProcessDefinitionSession"), null, createEnvironment());
-        registerWorkItemHandlers(ksession, "myProcessDefinitionSession", em);
+        ksession = loadKnowldgeSession(businessEntityByWorkItemId.getSessionId(), "myProcessDefinitionSession", em);
         assertNotNull(ksession);
 
         
@@ -421,86 +371,6 @@ public class SingleSessionPatternsTest {
     }
 
     /**
-     * Retrieves the {@link BusinessEntity} related to a workItemId from the 
-     * database. 
-     * @param workItemId the workItemId.
-     * @param em the EntityManager to be used.
-     * @return the {@link BusinessEntity} related to a workItemId from the 
-     * database
-     */
-    private BusinessEntity getBusinessEntityByWorkItemId(long workItemId, EntityManager em) {
-        return (BusinessEntity) em.createQuery("select be from BusinessEntity be where be.workItemId = :workItemId and be.active = true")
-                .setParameter("workItemId", workItemId)
-                .getSingleResult();
-    }
-
-    /**
-     * Returns the list of all active BusinessEntities in the database.
-     * @param em the EntityManager to be used.
-     * @return the list of all active BusinessEntities in the database
-     */
-    private List<BusinessEntity> getActiveBusinessEntities(EntityManager em) {
-        List<BusinessEntity> businessEntities = em.createQuery("select be from BusinessEntity be where be.active = true").getResultList();
-        return businessEntities;
-    }
-
-    /**
-     * Returns the list of all inactive BusinessEntities in the database.
-     * @param em the EntityManager to be used.
-     * @return the list of all inactive BusinessEntities in the database
-     */
-    private List<BusinessEntity> getInactiveBusinessEntities(EntityManager em) {
-        List<BusinessEntity> businessEntities = em.createQuery("select be from BusinessEntity be where be.active = false").getResultList();
-        return businessEntities;
-    }
-
-    /**
-     * Queries the database to retrieve a {@link BusinessEntity} given its key.
-     * Only active BusinessEntities are returned.
-     * @param key the key of the BusinessEntity.
-     * @param em the EntityManager to be used.
-     * @return the BusinessEntity with the given key.
-     */
-    private BusinessEntity getBusinessEntity(String key, EntityManager em) {
-        BusinessEntity businessEntity = (BusinessEntity) em.createQuery("select be from BusinessEntity be where be.businessKey = :key "
-                + "and be.active = true")
-                .setParameter("key", key)
-                .getSingleResult();
-
-        return businessEntity;
-    }
-
-    /**
-     * Queries the database to retrieve all the {@link BusinessEntity} belonging
-     * to a process instance. Only active BusinessEntities are returned.
-     * @param processId the process id
-     * @param em the EntityManager to be used.
-     * @return the {@link BusinessEntity} belonging to a process instance
-     */
-    private List<BusinessEntity> getBusinessEntitiesProcessId(long processId, EntityManager em) {
-        List<BusinessEntity> businessEntities = em.createQuery("select be from BusinessEntity be where  "
-                + " be.processId = :processId"
-                + " and be.active = true")
-                .setParameter("processId", processId)
-                .getResultList();
-        return businessEntities;
-    }
-
-    /**
-     * Sets the 'active' property of the businessEntity as 'false' and persists
-     * it into the database.
-     *
-     * @param businessEntity
-     */
-    private void markBusinessEntityAsCompleted(Long businessEntityId, EntityManager em) {
-        em.joinTransaction();
-        BusinessEntity businessEntity = em.find(BusinessEntity.class, businessEntityId);
-        businessEntity.setActive(false);
-        System.out.println("Merging Business Entity: " + businessEntity);
-        em.merge(businessEntity);
-    }
-
-    /**
      * Creates a new ksession containing a single process definition: 
      * 'process-async-interactions.bpmn'.
      * This method uses {@link #createKnowledgeSession(java.lang.String, java.util.Map)}
@@ -509,25 +379,9 @@ public class SingleSessionPatternsTest {
      * used by this method.
      * @return a new ksession containing a single process definition.
      */
-    private StatefulKnowledgeSession createProcessOneKnowledgeSession(String key) {
+    private StatefulKnowledgeSession createProcessKnowledgeSession(String key) {
         Map<Resource,ResourceType> resources = new HashMap<Resource, ResourceType>();
         resources.put(ResourceFactory.newClassPathResource("process-async-interactions.bpmn"), ResourceType.BPMN2);
-        
-        return this.createKnowledgeSession(key, resources);
-    }
-
-    /**
-     * Creates a new ksession containing a single process definition: 
-     * 'process-async-interactions2.bpmn'.
-     * This method uses {@link #createKnowledgeSession(java.lang.String, java.util.Map)}
-     * in order to create the ksession.
-     * @param key The key used to register the kbase created with the resources
-     * used by this method.
-     * @return a new ksession containing a single process definition.
-     */
-    private StatefulKnowledgeSession createProcessTwoKnowledgeSession(String key) {
-        Map<Resource,ResourceType> resources = new HashMap<Resource, ResourceType>();
-        resources.put(ResourceFactory.newClassPathResource("process-async-interactions2.bpmn"), ResourceType.BPMN2);
         
         return this.createKnowledgeSession(key, resources);
     }
@@ -550,50 +404,6 @@ public class SingleSessionPatternsTest {
     }
     
     /**
-     * Creates a new Knowledge Base with the passed resources and returns a fresh
-     * ksession from it. This method register the created kbase in {@link #kbases}
-     * with the key passed as parameter. The returned session is configured as
-     * persistent.
-     * @param key the key used to register the generated kbase in {@link #kbases}.
-     * @param resources The resources to be placed inside the generated kbase.
-     * @return 
-     */
-    private StatefulKnowledgeSession createKnowledgeSession(String key, Map<Resource, ResourceType> resources) {
-        
-        //Creates a new kbuilder
-        KnowledgeBuilder kbuilder = KnowledgeBuilderFactory.newKnowledgeBuilder();
-        
-        //Adds al the given resources
-        for (Map.Entry<Resource, ResourceType> entry : resources.entrySet()) {
-            kbuilder.add(entry.getKey(), entry.getValue());
-        }
-
-        //If there is any compilation error then fail!
-        if (kbuilder.hasErrors()) {
-            for (KnowledgeBuilderError error : kbuilder.getErrors()) {
-                System.out.println(">>> Error:" + error.getMessage());
-
-            }
-            fail(">>> Knowledge couldn't be parsed! ");
-        }
-
-        //Creates a new kbase
-        KnowledgeBase kbase = KnowledgeBaseFactory.newKnowledgeBase();
-        
-        //Add the generated knowledge packages from kbuilder.
-        kbase.addKnowledgePackages(kbuilder.getKnowledgePackages());
-        
-        //Register the kbase in this.kbases
-        kbases.put(key, kbase);
-
-        //Creates a Persistence Knowledge Session
-        System.out.println(" >>> Let's create a Persistent Knowledge Session");
-        final StatefulKnowledgeSession ksession = JPAKnowledgeService.newStatefulKnowledgeSession(kbase, null, createEnvironment());
-
-        return ksession;
-    }
-    
-    /**
      * Register the Work Item handler we are going to use in our processes.
      * An instance of {@link MockAsyncExternalServiceWorkItemHandler} is used 
      * for all the 'Human Task' and 'External Service Call' tasks.
@@ -602,22 +412,10 @@ public class SingleSessionPatternsTest {
      * @param em The entity manager that the instance of {@link MockAsyncExternalServiceWorkItemHandler}
      * will use.
      */
-    private void registerWorkItemHandlers(StatefulKnowledgeSession ksession, String key, EntityManager em) {
+    protected void registerWorkItemHandlers(StatefulKnowledgeSession ksession, String key, EntityManager em) {
         MockAsyncExternalServiceWorkItemHandler mockExternalServiceWorkItemHandler = new MockAsyncExternalServiceWorkItemHandler(em, ksession.getId(), key);
         ksession.getWorkItemManager().registerWorkItemHandler("Human Task", mockExternalServiceWorkItemHandler);
         ksession.getWorkItemManager().registerWorkItemHandler("External Service Call", mockExternalServiceWorkItemHandler);
     }
 
-    /**
-     * Creates the persistence environment used by jBPM to handle persistent
-     * sessions.
-     * @return a new environment.
-     */
-    private Environment createEnvironment() {
-
-        Environment env = EnvironmentFactory.newEnvironment();
-        env.set(EnvironmentName.ENTITY_MANAGER_FACTORY, emf);
-        env.set(EnvironmentName.TRANSACTION_MANAGER, TransactionManagerServices.getTransactionManager());
-        return env;
-    }
 }
