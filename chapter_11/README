@@ -62,4 +62,14 @@ the master session. The master session will complete the work item handlers
 specified by the BusinessEntity and continue with the execution of the related
 process instance.
 
-b) multiSessionsWithSessionLocator()
+b) multiSessionsWithSessionLocator() test uses the concept of a SessionLocator 
+to register slaves sessions.
+Based on rules, the master session decides which (process definition), 
+when (declaratively expressed with rules) and where (in which slave session)
+to start a process instance. The behavior of this test is really simple: for
+each Person object inserted in the master session a new process instance is
+going to be started in each of the slaves sessions containing the 'com.salaboy.process.AsyncInteractions'
+process definition. Just like in the previous test, the concept of a BusinessEntity
+is used to keep track of the relation between a session, a work item and a process
+instance. Every time a BusinessEntity is inserted in the master session, the
+corresponding work item handler is going to be completed.

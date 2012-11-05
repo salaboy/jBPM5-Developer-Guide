@@ -109,8 +109,11 @@ public class MultiSessionsPatternsTest extends SessionsPatternsTestsBase{
         ksession.dispose();
     }
 
-    /*
-     * 
+    /**
+     * This test uses the concept of a SessionLocator to register slaves sessions.
+     * Based on rules, the master session decides which (process definition), 
+     * when (declaratively expressed with rules) and where (in which slave session)
+     * to start a process instance.
      */
     @Test
     public void multiSessionsWithSessionLocator() throws Exception {
@@ -158,7 +161,7 @@ public class MultiSessionsPatternsTest extends SessionsPatternsTestsBase{
         // The process will be selected and started. Because it contains an async activity a new BusinessEntity will be created
         interactionSession.fireAllRules();
    
-        /*
+        
          // Look for all the pending Business Keys which represent an interaction and insert them into the interaction session
         List<BusinessEntity> pendingBusinessEntities = em.createQuery("select be from BusinessEntity be where  "
                 + " be.active = true").getResultList();
@@ -173,7 +176,7 @@ public class MultiSessionsPatternsTest extends SessionsPatternsTestsBase{
         interactionSession.fireAllRules();
         
         interactionSession.dispose();
-*/
+
     }
 
     /**

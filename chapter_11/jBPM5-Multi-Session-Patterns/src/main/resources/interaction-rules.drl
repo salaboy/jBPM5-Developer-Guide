@@ -15,26 +15,12 @@ import org.drools.runtime.process.ProcessInstance;
 global EntityManager em;
 global KnowledgeSessionSupport ksessionSupport;
 
-declare ProcessForPerson
-    person: Person
-    pi: ProcessInstance 
-    sl: SessionLocator
-end
-
 rule "Log"
     salience 10
     when
       $be:  BusinessEntity()
     then
         System.out.println(" ### Log: "+$be);
-end
-
-rule "Log ProcessForPerson"
-    salience 10
-    when
-      $pfp:  ProcessForPerson()
-    then
-        System.out.println(" ### Log: "+$pfp);
 end
 
 rule "Complete Interaction When We Receive Data"
@@ -50,7 +36,6 @@ rule "Complete Interaction When We Receive Data"
 
     ksessionSupport.completeInteraction(ksession,em, $be, $data.getDataMap());
 
-    ksession.dispose();
 end
 
 
@@ -67,7 +52,6 @@ rule "Choose Session and Start Process for a Person"
     when
         $sl: SessionLocator($process: props['process'] == "com.salaboy.process.AsyncInteractions")
         $p: Person()
-        not(ProcessForPerson(person == $p))
     then
 
         StatefulKnowledgeSession ksession = 
@@ -81,26 +65,8 @@ rule "Choose Session and Start Process for a Person"
         params.put("person", $p);    
         
         ProcessInstance pi = ksession.createProcessInstance($process, params );
-        //ksession.startProcessInstance(pi.getId());
+        ksession.startProcessInstance(pi.getId());
 
-        insert(new ProcessForPerson($p, pi, $sl));
         System.out.println("1 ##################################### "+pi.getId());
 
-        
-end
-
-rule "Start Process when we have all the information"
-    
-    when
-        $pfp: ProcessForPerson()
-    then
-        
-        StatefulKnowledgeSession ksession = 
-            ksessionSupport.loadKnowldgeSession(
-                $pfp.getSl().getSessionId(),
-                $pfp.getSl().getSessionName(),
-                em);
-
-        ksession.startProcessInstance($pfp.getPi().getId());
-        ksession.dispose();
 end
