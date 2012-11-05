@@ -1,0 +1,65 @@
+Chapter 11 - Architectural and Integration Tips
+
+Chapter 11 includes 1 project showing different ways of interaction between
+knowledge sessions and process instances:
+
+- SingleSessionPatternsTest.java:
+This class contains a set of tests showing the 2 different ways of working
+with a self-contained Knowledge Sessions. By self-contained I mean sessions 
+that don't require a separate session to be executed. All the processes and rules
+run in a single instance of it.
+
+a) The first way is to have an individual knowledge session for each process 
+instance we want to start. Each time a process is started a new session is created.
+When we want to interact with an existing process instance we need to restore the
+corresponding session first. The test singleSessionPerProcessInstance() shows
+this behavior. Here, a BusinessEntity instance is created to keep the relation
+between a process instance, a work item and a knowledge session. Using this
+entity we can restore the corresponding knowledge session and interact with it.
+This test uses 1 process definition and creates an individual session
+for each instance it starts. The process definition contains 3 asynchronous
+tasks whose behavior is implemented by MockAsyncExternalServiceWorkItemHandler
+class. This class is in charge of persist a BusinessEntity each time it is 
+invoked.
+
+b) Another strategy to start process instances is to keep all the instances of
+the same definition in the same knowledge session. This strategy is implemented
+by singleSessionPerProcessDefinition() test. In this test, 2 process instances
+of the same process definition are started in a single session. The process 
+definition and work item handler used by this test are the same that we used in 
+singleSessionPerProcessInstance(). A BusinessEntity instance is also used
+to keep the relation between the session, the process instance and the active
+work item. 
+
+c) The task of starting a process instance could also be delegated to a rule.
+This way, we can express the situation where a process instance must be started
+in a declarative way. That is exactly what singleSessionPerProcessDefinitionWithRules() 
+test does. In this case, a session containing a process definition (the same
+definition we used in the previous tests) and a rule resource is used to 
+start process instances in a declarative way. The behavior of this test is
+the same as b): one session for all process instances of the same definition.
+The only difference is that the process instances are not started from the java
+code but from the rules. Each time a Person object is inserted in the session,
+a new process instance is started in that same session.
+
+
+- MultiSessionsPatternsTest.java:
+This class contains some tests showing how different knowledge sessions can
+interact in order to achieve a result (in this case, the completion of a process
+instance).
+
+a) multiSessionsCollaboration() test shows how a master session can automatically 
+complete a work item handler in a slave session when the required information is 
+present. In this case, the master session ('interactionSession' in the test) is 
+composed by a set of rules in charge of the completion of work item handlers and
+the instantiation of new process instances. In the case of this test, the rule
+being used is 'Complete Interaction When We Receive Data' which completes a 
+work item handler each time a BusinessEntity is inserted in the session.
+The test starts a process instance (same definition and work item handler we 
+used before) that persists a BusinessEntity when 'External Service Call' task is 
+executed. The Business Entities are then loaded by the test and inserted into
+the master session. The master session will complete the work item handlers 
+specified by the BusinessEntity and continue with the execution of the related
+process instance.
+
+b) multiSessionsWithSessionLocator()
