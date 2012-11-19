@@ -9,8 +9,8 @@
     <url>http://salaboy.com</url>
     <packaging>pom</packaging>
     <properties>
-        <jbpm.version>5.4.0-SNAPSHOT</jbpm.version>
-        <drools.version>5.5.0-SNAPSHOT</drools.version>
+        <jbpm.version>5.4.0.Final</jbpm.version>
+        <drools.version>5.5.0.Final</drools.version>
         <hibernate.version>3.4.0.GA</hibernate.version>
         <hibernate.core.version>3.3.2.GA</hibernate.core.version>
         
