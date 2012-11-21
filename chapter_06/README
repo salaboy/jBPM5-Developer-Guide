@@ -1,0 +1,72 @@
+Chapter 6 - Domain Specific Processes
+
+This chapter contains 2 projects:
+1) jBPM5-Executor-Service: This project shows an implementation of the Executor
+Service component introduced in Chapter 6. The idea of this component is to deal
+with the interactions between the process runtime and any external system.
+Some of the concepts supported by this implementation are:
+    - Command Based approach: Each interaction with an external system is encapsulated
+in a command.
+    - Retry mechanism: In the case of a failure while executing a command, the
+executor service comes with a built-in retry mechanism.
+    - Fail over recovery: the interactions request are stored in a database to
+support unexpected crashes.
+    - Management: pending and completed commands can be queried. Commands can 
+be canceled if needed.
+
+Even if the module is not production-ready it serves as a guideline for more
+robust implementations.  
+The tests included in this project cover the different characteristics of the 
+executor service module:
+    a) BasicExecutorBaseTest: Test showing the different characteristics of 
+the Executor Service.
+    b) ArquillianCDISimpleExecutorTest: Executes the tests present in BasicExecutorBaseTest
+using Arquillian to create a CDI container. The executor service is then injected
+in BasicExecutorBaseTest using CDI.
+    c) NoCDIExecutorTest: Executes the tests present in BasicExecutorBaseTest
+wihtout using CDI. In this case, the execution service is manually instantiated 
+and configured.
+
+2) jBPM5-Patient-Insurance: This project covers the scenarios described in 
+Chapter 6 using the Executor Service module to deal with external services
+interaction. It also contains some tests showing the different ways to interact
+with an external sevice (represented by a web service in this case):
+    - Custom Work Item Handler
+    - jBPM5' ServiceTaskHandler
+    - Executor Service
+
+The tests present in this project are:
+    a) AsyncWorkItemDontWaitForCompletionTest: Test executing a process with a 
+single Task using the Executor Service component to interact with a (mocked) 
+external service. The process is configured to tell the work item handler being 
+used (AsyncGenericWorkItemHandler) to not wait until the external system comes 
+back to complete the Task. The result will be a process that will be completed 
+before the external system is even invoked.
+    b) AsyncWorkItemWaitForCompletionTest: Test executing a process with a 
+single Task using the Executor Service component to interact with a (mocked) 
+external service. The process is configured to tell the work item handler being 
+used (AsyncGenericWorkItemHandler) to wait until the external system comes 
+back before completing the Task. The result will be a process that will is not 
+going to be completed until the external system comes back with a response.
+    c) HospitalInsuranceProcessTest: Executes "Hopistal Insurance Check-In" process
+using independent mocked Work Item Handler for each of the tasks in the process.
+    d) HospitalInsuranceServiceTest: Isolated tests for {@link InsuranceServiceImpl} 
+Web Service methods. This web service is used by most of the tests in this project.
+    e) GenericWebServiceTaskTest: Simple tests showing the interaction between 
+a process and a web service.
+    f) HospitalInsuranceProcessExecutorTest: Executes "Hopistal Insurance Check-In" 
+process using the Executor Service module for interact with a web service.
+    g) ServiceTaskTest: Similar to GenericWebServiceTaskTest but using jBPM5' 
+    out-of-the box Service Task Handler. The process being used by this test uses 
+    a Service Task node instead of an Abstract Task node.
+    h) SlowWebServicesInteractionsTest: This test class consists in two tests 
+executing a process composed by 3 tasks. The idea of the tests is to emulate web 
+services that takes some considerable time to be invoked. The 2 approaches taken 
+by these tests is to wait until each invocation returns and to continue without 
+care about the responses at all. For the communication between the process and 
+the web service the Executor Service component is used.
+
+
+For updates about the book visit: http://salaboy.com / http://ilesteban.wordpress.com
+or follow us on twitter: http://www.twitter.com/salaboy / http://www.twitter.com/ilesteban
+- jBPM5 Developer Guide 2012

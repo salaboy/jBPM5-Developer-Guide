@@ -8,6 +8,12 @@ import org.drools.runtime.process.WorkItem;
 import org.drools.runtime.process.WorkItemHandler;
 import org.drools.runtime.process.WorkItemManager;
 
+/**
+ * Synchronous Work Item Handler that invokes a web service.
+ * The wsdl, methodName and parameters can be specified though its input
+ * parameters.
+ * @author esteban
+ */
 public class CXFWebServiceWorkItemHandler implements WorkItemHandler {
 	
 	public void executeWorkItem(WorkItem workItem, WorkItemManager manager) {

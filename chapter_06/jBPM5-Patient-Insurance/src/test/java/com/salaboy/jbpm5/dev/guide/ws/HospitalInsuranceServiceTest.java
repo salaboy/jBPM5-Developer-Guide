@@ -20,6 +20,11 @@ import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
+/**
+ * Isolated tests for {@link InsuranceServiceImpl} Web Service methods.
+ * This web service is used by most of the tests in this project.
+ * @author esteban
+ */
 public class HospitalInsuranceServiceTest {
 
     protected StatefulKnowledgeSession session;
@@ -63,7 +68,7 @@ public class HospitalInsuranceServiceTest {
     }
 
     @Test
-    public void patientNonInsuredTest() {
+    public void patientNotInsuredTest() {
 
         Patient patient = this.service.getPatientData(testPatients.get("brotha").getId());
         assertNotNull(patient);

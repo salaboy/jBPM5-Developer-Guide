@@ -31,6 +31,19 @@ import java.util.Map;
 import java.util.UUID;
 import org.drools.event.rule.DefaultAgendaEventListener;
 
+/**
+ * Executes "Hopistal Insurance Check-In" process introduced un Chapter 6.
+ * These tests use an independent mocked Work Item Handler for each of
+ * the tasks of the process.
+ * The Work Item Handled used by theses tests are:
+ *       "Gather Patient Data" -> {@link PatientDataServiceWorkItemHandler}
+ *       "Insurance Service" -> {@link InsuranceServiceWorkItemHandler}
+ *       "External Insurance Company Service" -> {@link CompanyGatewayWorkItemHandler}
+ *       "Rates Service" -> {@link RatesServiceWorkItemHandler}
+ *       "Invoice Service" -> {@link InvoiceServiceWorkItemHandler}
+ *
+ * @author esteban
+ */
 public class HospitalInsuranceProcessTest {
 
     protected StatefulKnowledgeSession session;
@@ -58,23 +71,15 @@ public class HospitalInsuranceProcessTest {
         stopWebService();
     }
 
+    /**
+     * Tests the execution path for a patient having a valid insurance.
+     */
     @Test
     public void testPatientInsuredProcess() {
         HashMap<String, Object> input = new HashMap<String, Object>();
 
         Patient salaboy = testPatients.get("salaboy");
         input.put("patientName", salaboy.getId());
-
-        PatientDataServiceWorkItemHandler patientDataHandler = new PatientDataServiceWorkItemHandler();
-        session.getWorkItemManager().registerWorkItemHandler("Gather Patient Data", patientDataHandler);
-        InsuranceServiceWorkItemHandler insuranceServiceHandler = new InsuranceServiceWorkItemHandler();
-        session.getWorkItemManager().registerWorkItemHandler("Insurance Service", insuranceServiceHandler);
-        CompanyGatewayWorkItemHandler companyGatewayHandler = new CompanyGatewayWorkItemHandler();
-        session.getWorkItemManager().registerWorkItemHandler("External Insurance Company Service", companyGatewayHandler);
-        RatesServiceWorkItemHandler ratesServiceHandler = new RatesServiceWorkItemHandler();
-        session.getWorkItemManager().registerWorkItemHandler("Rates Service", ratesServiceHandler);
-        InvoiceServiceWorkItemHandler invoiceServiceHandler = new InvoiceServiceWorkItemHandler();
-        session.getWorkItemManager().registerWorkItemHandler("Invoice Service", invoiceServiceHandler);
 
         WorkflowProcessInstance pI = (WorkflowProcessInstance) session.startProcess("NewPatientInsuranceCheck", input);
 
@@ -84,23 +89,15 @@ public class HospitalInsuranceProcessTest {
         
     }
     
+    /**
+     * Tests the execution path for a patient NOT having a valid insurance.
+     */
     @Test
-    public void testPatientNonInsuredProcess() {
+    public void testPatientNotInsuredProcess() {
         HashMap<String, Object> input = new HashMap<String, Object>();
 
         Patient brotha = testPatients.get("brotha");
         input.put("patientName", brotha.getId());
-
-        PatientDataServiceWorkItemHandler patientDataHandler = new PatientDataServiceWorkItemHandler();
-        session.getWorkItemManager().registerWorkItemHandler("Gather Patient Data", patientDataHandler);
-        InsuranceServiceWorkItemHandler insuranceServiceHandler = new InsuranceServiceWorkItemHandler();
-        session.getWorkItemManager().registerWorkItemHandler("Insurance Service", insuranceServiceHandler);
-        CompanyGatewayWorkItemHandler companyGatewayHandler = new CompanyGatewayWorkItemHandler();
-        session.getWorkItemManager().registerWorkItemHandler("External Insurance Company Service", companyGatewayHandler);
-        RatesServiceWorkItemHandler ratesServiceHandler = new RatesServiceWorkItemHandler();
-        session.getWorkItemManager().registerWorkItemHandler("Rates Service", ratesServiceHandler);
-        InvoiceServiceWorkItemHandler invoiceServiceHandler = new InvoiceServiceWorkItemHandler();
-        session.getWorkItemManager().registerWorkItemHandler("Invoice Service", invoiceServiceHandler);
 
         WorkflowProcessInstance pI = (WorkflowProcessInstance) session.startProcess("NewPatientInsuranceCheck", input);
 
@@ -154,6 +151,18 @@ public class HospitalInsuranceProcessTest {
             
         });
 
+        //Registers an independent mocked work item handler for each task present
+        //in the process.
+        PatientDataServiceWorkItemHandler patientDataHandler = new PatientDataServiceWorkItemHandler();
+        session.getWorkItemManager().registerWorkItemHandler("Gather Patient Data", patientDataHandler);
+        InsuranceServiceWorkItemHandler insuranceServiceHandler = new InsuranceServiceWorkItemHandler();
+        session.getWorkItemManager().registerWorkItemHandler("Insurance Service", insuranceServiceHandler);
+        CompanyGatewayWorkItemHandler companyGatewayHandler = new CompanyGatewayWorkItemHandler();
+        session.getWorkItemManager().registerWorkItemHandler("External Insurance Company Service", companyGatewayHandler);
+        RatesServiceWorkItemHandler ratesServiceHandler = new RatesServiceWorkItemHandler();
+        session.getWorkItemManager().registerWorkItemHandler("Rates Service", ratesServiceHandler);
+        InvoiceServiceWorkItemHandler invoiceServiceHandler = new InvoiceServiceWorkItemHandler();
+        session.getWorkItemManager().registerWorkItemHandler("Invoice Service", invoiceServiceHandler);
 
     }
 }

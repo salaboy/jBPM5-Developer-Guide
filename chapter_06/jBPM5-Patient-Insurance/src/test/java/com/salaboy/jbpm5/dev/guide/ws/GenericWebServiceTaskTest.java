@@ -30,6 +30,11 @@ import java.util.Map;
 import java.util.UUID;
 import org.drools.event.rule.DefaultAgendaEventListener;
 
+/**
+ * This test class shows the interaction between an Abstract Task and a Web Service
+ * using a custom Work Item Handler: {@link CXFWebServiceWorkItemHandler}.
+ * @author esteban
+ */
 public class GenericWebServiceTaskTest {
 
     protected StatefulKnowledgeSession session;
@@ -66,6 +71,54 @@ public class GenericWebServiceTaskTest {
 
     }
 
+    /**
+     * Simple test showing the interaction between a process and a web service.
+     * This method tests the case of an invalid response from the web-service.
+     */
+    @Test
+    public void testPatientInsuranceCheckProcessFalse() {
+        HashMap<String, Object> input = new HashMap<String, Object>();
+
+        
+        input.put("bedrequest_patientname", testPatients.get("brotha").getId());
+
+        //Register a synchronous work item handler that will invoke a web service
+        CXFWebServiceWorkItemHandler webServiceHandler = new CXFWebServiceWorkItemHandler();
+        session.getWorkItemManager().registerWorkItemHandler("Web Service", webServiceHandler);
+
+        WorkflowProcessInstance pI = (WorkflowProcessInstance) session.startProcess("NewPatientInsuranceCheck", input);
+
+        //'brotha' is not inssured according to the web service we have configured.
+        //The response should be invalid.
+        assertEquals(ProcessInstance.STATE_COMPLETED, pI.getState());
+        assertEquals(Boolean.FALSE, pI.getVariable("checkinresults_patientInsured"));
+        System.out.println("-> Insurance Valid = " + pI.getVariable("checkinresults_patientInsured"));
+    }
+
+    /**
+     * Simple test showing the interaction between a process and a web service.
+     * This method tests the case of an invalid response from the web-service.
+     */
+    @Test
+    public void testPatientInsuranceCheckProcessTrue() {
+        HashMap<String, Object> input = new HashMap<String, Object>();
+
+        input.put("bedrequest_patientname", testPatients.get("salaboy").getId());
+
+        //Register a synchronous work item handler that will invoke a web service
+        CXFWebServiceWorkItemHandler webServiceHandler = new CXFWebServiceWorkItemHandler();
+        session.getWorkItemManager().registerWorkItemHandler("Web Service", webServiceHandler);
+
+        WorkflowProcessInstance pI = (WorkflowProcessInstance) session.startProcess("NewPatientInsuranceCheck", input);
+
+        //'salaboy' is correctly inssured according to the web service we have configured.
+        //The response should be valid.
+        assertEquals(ProcessInstance.STATE_COMPLETED, pI.getState());
+        assertEquals(Boolean.TRUE, pI.getVariable("checkinresults_patientInsured"));
+        System.out.println("-> Insurance Valid = " + pI.getVariable("checkinresults_patientInsured"));
+
+    }
+    
     private void initializeSession() {
         KnowledgeBuilder kbuilder = KnowledgeBuilderFactory.newKnowledgeBuilder();
 
@@ -95,42 +148,6 @@ public class GenericWebServiceTaskTest {
             }
             
         });
-
-    }
-
-    @Test
-    public void testPatientInsuranceCheckProcessFalse() {
-        HashMap<String, Object> input = new HashMap<String, Object>();
-
-        
-        input.put("bedrequest_patientname", testPatients.get("brotha").getId());
-
-        CXFWebServiceWorkItemHandler webServiceHandler = new CXFWebServiceWorkItemHandler();
-        session.getWorkItemManager().registerWorkItemHandler("Web Service", webServiceHandler);
-
-        WorkflowProcessInstance pI = (WorkflowProcessInstance) session.startProcess("NewPatientInsuranceCheck", input);
-
-        assertEquals(ProcessInstance.STATE_COMPLETED, pI.getState());
-        assertEquals(Boolean.FALSE, pI.getVariable("checkinresults_patientInsured"));
-        System.out.println("-> Insurance Valid = " + pI.getVariable("checkinresults_patientInsured"));
-    }
-
-    @Test
-    public void testPatientInsuranceCheckProcessTrue() {
-        HashMap<String, Object> input = new HashMap<String, Object>();
-
-        
-        input.put("bedrequest_patientname", testPatients.get("salaboy").getId());
-
-
-        CXFWebServiceWorkItemHandler webServiceHandler = new CXFWebServiceWorkItemHandler();
-        session.getWorkItemManager().registerWorkItemHandler("Web Service", webServiceHandler);
-
-        WorkflowProcessInstance pI = (WorkflowProcessInstance) session.startProcess("NewPatientInsuranceCheck", input);
-
-        assertEquals(ProcessInstance.STATE_COMPLETED, pI.getState());
-        assertEquals(Boolean.TRUE, pI.getVariable("checkinresults_patientInsured"));
-        System.out.println("-> Insurance Valid = " + pI.getVariable("checkinresults_patientInsured"));
 
     }
 }

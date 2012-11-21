@@ -14,7 +14,10 @@ import org.jbpm.executor.api.CommandContext;
 import org.jbpm.executor.api.ExecutionResults;
 
 /**
- *
+ * Completes a work item given its id. The id of the work item is retrieved from
+ * the context using the key '_workItemId'. The session used to complete the 
+ * work item is get from SessionStoreUtil class using the first section of
+ * the business key as id.
  * @author salaboy
  */
 @Named

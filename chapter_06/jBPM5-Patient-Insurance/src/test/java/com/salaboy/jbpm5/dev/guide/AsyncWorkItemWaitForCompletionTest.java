@@ -5,12 +5,9 @@
 package com.salaboy.jbpm5.dev.guide;
 
 import com.salaboy.jbpm5.dev.guide.util.SessionStoreUtil;
-import com.salaboy.jbpm5.dev.guide.callbacks.PrintResultsCallback;
 import com.salaboy.jbpm5.dev.guide.commands.CheckInCommand;
 import com.salaboy.jbpm5.dev.guide.workitems.AsyncGenericWorkItemHandler;
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import org.drools.KnowledgeBase;
 import org.drools.KnowledgeBaseFactory;
 import org.drools.builder.KnowledgeBuilder;
@@ -29,7 +26,6 @@ import org.jbpm.executor.ExecutorServiceEntryPoint;
 import org.junit.After;
 import static org.junit.Assert.assertEquals;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 
 /**
@@ -77,6 +73,10 @@ public class AsyncWorkItemWaitForCompletionTest {
     private void initializeSession() {
         KnowledgeBuilder kbuilder = KnowledgeBuilderFactory.newKnowledgeBuilder();
 
+        //We are using a proces containing a single Task. The task is configured
+        //to wait until the completion of the external system. A specialized
+        //callback (CompleteWorkItemCallback) is used to complete the work item 
+        //after the command was executed.
         kbuilder.add(new ClassPathResource("async-work-item-wait.bpmn"), ResourceType.BPMN2);
         if (kbuilder.hasErrors()) {
             KnowledgeBuilderErrors errors = kbuilder.getErrors();
@@ -103,11 +103,23 @@ public class AsyncWorkItemWaitForCompletionTest {
             }
             
         });
+        
+        //Registers the session in SessionStoreUtil. The callback we are using
+        //for the process' Task will retrieve this session later and completes
+        //the work item using it.
         SessionStoreUtil.sessionCache.put("sessionId="+session.getId(), session);
 
-        SessionStoreUtil.sessionCache.put("sessionId="+session.getId(), session);
     }
 
+    /**
+     * AsyncWorkItemWaitForCompletionTest: Test executing a process with a 
+     * single Task using the Executor Service component to interact with a (mocked) 
+     * external service. The process is configured to tell the work item handler being 
+     * used (AsyncGenericWorkItemHandler) to wait until the external system comes 
+     * back before completing the Task. The result will be a process that will is not 
+     * going to be completed until the external system comes back with a response.
+     * @throws InterruptedException 
+     */
     @Test
     public void executorCheckInTestFinishesWithoutHandler() throws InterruptedException {
         HashMap<String, Object> input = new HashMap<String, Object>();
@@ -115,68 +127,36 @@ public class AsyncWorkItemWaitForCompletionTest {
         String patientName = "John Doe";
         input.put("bedrequest_patientname", patientName);
 
+        //Registers an instance of AsyncGenericWorkItemHandler as a handler for
+        //all the 'Async Work' tasks in the processes.
         AsyncGenericWorkItemHandler asyncHandler = new AsyncGenericWorkItemHandler(executor, session.getId());
         session.getWorkItemManager().registerWorkItemHandler("Async Work", asyncHandler);
 
         WorkflowProcessInstance pI = (WorkflowProcessInstance) session.startProcess("PatientCheckIn", input);
 
-        assertEquals(ProcessInstance.STATE_ACTIVE, pI.getState());
-
+        //No command was executed yet.
         assertEquals(0, CheckInCommand.getCheckInCount());
-
-        Thread.sleep(executor.getInterval()*1000 + 1000);
-
-        assertEquals(1, CheckInCommand.getCheckInCount());
         
-    }
-
-    @Test
-    public void executorCheckInTestFinishesWithHandler() throws InterruptedException {
-        HashMap<String, Object> input = new HashMap<String, Object>();
-
-        String patientName = "John Doe";
-        input.put("bedrequest_patientname", patientName);
-
-        AsyncGenericWorkItemHandler asyncHandler = new AsyncGenericWorkItemHandler(executor, session.getId());
-        session.getWorkItemManager().registerWorkItemHandler("Async Work", asyncHandler);
-
-        WorkflowProcessInstance pI = (WorkflowProcessInstance) session.startProcess("PatientCheckIn", input);
-
+        //Since we are waiting for the execution of the external system to be done,
+        //the process is still ACTIVE.
         assertEquals(ProcessInstance.STATE_ACTIVE, pI.getState());
 
-        assertEquals(0, CheckInCommand.getCheckInCount());
-
-        Thread.sleep(executor.getInterval() * 2000);
-
-        assertEquals(1, CheckInCommand.getCheckInCount());
-
-        assertEquals(ProcessInstance.STATE_COMPLETED, pI.getState());
         
-    }
-
-    @Test
-    public void executorCheckInTestStoppedBefore() throws InterruptedException {
-        HashMap<String, Object> input = new HashMap<String, Object>();
-
-        String patientName = "John Doe";
-        input.put("bedrequest_patientname", patientName);
-
-        AsyncGenericWorkItemHandler asyncHandler = new AsyncGenericWorkItemHandler(executor, session.getId());
-        session.getWorkItemManager().registerWorkItemHandler("Async Work", asyncHandler);
-
-        WorkflowProcessInstance pI = (WorkflowProcessInstance) session.startProcess("PatientCheckIn", input);
-
-        assertEquals(ProcessInstance.STATE_ACTIVE, pI.getState());
-
-        assertEquals(0, CheckInCommand.getCheckInCount());
-
         Thread.sleep(1000);
-
-        assertEquals(0, CheckInCommand.getCheckInCount());
-
-        Thread.sleep(1500);
-
-        assertEquals(1, CheckInCommand.getCheckInCount());
         
+        //After 1 second, the command is not yet executed meaning that the process
+        //is still ACTIVE.
+        assertEquals(0, CheckInCommand.getCheckInCount());
+        assertEquals(ProcessInstance.STATE_ACTIVE, pI.getState());
+        
+        
+        Thread.sleep(executor.getInterval()*1000);
+
+        //After a reasonable time, the command must be executed. This should
+        //have caused the execution of the callback and hence the completion
+        //of the work item and thus the process.
+        assertEquals(1, CheckInCommand.getCheckInCount());
+        assertEquals(ProcessInstance.STATE_COMPLETED, pI.getState());
     }
+
 }

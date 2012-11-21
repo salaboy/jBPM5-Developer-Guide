@@ -1,5 +1,6 @@
 package com.salaboy.jbpm5.dev.guide.ws;
 
+import com.salaboy.jbpm5.dev.guide.commands.CXFWebServiceCommand;
 import com.salaboy.jbpm5.dev.guide.util.SessionStoreUtil;
 import com.salaboy.jbpm5.dev.guide.webservice.SlowService;
 import com.salaboy.jbpm5.dev.guide.webservice.SlowServiceImpl;
@@ -24,6 +25,16 @@ import static org.junit.Assert.assertEquals;
 import org.junit.Before;
 import org.junit.Test;
 
+/**
+ * This test class consists in two tests executing a process composed by 3
+ * tasks. The idea of the tests is to emulate web services that takes some 
+ * considerable time to be invoked. The 2 approaches taken by these tests is
+ * to wait until each invocation returns and to continue without care about
+ * the responses at all.
+ * For the communication between the process and the web service the Executor
+ * Service component is used.
+ * @author esteban
+ */
 public class SlowWebServicesInteractionsTest {
 
     protected ExecutorServiceEntryPoint executor;
@@ -62,6 +73,87 @@ public class SlowWebServicesInteractionsTest {
         executor.init();
     }
 
+    /**
+     * Invokes 3 web services that take some time to be executed. The process
+     * will continue with its execution without waiting for each web service to
+     * finish. The process -> web service interaction is performed using the
+     * Execution Service component. The Command being used is {@link CXFWebServiceCommand}
+     * and the web service implementation is {@link SlowServiceImpl}.
+     * @throws InterruptedException 
+     */
+    @Test
+    public void testSlowWebServicesNoWait() throws InterruptedException {
+
+        initializeSession("three-systems-interactions-nowait.bpmn");
+
+        HashMap<String, Object> input = new HashMap<String, Object>();
+
+        String patientName = "John Doe";
+        input.put("bedrequest_patientname", patientName);
+
+
+        AsyncGenericWorkItemHandler webServiceHandler = new AsyncGenericWorkItemHandler(executor, session.getId());
+        session.getWorkItemManager().registerWorkItemHandler("Slow Web Service", webServiceHandler);
+
+        WorkflowProcessInstance pI = (WorkflowProcessInstance) session.startProcess("ThreeSystemsInteractions", input);
+
+        //Even if the requests are not executed yet, the process is completed.
+        List<RequestInfo> resultList = executor.getExecutedRequests();
+        assertEquals(0, resultList.size());
+        
+        assertEquals(ProcessInstance.STATE_COMPLETED, pI.getState());
+
+        Thread.sleep(25000);
+
+        //After 25 seconds we could see that the web services were invoked
+        //correctly.
+        resultList = executor.getExecutedRequests();
+        assertEquals(3, resultList.size());
+        session.dispose();
+    }
+
+    /**
+     * Invokes 3 web services that take some time to be executed. The process
+     * will wait for each web service to finish before continuing to the next
+     * task. The process -> web service interaction is performed using the
+     * Execution Service component. The Command being used is {@link CXFWebServiceCommand}
+     * and the web service implementation is {@link SlowServiceImpl}.
+     * @throws InterruptedException 
+     */
+    @Test
+    public void testSlowWebServicesWait() throws InterruptedException {
+
+        initializeSession("three-systems-interactions-wait.bpmn");
+
+        SessionStoreUtil.sessionCache.put("sessionId=" + session.getId(), session);
+        HashMap<String, Object> input = new HashMap<String, Object>();
+
+        String patientName = "John Doe";
+        input.put("bedrequest_patientname", patientName);
+
+
+        AsyncGenericWorkItemHandler webServiceHandler = new AsyncGenericWorkItemHandler(executor, session.getId());
+        session.getWorkItemManager().registerWorkItemHandler("Slow Web Service", webServiceHandler);
+
+        WorkflowProcessInstance pI = (WorkflowProcessInstance) session.startProcess("ThreeSystemsInteractions", input);
+
+        //No web service was invoked yet, so the process remains ACTIVE
+        List<RequestInfo> resultList = executor.getExecutedRequests();
+        assertEquals(0, resultList.size());
+        assertEquals(ProcessInstance.STATE_ACTIVE, pI.getState());
+
+        Thread.sleep(25000);
+
+        //After 25 seconds we could see that the web services were invoked
+        //correctly.
+        resultList = executor.getExecutedRequests();
+        assertEquals(3, resultList.size());
+
+        assertEquals(ProcessInstance.STATE_COMPLETED, pI.getState());
+        session.dispose();
+    }
+    
+    
     private void initializeSession(String processName) {
         KnowledgeBuilder kbuilder = KnowledgeBuilderFactory.newKnowledgeBuilder();
 
@@ -89,58 +181,5 @@ public class SlowWebServicesInteractionsTest {
                 session.fireAllRules();
             }
         });
-    }
-
-    @Test
-    public void testSlowWebServicesNoWait() throws InterruptedException {
-
-        initializeSession("three-systems-interactions-nowait.bpmn");
-
-        HashMap<String, Object> input = new HashMap<String, Object>();
-
-        String patientName = "John Doe";
-        input.put("bedrequest_patientname", patientName);
-
-
-        AsyncGenericWorkItemHandler webServiceHandler = new AsyncGenericWorkItemHandler(executor, session.getId());
-        session.getWorkItemManager().registerWorkItemHandler("Slow Web Service", webServiceHandler);
-
-        WorkflowProcessInstance pI = (WorkflowProcessInstance) session.startProcess("Three Systems Interactions", input);
-
-        assertEquals(ProcessInstance.STATE_COMPLETED, pI.getState());
-
-        Thread.sleep(25000);
-
-        List<RequestInfo> resultList = executor.getExecutedRequests();
-        assertEquals(3, resultList.size());
-        session.dispose();
-    }
-
-    @Test
-    public void testSlowWebServicesWait() throws InterruptedException {
-
-        initializeSession("three-systems-interactions-wait.bpmn");
-
-        SessionStoreUtil.sessionCache.put("sessionId=" + session.getId(), session);
-        HashMap<String, Object> input = new HashMap<String, Object>();
-
-        String patientName = "John Doe";
-        input.put("bedrequest_patientname", patientName);
-
-
-        AsyncGenericWorkItemHandler webServiceHandler = new AsyncGenericWorkItemHandler(executor, session.getId());
-        session.getWorkItemManager().registerWorkItemHandler("Slow Web Service", webServiceHandler);
-
-        WorkflowProcessInstance pI = (WorkflowProcessInstance) session.startProcess("Three Systems Interactions", input);
-
-        assertEquals(ProcessInstance.STATE_ACTIVE, pI.getState());
-
-        Thread.sleep(25000);
-
-        List<RequestInfo> resultList = executor.getExecutedRequests();
-        assertEquals(3, resultList.size());
-
-        assertEquals(ProcessInstance.STATE_COMPLETED, pI.getState());
-        session.dispose();
     }
 }

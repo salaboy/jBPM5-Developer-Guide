@@ -30,6 +30,13 @@ import static org.junit.Assert.assertEquals;
 import org.junit.Before;
 import org.junit.Test;
 
+/**
+ * Executes "Hopistal Insurance Check-In" process introduced un Chapter 6.
+ * These tests use the same instance of {@link AsyncGenericWorkItemHandler} for
+ * all the tasks defined in the process. This handler will use the Executor 
+ * Service component to execute different methods of a web service.
+ * @author esteban
+ */
 public class HospitalInsuranceProcessExecutorTest {
 
     protected StatefulKnowledgeSession session;
@@ -42,7 +49,6 @@ public class HospitalInsuranceProcessExecutorTest {
     @Before
     public void setUp() {
         initializeWebService();
-        initializeSession();
         
         Patient salaboy = new Patient(UUID.randomUUID().toString(), "Salaboy", "SalaboyLastName", "salaboy@gmail.com", "555-15151-515151", 28);
         testPatients.put("salaboy", salaboy);
@@ -60,6 +66,9 @@ public class HospitalInsuranceProcessExecutorTest {
         executor.setThreadPoolSize(1);
         executor.setInterval(3);
         executor.init();
+        
+        
+        initializeSession();
     }
 
     @After
@@ -70,6 +79,9 @@ public class HospitalInsuranceProcessExecutorTest {
         stopWebService();
     }
 
+    /**
+     * Tests the execution path for a patient having a valid insurance.
+     */
     @Test
     public void testPatientInsuredProcessWithExecutor() throws InterruptedException {
         HashMap<String, Object> input = new HashMap<String, Object>();
@@ -77,13 +89,6 @@ public class HospitalInsuranceProcessExecutorTest {
         Patient salaboy = testPatients.get("salaboy");
         input.put("patientName", salaboy.getId());
         SessionStoreUtil.sessionCache.put("sessionId="+session.getId(), session);
-        AsyncGenericWorkItemHandler genericHandler = new AsyncGenericWorkItemHandler(executor, session.getId());
-
-        session.getWorkItemManager().registerWorkItemHandler("Gather Patient Data", genericHandler);
-        session.getWorkItemManager().registerWorkItemHandler("Insurance Service", genericHandler);
-        session.getWorkItemManager().registerWorkItemHandler("External Insurance Company Service", genericHandler);
-        session.getWorkItemManager().registerWorkItemHandler("Rates Service", genericHandler);
-        session.getWorkItemManager().registerWorkItemHandler("Invoice Service", genericHandler);
 
         WorkflowProcessInstance pI = (WorkflowProcessInstance) session.startProcess("NewPatientInsuranceCheck", input);
         //Our application can continue doing other things, the executor will do the rest
@@ -94,6 +99,9 @@ public class HospitalInsuranceProcessExecutorTest {
         
     }
     
+    /**
+     * Tests the execution path for a patient NOT having a valid insurance.
+     */
     @Test
     public void testPatientNonInsuredProcessWithExecutor() throws InterruptedException {
         HashMap<String, Object> input = new HashMap<String, Object>();
@@ -101,18 +109,7 @@ public class HospitalInsuranceProcessExecutorTest {
         Patient brotha = testPatients.get("brotha");
         input.put("patientName", brotha.getId());
         SessionStoreUtil.sessionCache.put("sessionId="+session.getId(), session);
-        AsyncGenericWorkItemHandler genericHandler = new AsyncGenericWorkItemHandler(executor,session.getId());
        
-        session.getWorkItemManager().registerWorkItemHandler("Gather Patient Data", genericHandler);
-       
-        session.getWorkItemManager().registerWorkItemHandler("Insurance Service", genericHandler);
-       
-        session.getWorkItemManager().registerWorkItemHandler("External Insurance Company Service", genericHandler);
-       
-        session.getWorkItemManager().registerWorkItemHandler("Rates Service", genericHandler);
-       
-        session.getWorkItemManager().registerWorkItemHandler("Invoice Service", genericHandler);
-
         WorkflowProcessInstance pI = (WorkflowProcessInstance) session.startProcess("NewPatientInsuranceCheck", input);
 
         //Our application can continue doing other things, the executor will do the rest
@@ -167,6 +164,16 @@ public class HospitalInsuranceProcessExecutorTest {
             }
             
         });
+        
+        //Registers the same generic handler for all the tasks. The handler will
+        //schedule commands into the Executor Service. Each task in the process
+        //is configured to use a different command.
+        AsyncGenericWorkItemHandler genericHandler = new AsyncGenericWorkItemHandler(executor,session.getId());
+        session.getWorkItemManager().registerWorkItemHandler("Gather Patient Data", genericHandler);
+        session.getWorkItemManager().registerWorkItemHandler("Insurance Service", genericHandler);
+        session.getWorkItemManager().registerWorkItemHandler("External Insurance Company Service", genericHandler);
+        session.getWorkItemManager().registerWorkItemHandler("Rates Service", genericHandler);
+        session.getWorkItemManager().registerWorkItemHandler("Invoice Service", genericHandler);
 
     }
 }

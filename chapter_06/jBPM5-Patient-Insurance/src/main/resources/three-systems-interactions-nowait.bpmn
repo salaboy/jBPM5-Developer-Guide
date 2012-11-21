@@ -18,7 +18,7 @@
   <itemDefinition id="_slowservice_resultThreeItem" />
   <itemDefinition id="_checkinresults_timeItem" structureRef="String" />
 
-  <process processType="Private" isExecutable="true" id="Three Systems Interactions" name="Three Systems Interaction" tns:packageName="defaultPackage" >
+  <process processType="Private" isExecutable="true" id="ThreeSystemsInteractions" name="Three Systems Interaction" tns:packageName="defaultPackage" >
 
     <!-- process variables -->
     <property id="bedrequest_patientname" itemSubjectRef="_bedrequest_patientnameItem"/>
@@ -289,7 +289,7 @@
   </process>
 
   <bpmndi:BPMNDiagram>
-    <bpmndi:BPMNPlane bpmnElement="DefferedWebService" >
+    <bpmndi:BPMNPlane bpmnElement="ThreeSystemsInteractions" >
       <bpmndi:BPMNShape bpmnElement="_1" >
         <dc:Bounds x="16" y="16" width="48" height="48" />
       </bpmndi:BPMNShape>

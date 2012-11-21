@@ -68,6 +68,8 @@ public class AsyncWorkItemDontWaitForCompletionTest {
     private void initializeSession() {
         KnowledgeBuilder kbuilder = KnowledgeBuilderFactory.newKnowledgeBuilder();
 
+        //We are using a proces containing a single Task. The task is configured
+        //to avoid waiting until the completion of the external system.
         kbuilder.add(new ClassPathResource("async-work-item-nowait.bpmn"), ResourceType.BPMN2);
         if (kbuilder.hasErrors()) {
             KnowledgeBuilderErrors errors = kbuilder.getErrors();
@@ -97,6 +99,15 @@ public class AsyncWorkItemDontWaitForCompletionTest {
         
     }
 
+    /**
+     * Test executing a process with a single Task using the Executor Service
+     * component to interact with a (mocked) external service. The process
+     * is configured to tell the work item handler being used (AsyncGenericWorkItemHandler)
+     * to not wait until the external system comes back to complete the Task.
+     * The result will be a process that will be completed before the external
+     * system is even invoked.
+     * @throws InterruptedException 
+     */
     @Test
     public void executorCheckInTestFinishes() throws InterruptedException {
         HashMap<String, Object> input = new HashMap<String, Object>();
@@ -104,42 +115,30 @@ public class AsyncWorkItemDontWaitForCompletionTest {
         String patientName = "John Doe";
         input.put("bedrequest_patientname", patientName);
 
+        //Registers an instance of AsyncGenericWorkItemHandler as a handler for
+        //all the 'Async Work' tasks in the processes.
         AsyncGenericWorkItemHandler asyncHandler = new AsyncGenericWorkItemHandler(executor, session.getId());
         session.getWorkItemManager().registerWorkItemHandler("Async Work", asyncHandler);
 
         WorkflowProcessInstance pI = (WorkflowProcessInstance) session.startProcess("PatientCheckIn", input);
 
+        //Since we are not waiting for the external system to respond before
+        //completing the workiten, the process is executed in just 1 step.
+        //At this point the process is completed.
         assertEquals(ProcessInstance.STATE_COMPLETED, pI.getState());
 
-        assertEquals(0, CheckInCommand.getCheckInCount());
-
-        Thread.sleep(executor.getInterval()*1000 + 1000);
-
-        assertEquals(1, CheckInCommand.getCheckInCount());
-    }
-
-    @Test
-    public void executorCheckInTestStoppedBefore() throws InterruptedException {
-        HashMap<String, Object> input = new HashMap<String, Object>();
-
-        String patientName = "John Doe";
-        input.put("bedrequest_patientname", patientName);
-
-        AsyncGenericWorkItemHandler asyncHandler = new AsyncGenericWorkItemHandler(executor, session.getId());
-        session.getWorkItemManager().registerWorkItemHandler("Async Work", asyncHandler);
-
-        WorkflowProcessInstance pI = (WorkflowProcessInstance) session.startProcess("PatientCheckIn", input);
-
-        assertEquals(ProcessInstance.STATE_COMPLETED, pI.getState());
-
+        //At this point, the command shouldn't be executed yet.
         assertEquals(0, CheckInCommand.getCheckInCount());
 
         Thread.sleep(1000);
-
+        
+        //After 1 second, the command is not yet executed.
         assertEquals(0, CheckInCommand.getCheckInCount());
+        
+        Thread.sleep(executor.getInterval()*1000);
 
-        Thread.sleep(1500);
-
+        //After a reasonable time, the command must be executed.
         assertEquals(1, CheckInCommand.getCheckInCount());
     }
+
 }

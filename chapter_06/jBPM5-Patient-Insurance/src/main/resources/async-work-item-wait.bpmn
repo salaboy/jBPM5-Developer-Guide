@@ -75,7 +75,7 @@
   </process>
 
   <bpmndi:BPMNDiagram>
-    <bpmndi:BPMNPlane bpmnElement="PatientDeferredCheckIn" >
+    <bpmndi:BPMNPlane bpmnElement="PatientCheckIn" >
       <bpmndi:BPMNShape bpmnElement="_1" >
         <dc:Bounds x="16" y="16" width="48" height="48" />
       </bpmndi:BPMNShape>

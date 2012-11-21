@@ -27,6 +27,12 @@ import java.util.Map;
 import java.util.UUID;
 import org.drools.event.rule.DefaultAgendaEventListener;
 
+/**
+ * Similar to {@link GenericWebServiceTaskTest} but using jBPM5' out-of-the box
+ * Service Task Handler. The process being used by this test uses a Service Task
+ * node instead of an Abstract Task node.
+ * @author esteban
+ */
 public class ServiceTaskTest {
 
     protected StatefulKnowledgeSession session;
@@ -50,38 +56,53 @@ public class ServiceTaskTest {
     public void tearDown() {
     }
 
+    /**
+     * Simple test showing the interaction between a process and a web service.
+     * This method tests the case of an invalid response from the web-service.
+     */
     @Test
     public void testPatientInsuranceCheckProcessFalse() {
-        HashMap<String, Object> input = new HashMap<String, Object>();
-
-        input.put("bedrequest_patientname", testPatients.get("salaboy").getId());
-
-        session.getWorkItemManager().registerWorkItemHandler("Service Task", new ServiceTaskHandler());
-
-        WorkflowProcessInstance pI = (WorkflowProcessInstance) session.startProcess("NewPatientInsuranceCheck", input);
-
-        assertEquals(ProcessInstance.STATE_COMPLETED, pI.getState());
-        assertEquals(Boolean.TRUE, pI.getVariable("checkinresults_patientInsured"));
-        System.out.println("-> Insurance Valid = " + pI.getVariable("checkinresults_patientInsured"));
-    }
-
-    @Test
-    public void testPatientInsuranceCheckProcessTrue() {
         HashMap<String, Object> input = new HashMap<String, Object>();
 
 
         input.put("bedrequest_patientname", testPatients.get("brotha").getId());
 
-
+        //Register a synchronous work item handler that will invoke a web service.
+        //This work item handler is provided by jBPM5.
         session.getWorkItemManager().registerWorkItemHandler("Service Task", new ServiceTaskHandler());
 
         WorkflowProcessInstance pI = (WorkflowProcessInstance) session.startProcess("NewPatientInsuranceCheck", input);
 
+        //'brotha' is not inssured according to the web service we have configured.
+        //The response should be invalid.
         assertEquals(ProcessInstance.STATE_COMPLETED, pI.getState());
         assertEquals(Boolean.FALSE, pI.getVariable("checkinresults_patientInsured"));
         System.out.println("-> Insurance Valid = " + pI.getVariable("checkinresults_patientInsured"));
 
 
+    }
+    
+    /**
+     * Simple test showing the interaction between a process and a web service.
+     * This method tests the case of an invalid response from the web-service.
+     */
+    @Test
+    public void testPatientInsuranceCheckProcessTrue() {
+        HashMap<String, Object> input = new HashMap<String, Object>();
+
+        input.put("bedrequest_patientname", testPatients.get("salaboy").getId());
+
+        //Register a synchronous work item handler that will invoke a web service.
+        //This work item handler is provided by jBPM5.
+        session.getWorkItemManager().registerWorkItemHandler("Service Task", new ServiceTaskHandler());
+
+        WorkflowProcessInstance pI = (WorkflowProcessInstance) session.startProcess("NewPatientInsuranceCheck", input);
+
+        //'salaboy' is correctly inssured according to the web service we have configured.
+        //The response should be valid.
+        assertEquals(ProcessInstance.STATE_COMPLETED, pI.getState());
+        assertEquals(Boolean.TRUE, pI.getVariable("checkinresults_patientInsured"));
+        System.out.println("-> Insurance Valid = " + pI.getVariable("checkinresults_patientInsured"));
     }
 
     private void initializeSession() {
