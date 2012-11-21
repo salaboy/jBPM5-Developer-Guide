@@ -50,7 +50,7 @@ Because the Human Interactions handled by the task service are asynchronous you 
 6) processInstancesAndLocalHTPlusFailTest: this test shows how to get hold of the user Transaction from the DataSource and handle the exception thrown by the MockFaultWorkItemHandler.
 
 
-For updates about the book visit: http://salaboy.com 
-or follow me on twitter: http://www.twitter.com/salaboy
-- Salaboy 2012
+For updates about the book visit: http://salaboy.com / http://ilesteban.wordpress.com
+or follow us on twitter: http://www.twitter.com/salaboy / http://www.twitter.com/ilesteban
+- jBPM5 Developer Guide 2012
 

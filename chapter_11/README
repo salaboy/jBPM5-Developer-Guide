@@ -73,3 +73,7 @@ process definition. Just like in the previous test, the concept of a BusinessEnt
 is used to keep track of the relation between a session, a work item and a process
 instance. Every time a BusinessEntity is inserted in the master session, the
 corresponding work item handler is going to be completed.
+
+For updates about the book visit: http://salaboy.com / http://ilesteban.wordpress.com
+or follow us on twitter: http://www.twitter.com/salaboy / http://www.twitter.com/ilesteban
+- jBPM5 Developer Guide 2012
