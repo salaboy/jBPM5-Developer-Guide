@@ -1,0 +1,31 @@
+Chapter 3 - Using BPMN 2.0 to Model Business Scenarios
+
+This chapter contains a single project containing the process definitions present
+in Chapter 3. 
+Since the process execution is not yet discussed in the book, there is no test
+in the project that executes any of the processes. In Chapter 5 most of these
+processes are going to be executed and tested.
+The idea of this chapter is to import into jBPM Web Designer the processes 
+contained in this project so you can start getting familiar with both, the
+process representation and the tooling. These 2 topics are covered in detail
+in Chapter 5.
+
+The processes included in this chapter are:
+
+1) HospitalEmergencyScenarioV1-data.bpmn: Simple process showing how data is
+defined in a process and how it flows through the different tasks.
+2) HospitalEmergencyScenarioV1.bpmn: First executable version of Simple Emergency
+Bed Request process. This process is a more complete version of the process
+mentioned in the book since it is ready to be executed.
+3) HospitalEmergencyScenarioV2.bpmn: An extension of V1 containing a diverging
+gateway creating different execution paths.
+4) HospitalEmergencyScenarioV3.bpmn: Another extension over V2, this time introducing
+an Intermediate Catch Event to have loosely coupled execution paths in a single
+process definition.
+5) residentsHiringV1.bpmn: A process definition covering some advance topics like
+timers and multiple-instance tasks.
+
+
+For updates about the book visit: http://salaboy.com / http://ilesteban.wordpress.com
+or follow us on twitter: http://www.twitter.com/salaboy / http://www.twitter.com/ilesteban
+- jBPM5 Developer Guide 2012
