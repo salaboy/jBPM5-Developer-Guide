@@ -1,0 +1,24 @@
+Chapter 2 - BPM System Structure
+
+This chapter covers the internals of the process engine, by showing a simple implementation of a NodeInstance oriented process engine. 
+There are two modules inside this chapter source code directory:
+
+1) jBPM3-GOP-Token: 
+This module contains two different projects explaining the Token Based approach of building a process engine. This is included here as a reference, because the explanations about this project were provided in my previous book called jBPM Developer Guide, based on jBPM3.
+2) jBPM5-GOP-NodeInstance: 
+This project describe a simple way to create a process engine. The main idea behind this example project is to show you the basic behavior of the engine. This example uses a Node Instance approach which is explained inside Chapter 2. 
+If you take a look at the SimpleProcessExecutionTest you will find 3 tests that demonstrate how to create a new process instance and how to execute it. 
+In order to understand 100% of what is going on in those tests I encourage you to debug them and step into the methods to see how the engine reacts to different tasks. 
+You will find inside the src/main/java directory the package called: com.salaboy.process.engine, which contains all the internal structures that are needed for this simple version of a process engine. 
+ a) simpleProcessExecution(): this test shows how to create create an execute a simple business process. Notice the createProcessDefinition(); method call which builds the process definition programatically.
+
+ b) simpleProcessExecutionWithCustomEventListener(): this test shows how we can inject an event service to the engine. We as users will be notified every time that an event occurs inside the engine. Using this mechanism we will be able to monitor our business process and measure performance for example.
+
+ c) simpleProcessExecutionWithProcessVariables(): this test shows how to we can add information to the process context, in order to use that information inside the different activities. 
+
+
+
+For updates about the book visit: http://salaboy.com / http://ilesteban.wordpress.com
+or follow us on twitter: http://www.twitter.com/salaboy / http://www.twitter.com/ilesteban
+- jBPM5 Developer Guide 2012
+
