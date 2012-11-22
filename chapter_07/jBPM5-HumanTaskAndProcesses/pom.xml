@@ -5,11 +5,11 @@
     <parent>
         <artifactId>chapter07</artifactId>
         <groupId>com.salaboy</groupId>
-        <version>1.0-SNAPSHOT</version>
+        <version>1.0-Final</version>
     </parent>
     <groupId>com.salaboy.jbpm5.dev.guide</groupId>
     <artifactId>jBPM5-HumanTaskAndProcesses</artifactId>
-    <version>1.0-SNAPSHOT</version>
+    <version>1.0-Final</version>
     <name>jBPM5 :: Human Task &amp; Process Interactions + LDAP Identity</name>
     <url>http://salaboy.com</url>
     <properties>

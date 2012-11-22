@@ -5,11 +5,11 @@
     <parent>
         <groupId>com.salaboy</groupId>
         <artifactId>chapter07</artifactId>
-        <version>1.0-SNAPSHOT</version>
+        <version>1.0-Final</version>
     </parent>
    
     <artifactId>jBPM5-HumanTaskUI-Swing</artifactId>
-    <version>1.0-SNAPSHOT</version>
+    <version>1.0-Final</version>
     <name>jBPM5 :: Human Tasks Simple UI - Swing Example</name>
     <url>http://salaboy.com</url>
     <properties>

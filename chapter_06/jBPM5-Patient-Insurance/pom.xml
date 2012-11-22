@@ -5,7 +5,7 @@
     <parent>
         <artifactId>chapter06</artifactId>
         <groupId>com.salaboy</groupId>
-        <version>1.0-SNAPSHOT</version>
+        <version>1.0-Final</version>
     </parent>
     <groupId>com.salaboy.jbpm5.dev.guide</groupId>
     <artifactId>jBPM5-Patient-Insurance</artifactId>
@@ -13,7 +13,6 @@
     <url>http://maven.apache.org</url>
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <jbpm.version>5.4.0-SNAPSHOT</jbpm.version>
         <maven.btm.maxPoolSize>16</maven.btm.maxPoolSize>
         <maven.hibernate.dialect>org.hibernate.dialect.H2Dialect</maven.hibernate.dialect>
         <maven.datasource.classname>bitronix.tm.resource.jdbc.lrc.LrcXADataSource</maven.datasource.classname>
@@ -57,7 +56,7 @@
         <dependency>
            <groupId>com.salaboy.jbpm5.dev.guide</groupId>
            <artifactId>jBPM5-Executor-Service</artifactId>
-           <version>1.0-SNAPSHOT</version>
+           <version>1.0-Final</version>
             <exclusions>
                 <exclusion>
                     <artifactId>commons-lang</artifactId>
