@@ -103,9 +103,9 @@ public class SlowWebServicesInteractionsTest {
         
         assertEquals(ProcessInstance.STATE_COMPLETED, pI.getState());
 
-        Thread.sleep(25000);
+        Thread.sleep(35000);
 
-        //After 25 seconds we could see that the web services were invoked
+        //After 35 seconds we could see that the web services were invoked
         //correctly.
         resultList = executor.getExecutedRequests();
         assertEquals(3, resultList.size());
@@ -142,9 +142,9 @@ public class SlowWebServicesInteractionsTest {
         assertEquals(0, resultList.size());
         assertEquals(ProcessInstance.STATE_ACTIVE, pI.getState());
 
-        Thread.sleep(25000);
+        Thread.sleep(35000);
 
-        //After 25 seconds we could see that the web services were invoked
+        //After 35 seconds we could see that the web services were invoked
         //correctly.
         resultList = executor.getExecutedRequests();
         assertEquals(3, resultList.size());
