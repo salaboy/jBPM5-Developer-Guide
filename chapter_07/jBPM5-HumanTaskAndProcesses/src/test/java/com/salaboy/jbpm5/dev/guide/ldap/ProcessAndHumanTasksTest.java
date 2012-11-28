@@ -97,8 +97,7 @@ public class ProcessAndHumanTasksTest {
         
 
         // now, a user with role TL will see the task.. esteban is one of them
-        List<TaskSummary> estebanTasks = this.service.getTasksAssignedAsPotentialOwner("esteban",
-                this.ldapQuery.groupsForUser("esteban"), "en-UK");
+        List<TaskSummary> estebanTasks = this.service.getTasksAssignedAsPotentialOwner("esteban", "en-UK");
         Assert.assertEquals(1, estebanTasks.size());
         this.service.claim(estebanTasks.get(0).getId(), "esteban");
         this.service.start(estebanTasks.get(0).getId(), "esteban");
@@ -107,8 +106,7 @@ public class ProcessAndHumanTasksTest {
         
 
         // now, a user with role HR will see the task.. mariano is one of them
-        List<TaskSummary> marianoTasks = this.service.getTasksAssignedAsPotentialOwner("mariano",
-                this.ldapQuery.groupsForUser("mariano"), "en-UK");
+        List<TaskSummary> marianoTasks = this.service.getTasksAssignedAsPotentialOwner("mariano", "en-UK");
         Assert.assertEquals(1, marianoTasks.size());
         this.service.claim(marianoTasks.get(0).getId(), "mariano");
         this.service.start(marianoTasks.get(0).getId(), "mariano");
